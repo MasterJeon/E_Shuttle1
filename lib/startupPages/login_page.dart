@@ -161,7 +161,7 @@ class Login extends StatelessWidget {
                               //Navigation to home page
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context)=> homePage()),
+                                MaterialPageRoute(builder: (context)=> HomePage()),
                               );
                             }
 

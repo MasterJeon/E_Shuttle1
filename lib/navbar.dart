@@ -58,17 +58,4 @@ class navbar extends StatelessWidget {
       ),
     );
   }
-
-  Widget build(BuildContext context){
-    return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        destinations: [
-          Container(),
-          Container(),
-          Container(),
-          Container(),
-        ],
-      ),
-    );
-  }
 }

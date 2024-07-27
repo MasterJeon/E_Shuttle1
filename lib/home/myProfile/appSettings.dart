@@ -6,18 +6,18 @@ import 'package:flutter/services.dart';
 void main() => runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyProfile(),
+      home: AppSettings(),
     )
 );
 
-class MyProfile extends StatefulWidget {
-  const MyProfile({Key? key}) : super(key: key);
+class AppSettings extends StatefulWidget {
+  const AppSettings({Key? key}) : super(key: key);
 
   @override
-  MyProfileState createState() => MyProfileState();
+  AppSettingsState createState() => AppSettingsState();
 }
 
-class MyProfileState extends State<MyProfile> {
+class AppSettingsState extends State<AppSettings> {
   bool isDarkMode = false;
   String selectedLanguage = 'English';
   @override

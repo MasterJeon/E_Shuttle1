@@ -156,7 +156,7 @@ class AccountVerificationState extends State<AccountVerification> {
           showCursor: false,
           readOnly: false,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.headlineMedium,
           keyboardType: TextInputType.number,
           inputFormatters: [
             LengthLimitingTextInputFormatter(1),

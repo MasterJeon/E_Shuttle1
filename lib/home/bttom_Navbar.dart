@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget{
   const BottomNavBar({super.key});
@@ -27,6 +27,4 @@ class NavigationController extends GetxControler{
 
   final screens = []
 }
-
-              
-    
+*/

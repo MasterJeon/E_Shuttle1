@@ -22,10 +22,10 @@ class _MyAppState extends State<MyApp>{
   Widget build(BuildContext context){
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: homePage(),
+      home: HomePage(),
       
       routes: { 
-          '/homePage':(context) => homePage(),
+          '/homePage':(context) => HomePage(),
           '/profilePage':(context) => Profile(),
           '/wallet':(context) => Wallet(),
           '/sos':(context) => SOS(),
