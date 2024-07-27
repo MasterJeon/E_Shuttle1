@@ -123,7 +123,7 @@ class MainApp extends StatelessWidget {
                           ),
                           ),
                           child: Center(
-                            child: Text("Login", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                            child: Text  ("Login", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
                           ),
                         ),
 

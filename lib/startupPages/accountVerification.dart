@@ -1,3 +1,4 @@
+import 'package:e_shuttle/startupPages/selectRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -78,8 +79,15 @@ class AccountVerificationState extends State<AccountVerification> {
                       SizedBox(height: 22),
                       SizedBox(
                         width: double.infinity,
+
+                        //directing to Select your route page
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const SelectRoute()),
+                              );
+                            },
                           style: ButtonStyle(
                             foregroundColor:
                                 MaterialStateProperty.all<Color>(Colors.white),
