@@ -4,25 +4,24 @@ import 'package:flutter/services.dart';
 void main() => runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ScanPay(),
+      home: ETickets(),
     )
 );
 
-class ScanPay extends StatefulWidget {
-  const ScanPay({Key? key}) : super(key: key);
+class ETickets extends StatefulWidget {
+  const ETickets({Key? key}) : super(key: key);
 
   @override
-  State<ScanPay> createState() => ScanPayState();
+  ETicketsState createState() => ETicketsState();
 }
 
-class ScanPayState extends State<ScanPay> {
+class ETicketsState extends State<ETickets> {
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get the size of the screen
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(title: Text('E-Tickets')),
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xfff7f6fb),
       body: SafeArea(
@@ -55,7 +54,7 @@ class ScanPayState extends State<ScanPay> {
                 SizedBox(height: 24),
                 SizedBox(height: 10),
                 Text(
-                  "Validate your code at the bus entrance befire and after your arrival to exit.",
+                  "Validate your code at the bus entrance before and after your arrival to exit.",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -84,12 +83,37 @@ class ScanPayState extends State<ScanPay> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),                
+                SizedBox(height: 80),   
+                buildButtons(),             
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+  Widget buildButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: ElevatedButton(
+          onPressed: () {
+            // Handle QR code scanner button press
+          },
+          child: Text('Check Balance'),
+        ),
+        ),
+        SizedBox(width: 20),
+        Expanded(
+          child: ElevatedButton(
+          onPressed: () {
+            // Handle payment button press
+          },
+          child: Text('Recharge'),
+        ),
+        ),
+      ],
     );
   }
 }

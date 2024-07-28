@@ -23,7 +23,7 @@ class AccountVerificationState extends State<AccountVerification> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xfff7f6fb),
+      backgroundColor: Color.fromARGB(255, 68, 174, 250),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -33,62 +33,55 @@ class AccountVerificationState extends State<AccountVerification> {
               horizontal: screenSize.width * 0.08,
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'E-Tickets',
+                  'Bus Route',
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 60),
-                
-                Text(
-                  'Scan to Pay...!',
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 24),
-                SizedBox(height: 10),
-                Text(
-                  "Validate your code at the bus entrance befire and after your arrival to exit.",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 24),
-                SizedBox(height: 28),
-                Container(
-                  padding: EdgeInsets.all(28),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    children: [
-                      
-                      SizedBox(height: 60),
-                      
-                      Text(
-                        "                 QR Code                 "
-                      ),
-                      SizedBox(height: 60),
-                      
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),                
+                SizedBox(height: 20),
+                busStop("Stop1","7.00 AM"),  
+                busStop("Stop2","7.00 AM"),     
+                busStop("Stop3","7.00 AM"),  
+                busStop("Stop4","7.00 AM"), 
+                busStop("Stop5","7.00 AM"),  
+                busStop("Stop6","7.00 AM"), 
+                busStop("Stop7","7.00 AM"),  
+                busStop("Stop8","7.00 AM"),         
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+  Widget busStop(String stop, String time) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        
+        Text(
+          
+                  (stop),
+                  style: TextStyle(
+                    fontSize: 20,
+                    //fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+        SizedBox(width: 20),
+        Text(
+                  (time),
+                  style: TextStyle(
+                    fontSize: 20,
+                    //fontWeight: FontWeight.bold,
+                  ),
+                ),
+        
+        
+      ],
     );
   }
 }

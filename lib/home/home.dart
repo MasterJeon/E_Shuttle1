@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   int currentTab = 0;
   final List<Widget> screens = [
     HomeContent(), // Placeholder for home content
-    ScanPay(),
+    ETickets(),
     SOS(),
     MyProfile()
   ];
@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ScanPay()),
+                  MaterialPageRoute(builder: (context) => ETickets()),
                 );
               },
             ),
@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = ScanPay();
+                        currentScreen = ETickets();
                         currentTab = 1;
                       });
                     },
