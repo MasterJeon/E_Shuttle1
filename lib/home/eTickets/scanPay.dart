@@ -55,7 +55,7 @@ class ScanPayState extends State<ScanPay> {
                 SizedBox(height: 24),
                 SizedBox(height: 10),
                 Text(
-                  "Validate your code at the bus entrance befire and after your arrival to exit.",
+                  "Validate your code at the bus entrance before and after your arrival to exit.",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
