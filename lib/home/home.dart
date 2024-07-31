@@ -1,7 +1,9 @@
 import 'package:e_shuttle/home/SOS/SOS.dart';
 import 'package:e_shuttle/home/eTickets/scanPay.dart';
+import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
 import 'package:e_shuttle/home/myProfile/appSettings.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
+import 'package:e_shuttle/home/myWallet/eWallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +20,9 @@ class _HomePageState extends State<HomePage> {
     HomeContent(), // Placeholder for home content
     ScanPay(),
     SOS(),
-    MyProfile()
+    MyProfile(),
+    EWallet(),
+    Feedbacks(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -68,6 +72,10 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.account_balance_wallet),
               title: const Text('My Wallet'),
               onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EWallet()),
+                );
                 // Implement My Wallet navigation
               },
             ),
@@ -87,6 +95,10 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.message),
               title: const Text('Reviews and Feedbacks'),
               onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Feedbacks()),
+                );
                 // Implement Reviews and Feedbacks navigation
               },
             ),
