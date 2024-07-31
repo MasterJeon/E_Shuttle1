@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:unitled2/models/user.dart';
+import 'package:e_shuttle/models/user.dart';
 
 const String COLLECTION_REF = "user";
 
