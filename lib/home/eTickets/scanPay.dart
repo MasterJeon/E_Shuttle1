@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:qr_flutter/qr_flutter.dart';
 void main() => runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -64,6 +64,10 @@ class ETicketsState extends State<ETickets> {
                 ),
                 SizedBox(height: 24),
                 SizedBox(height: 28),
+
+
+
+
                 Container(
                   padding: EdgeInsets.all(28),
                   decoration: BoxDecoration(
@@ -83,6 +87,9 @@ class ETicketsState extends State<ETickets> {
                     ],
                   ),
                 ),
+
+
+                
                 SizedBox(height: 80),   
                 buildButtons(),             
               ],
