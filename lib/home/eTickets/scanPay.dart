@@ -1,124 +1,123 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-void main() => runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ETickets(),
-    )
-);
 
-class ETickets extends StatefulWidget {
-  const ETickets({Key? key}) : super(key: key);
-
-  @override
-  ETicketsState createState() => ETicketsState();
+void main() {
+  runApp(MyApp());
 }
 
-class ETicketsState extends State<ETickets> {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Use MediaQuery to get the size of the screen
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: scanPay(),
+    );
+  }
+}
+
+class scanPay extends StatefulWidget {
+  const scanPay({super.key});
+
+  @override
+  State<scanPay> createState() => _scanPayState();
+}
+
+class _scanPayState extends State<scanPay> {
+  String qrData = "google"; // Data set from the backend
+
+  @override
+  Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xfff7f6fb),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            // Set padding relative to screen size
-            padding: EdgeInsets.symmetric(
-              vertical: screenSize.height * 0.03,
-              horizontal: screenSize.width * 0.08,
+      appBar: AppBar(
+        title: Text("QR Code Generator"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 30),
+            Text(
+              'E-Tickets',
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'E-Tickets',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
+            SizedBox(height: 60),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.08),
+              child: Column(
+                children: [
+                  Text(
+                    'Scan to Pay...!',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: 60),
-                
-                Text(
-                  'Scan to Pay...!',
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
+                  SizedBox(height: 24),
+                  Text(
+                    "Validate your code at the bus entrance before and after your arrival to exit.",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black38,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                SizedBox(height: 24),
-                SizedBox(height: 10),
-                Text(
-                  "Validate your code at the bus entrance before and after your arrival to exit.",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 24),
-                SizedBox(height: 28),
-
-
-
-
-                Container(
-                  padding: EdgeInsets.all(28),
-                  decoration: BoxDecoration(
+                  SizedBox(height: 28),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenSize.height * 0.03,
+                      horizontal: screenSize.width * 0.08,
+                    ),
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    children: [
-                      
-                      SizedBox(height: 60),
-                      
-                      Text(
-                        "                 QR Code                 "
+                    child: Center(
+                      child: QrImageView(
+                        data: 'hi Dharani madam', // this must be a randomly generated code if else user can also generate the code himself
+                        version: QrVersions.auto,
+                        size: 200.0,
+                        backgroundColor:  Colors.white,
                       ),
-                      SizedBox(height: 60),
-                      
-                    ],
+                    ),
                   ),
-                ),
-
-
-                
-                SizedBox(height: 80),   
-                buildButtons(),             
-              ],
+                ],
+              ),
             ),
-          ),
+            SizedBox(height: 80),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.08),
+              child: buildButtons(),
+            ),
+          ],
         ),
       ),
     );
   }
+
   Widget buildButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
           child: ElevatedButton(
-          onPressed: () {
-            // Handle QR code scanner button press
-          },
-          child: Text('Check Balance'),
-        ),
+            onPressed: () {
+              // Handle QR code scanner button press
+            },
+            child: Text('Check Balance'),
+          ),
         ),
         SizedBox(width: 20),
         Expanded(
           child: ElevatedButton(
-          onPressed: () {
-            // Handle payment button press
-          },
-          child: Text('Recharge'),
-        ),
+            onPressed: () {
+              // Handle payment button press
+            },
+            child: Text('Recharge'),
+          ),
         ),
       ],
     );

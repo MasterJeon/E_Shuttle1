@@ -16,7 +16,8 @@ class _HomePageState extends State<HomePage> {
   int currentTab = 0;
   final List<Widget> screens = [
     HomeContent(), // Placeholder for home content
-    ETickets(),
+    //ETickets(),
+    
     SOS(),
     MyProfile()
   ];

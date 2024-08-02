@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp>{
           '/homePage':(context) => HomePage(),
           '/profilePage':(context) => Profile(),
           '/wallet':(context) => EWallet(),
+          '/wallet':(context) => EWallet(),
           '/sos':(context) => SOS(),
           '/feedbacks':(context) => Feedbacks(),
           '/tickets':(context) => Tickets(),

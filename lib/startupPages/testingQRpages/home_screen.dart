@@ -23,7 +23,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //final GlobalKey globalKey = GlobalKey();
   String qrData = "google"; // Data set from the backend
 
   @override
@@ -40,28 +39,87 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 30),
-            RepaintBoundary(
-              //key: globalKey,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.03,
-                  horizontal: screenSize.width * 0.08,
-                ),
-                color: Colors.grey,
-                child: Center(
-                  child: QrImageView(
-                    data: 'I love u',//this must be a randomly generated code if else user can also generate the code himself
-                    version: QrVersions.auto,
-                    size: 200.0,
-                    //gapless: false,
-                    backgroundColor: Colors.white,
-                  ),
-                ),
+            Text(
+              'E-Tickets',
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+            SizedBox(height: 60),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.08),
+              child: Column(
+                children: [
+                  Text(
+                    'Scan to Pay...!',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  Text(
+                    "Validate your code at the bus entrance before and after your arrival to exit.",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black38,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 28),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenSize.height * 0.03,
+                      horizontal: screenSize.width * 0.08,
+                    ),
+                    color: Colors.white,
+                    child: Center(
+                      child: QrImageView(
+                        data: 'Hello Sumuduu', // this must be a randomly generated code if else user can also generate the code himself
+                        version: QrVersions.auto,
+                        size: 200.0,
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 80),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.08),
+              child: buildButtons(),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+              // Handle QR code scanner button press
+            },
+            child: Text('Check Balance'),
+          ),
+        ),
+        SizedBox(width: 20),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+              // Handle payment button press
+            },
+            child: Text('Recharge'),
+          ),
+        ),
+      ],
     );
   }
 }
