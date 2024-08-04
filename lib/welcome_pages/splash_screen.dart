@@ -1,5 +1,7 @@
+import 'package:e_shuttle/welcome_pages/welcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 
 void main() => runApp(
@@ -20,6 +22,19 @@ with SingleTickerProviderStateMixin{
 
   void initState(){
     super.initState();
+    SystemChrome. setEnabledSystemUIMode(SystemUiMode.immersive);
+
+    Future.delayed(Duration(seconds: 6),(){
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (_) => const WelcomeScreen(),
+        ));
+    });
+  }
+
+  void dispose(){
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+     overlays: SystemUiOverlay.values);
+    super.dispose();
   }
 
   Widget build(BuildContext context){
@@ -30,7 +45,9 @@ with SingleTickerProviderStateMixin{
             colors:[
               Color.fromRGBO(0, 115, 239, 0.884),
               Color.fromRGBO(22, 5, 107, 0.94),
+              
               Color.fromRGBO(8,1, 41, 0.94),
+              const Color.fromRGBO(255, 167, 38, 1),
              // Color.fromRGBO(12,2, 59, 0.94),
               //Color.fromRGBO(0, 90, 150, 0.94),
               //Color.fromRGBO(12,2, 59, 0.94),
