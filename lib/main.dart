@@ -1,3 +1,6 @@
+import 'package:e_shuttle/home/Help.dart';
+import 'package:e_shuttle/home/changeRoute.dart';
+import 'package:e_shuttle/home/myProfile/appSettings.dart';
 import 'package:e_shuttle/home/myWallet/eWallet.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shuttle/home/SOS/SOS.dart';
@@ -29,9 +32,12 @@ class _MyAppState extends State<MyApp>{
           '/homePage':(context) => HomePage(),
           '/profilePage':(context) => Profile(),
           '/wallet':(context) => EWallet(),
-          '/sos':(context) => SOS(),
+          //'/sos':(context) => SOS(),
           '/feedbacks':(context) => Feedbacks(),
-          '/tickets':(context) => Tickets(),
+          //'/tickets':(context) => Tickets(),
+          '/appSettings':(context) => AppSettings(),
+          '/helpCenter':(context) => Help_support(),
+          '/routeChnge':(context) => changeRoute()
       },
     );
   }
