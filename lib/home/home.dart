@@ -1,8 +1,4 @@
-import 'package:e_shuttle/home/SOS/SOS.dart';
-import 'package:e_shuttle/home/eTickets/scanPay.dart';
-import 'package:e_shuttle/home/myProfile/appSettings.dart';
-import 'package:e_shuttle/home/myProfile/myProfile.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
