@@ -1,3 +1,4 @@
+import 'package:e_shuttle/startupPages/accountVerification.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'package:e_shuttle/services/database_service.dart';
@@ -133,7 +134,10 @@ class SignUp extends StatelessWidget {
                       margin: EdgeInsets.symmetric(horizontal: 50),
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle sign up action
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder:(context) => const AccountVerification()),
+                          );
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(Color.fromRGBO(0, 69, 230, 1)),

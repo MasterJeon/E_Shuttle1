@@ -10,19 +10,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: scanPay(),
+      home: HomeScreen(),
     );
   }
 }
 
-class scanPay extends StatefulWidget {
-  const scanPay({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<scanPay> createState() => _scanPayState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _scanPayState extends State<scanPay> {
+class _HomeScreenState extends State<HomeScreen> {
   String qrData = "google"; // Data set from the backend
 
   @override
@@ -77,10 +77,10 @@ class _scanPayState extends State<scanPay> {
                     color: Colors.white,
                     child: Center(
                       child: QrImageView(
-                        data: 'hi Dharani madam', // this must be a randomly generated code if else user can also generate the code himself
+                        data: 'Hello Sumuduu', // this must be a randomly generated code if else user can also generate the code himself
                         version: QrVersions.auto,
                         size: 200.0,
-                        backgroundColor:  Colors.white,
+                        backgroundColor: Colors.white,
                       ),
                     ),
                   ),

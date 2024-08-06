@@ -1,5 +1,7 @@
+import 'package:e_shuttle/home/home.dart';
+import 'package:e_shuttle/startupPages/signup_page.dart';
 import 'package:flutter/material.dart';
-import '../../signup_page.dart';
+//import '../../signup_page.dart';
 import 'package:e_shuttle/services/database_service.dart';
 import '../../models/user.dart';
 
@@ -155,7 +157,15 @@ class Login extends StatelessWidget {
                                   duration: const Duration(seconds: 3),
                                 ),
                               );
-                            } else {
+
+                              //Navigation to home page
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context)=> HomePage()),
+                              );
+                            }
+
+                            else {
                               // Login failed
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -165,12 +175,14 @@ class Login extends StatelessWidget {
                               );
                             }
                           },
+
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Color.fromRGBO(0, 69, 230, 1)),
                             padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 50, vertical: 10)),
                             shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
                             elevation: MaterialStateProperty.all(0),
                           ),
+
                           child: SizedBox(
                             height: 30,
                             child: Center(
@@ -179,6 +191,7 @@ class Login extends StatelessWidget {
                           ),
                         ),
                       ),
+
                       SizedBox(height: 35),
                       Text("Don't have an account?", style: TextStyle(color: Colors.grey)),
                       SizedBox(height: 30),
@@ -189,6 +202,7 @@ class Login extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
                           },
+                          
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Color.fromRGBO(230, 81, 0, 1)),
                             padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 50, vertical: 10)),

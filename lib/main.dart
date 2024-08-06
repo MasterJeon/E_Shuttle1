@@ -1,3 +1,4 @@
+import 'package:e_shuttle/home/myWallet/eWallet.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shuttle/home/SOS/SOS.dart';
 import 'package:e_shuttle/home/eTickets/tickets.dart';
@@ -22,12 +23,13 @@ class _MyAppState extends State<MyApp>{
   Widget build(BuildContext context){
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: homePage(),
+      home: HomePage(),
       
       routes: { 
-          '/homePage':(context) => homePage(),
+          '/homePage':(context) => HomePage(),
           '/profilePage':(context) => Profile(),
-          '/wallet':(context) => Wallet(),
+          '/wallet':(context) => EWallet(),
+          '/wallet':(context) => EWallet(),
           '/sos':(context) => SOS(),
           '/feedbacks':(context) => Feedbacks(),
           '/tickets':(context) => Tickets(),

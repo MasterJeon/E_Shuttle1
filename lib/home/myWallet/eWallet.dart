@@ -6,18 +6,18 @@ import 'package:flutter/services.dart';
 void main() => runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyProfile(),
+      home: EWallet(),
     )
 );
 
-class MyProfile extends StatefulWidget {
-  const MyProfile({Key? key}) : super(key: key);
+class EWallet extends StatefulWidget {
+  const EWallet({Key? key}) : super(key: key);
 
   @override
-  MyProfileState createState() => MyProfileState();
+  EWalletState createState() => EWalletState();
 }
 
-class MyProfileState extends State<MyProfile> {
+class EWalletState extends State<EWallet> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
