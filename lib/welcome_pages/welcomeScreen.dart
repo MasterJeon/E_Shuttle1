@@ -1,3 +1,4 @@
+import 'package:e_shuttle/welcome_pages/onboarding.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(
@@ -41,15 +42,15 @@ class WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 96),
+              SizedBox(height: 30),
               SizedBox(
-                width: 350,
-                height: 150,
-                child: Image.asset('assets/download.png'), // Replace with your image asset path
+                width:700,
+                height: 300,
+                child: Image.asset('assets/welcome.png'), // Replace with your image asset path
               ),
-              SizedBox(height: 96),
+              SizedBox(height: 40),
               Text(
-                'Welcome!',
+                'Welcome to E-Shuttle !',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -58,7 +59,8 @@ class WelcomeScreenState extends State<WelcomeScreen> {
               ),
               SizedBox(height: 24),
               Text(
-                "Getting your day to day shuttle update is now just a matter of some clicks.",
+                "Commute to KDU effortlessly! Track buses, buy digital tickets and travel safe — all in one app. Your smarter, faster way to travel. Let's get started!",
+                //"Getting your day to day shuttle update is now just a matter of some clicks.",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -76,103 +78,34 @@ class WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget buildButtons() {
-    return ElevatedButton(
-      onPressed: () {
-        // Handle button press
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const OnBoardingScreen(title: 'E-Shuttle Onboarding')),
+        );
       },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color.fromARGB(255, 67, 59, 59),
-        foregroundColor: Colors.white,
-      ),
-      child: Text('Get Started'),
-    );
-  }
-}
-
-
-
-/*import 'package:flutter/material.dart';
-
-
-
-void main() => runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: WelcomeScreen(),
-    )
-);
-
-class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
-
-  @override
-  WelcomeScreenState createState() => WelcomeScreenState();
-}
-
-class WelcomeScreenState extends State<WelcomeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      //appBar: AppBar(title: const Text('My Profile')),
-      body: Padding(
-        // Set padding relative to screen size
-        padding: EdgeInsets.symmetric(
-          vertical: screenSize.height * 0.05,
-          horizontal: screenSize.width * 0.08,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(230, 81, 0, 1),
+              Color.fromRGBO(239, 108, 0, 1),
+              Color.fromRGBO(255, 167, 38, 1),
+            ],
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        child: Column(
-          children: [
-          SizedBox(height: 96),
-          SizedBox(
-              width: 350,
-              height: 150,
-              child: Image.asset('assets/download.png'), // Replace with your image asset path
-            ),
-          SizedBox(height: 96),
-                SizedBox(height: 24),
-                Text(
-                  'Welcome!',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 24),
-                SizedBox(height: 10),
-                Text(
-                  "Getting your day to day shuttle update is now just a matter of some clicks ",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 100),
-                buildButtons(),
-          ],
+        child: const Text(
+          'Get Started',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
   }
-  Widget buildButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        
-          ElevatedButton(
-            onPressed: () {
-              // Handle button press
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromARGB(255, 67, 59, 59),
-              foregroundColor: Colors.white,
-            ),
-            child: Text('Get Started'),
-          ),   
-        ],
-      );
-    }
-}*/
+}

@@ -1,4 +1,5 @@
 import 'package:e_shuttle/main.dart';
+import 'package:e_shuttle/startupPages/login_page.dart';
 import 'package:e_shuttle/welcome_pages/wScreen1.dart';
 import 'package:e_shuttle/welcome_pages/wScreen2.dart';
 import 'package:e_shuttle/welcome_pages/wScreen3.dart';
@@ -43,15 +44,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>{
         children: [
           PageView(
             controller: pageController,
-            onPageChanged:(index){
-              currentPageIndex = index;
-              if (index == 3){
+            onPageChanged:(index){ 
+              setState(() {
+                currentPageIndex = index;
+              if (index == 2){
                 buttonText = "Finish";
               }else{
                 buttonText = "Skip";
               }
-              setState(() {
-                
               });
             } ,
             children: const [
@@ -62,22 +62,31 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>{
           ),
 
           Container(
-            alignment: const Alignment(0, 0.8),
+            alignment: const Alignment(0, 0.9),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 GestureDetector(
                   onTap: (){
-
+                    if (currentPageIndex == 2) {
+                      // Navigate to the Login screen on "Finish"
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Login()),
+                      );
+                    } else {
+                      // Skip to the last screen
+                      pageController.jumpToPage(2);
+                    }
                   },
-                  child: const Text(buttonText)
+                  child: Text(buttonText)
                 ),
                 SmoothPageIndicator(
                   controller: pageController, 
                   count: 3
                 ),
 
-                currentPageIndex == 3 ? const SizedBox (width: 10 ,): GestureDetector(
+                currentPageIndex == 2 ? const SizedBox (width: 10 ,): GestureDetector(
                   onTap: (){
                     pageController.nextPage(duration: Duration(milliseconds:500 ), curve: Curves.easeIn);
                   },

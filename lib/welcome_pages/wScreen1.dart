@@ -9,7 +9,7 @@ class Screen1 extends StatelessWidget{
       children: [
         Image.asset("assets/real_time_tracking.png"),
         const SizedBox(height: 40,),
-        const Text("Digital Ticketing System Within The App", style: TextStyle(
+        const Text("Real-Time Bus Tracking", style: TextStyle(
           color: Colors.black,
           fontSize: 25,
           fontWeight: FontWeight.w400
@@ -20,7 +20,7 @@ class Screen1 extends StatelessWidget{
         const SizedBox(height: 20,),
         Container(
           padding:EdgeInsets.symmetric(horizontal: 20),
-          child: Text("Our integrated digital ticketing system will make your bus ride easier. No more tickets bakjkghdsuguwherr tueryiuirui iurugiueriugieriguierhu eureitieurtyuiteruyitu urituierihutrehireu turethiuero", 
+          child: Text("Never miss your ride again ! Get real-time updates on bus locations and arrival times. No more waiting... Stay informed and plan your journey with ease.", 
             style: TextStyle(
               color: Colors.black.withOpacity(0.6),
               fontSize: 16,

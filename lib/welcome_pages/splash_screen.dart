@@ -44,10 +44,10 @@ with SingleTickerProviderStateMixin{
           gradient: LinearGradient(
             colors:[
               Color.fromRGBO(0, 115, 239, 0.884),
-              Color.fromRGBO(22, 5, 107, 0.94),
-              
+              Color.fromRGBO(22, 5, 107, 0.94),      
               Color.fromRGBO(8,1, 41, 0.94),
-              const Color.fromRGBO(255, 167, 38, 1),
+               Color.fromRGBO(239, 108, 0, 1),
+              //const Color.fromRGBO(255, 167, 38, 1),
              // Color.fromRGBO(12,2, 59, 0.94),
               //Color.fromRGBO(0, 90, 150, 0.94),
               //Color.fromRGBO(12,2, 59, 0.94),
@@ -95,22 +95,3 @@ with SingleTickerProviderStateMixin{
     );
   }
 }
-
-/*class SplashScreen extends StatelessWidget{
-  Widget build(BuildContext context){
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin:Alignment.,
-            colors: [
-              Color.fromRGBO(0, 69, 230, 0.94),
-              Color.fromRGBO(0, 115, 239, 0.884),
-              Color.fromRGBO(38, 201, 255, 0.91)
-            ]
-          )
-        ),
-      )
-    );
-  }
-}*/

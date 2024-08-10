@@ -7,9 +7,9 @@ class Screen3 extends StatelessWidget{
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset("assets/sos1.png"),
+        Image.asset("assets/sos2.png"),
         const SizedBox(height: 40,),
-        const Text("Digital Ticketing System Within The App", style: TextStyle(
+        const Text("Stay Connected & Safe", style: TextStyle(
           color: Colors.black,
           fontSize: 25,
           fontWeight: FontWeight.w400
@@ -20,7 +20,7 @@ class Screen3 extends StatelessWidget{
         const SizedBox(height: 20,),
         Container(
           padding:EdgeInsets.symmetric(horizontal: 20),
-          child: Text("Our integrated digital ticketing system will make your bus ride easier. No more tickets bakjkghdsuguwherr tueryiuirui iurugiueriugieriguierhu eureitieurtyuiteruyitu urituierihutrehireu turethiuero", 
+          child: Text("Your safety, our priority. Quickly alert security with our SOS feature and receive real-time notifications. Customize your profile and enjoy a personalized experience.", 
             style: TextStyle(
               color: Colors.black.withOpacity(0.6),
               fontSize: 16,

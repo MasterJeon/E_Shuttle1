@@ -9,7 +9,7 @@ class Screen2 extends StatelessWidget{
       children: [
         Image.asset("assets/e_ticket.png"),
         const SizedBox(height: 40,),
-        const Text("Digital Ticketing System Within The App", style: TextStyle(
+        const Text("Easy Digital Ticketing & E-Wallet", style: TextStyle(
           color: Colors.black,
           fontSize: 25,
           fontWeight: FontWeight.w400
@@ -20,7 +20,7 @@ class Screen2 extends StatelessWidget{
         const SizedBox(height: 20,),
         Container(
           padding:EdgeInsets.symmetric(horizontal: 20),
-          child: Text("Our integrated digital ticketing system will make your bus ride easier. No more tickets bakjkghdsuguwherr tueryiuirui iurugiueriugieriguierhu eureitieurtyuiteruyitu urituierihutrehireu turethiuero", 
+          child: Text("Say goodbye to paper tickets. Purchase and store your tickets digitally and securely with our integrated E-Wallet, Your digital ticket and balance at your fingertips, ready whenever you are.", 
             style: TextStyle(
               color: Colors.black.withOpacity(0.6),
               fontSize: 16,
