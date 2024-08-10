@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDB_7Upmc0VZ7jTRxh-EQlYaV2n1ST2sLE',
-    appId: '1:766732878424:android:839f46f69f519093bec02d',
+    appId: '1:766732878424:android:90e683b9103c6f8bbec02d',
     messagingSenderId: '766732878424',
     projectId: 'kdu-transportation-service',
     storageBucket: 'kdu-transportation-service.appspot.com',
@@ -60,11 +60,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAO_3BPYKGbo5tc0F9rgzIwoj5U-cOamNk',
-    appId: '1:766732878424:ios:5959f7f592ed885bbec02d',
+    appId: '1:766732878424:ios:48e8ae0d31659865bec02d',
     messagingSenderId: '766732878424',
     projectId: 'kdu-transportation-service',
     storageBucket: 'kdu-transportation-service.appspot.com',
-    iosBundleId: 'com.example.flutterApplication1',
+    iosBundleId: 'com.example.eShuttle',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(

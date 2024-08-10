@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = ETickets();
+                        currentScreen =  scanPay();
                         currentTab = 1;
                       });
                     },

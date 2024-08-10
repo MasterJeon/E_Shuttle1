@@ -39,7 +39,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   qr_flutter: ^4.1.0
   flutter_barcode_scanner: ^2.0.0
-  google_maps_flutter: ^2.7.1
+  google_maps_flutter: 2.6.1
+  smooth_page_indicator: ^1.2.0+3
 
 
 dev_dependencies:
