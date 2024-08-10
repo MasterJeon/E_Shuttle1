@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Add the secrets-gradle-plugin dependency here
+        classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1"
+    }
+}
+
 allprojects {
     repositories {
         google()
@@ -11,6 +22,17 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+}
+
+secrets {
+    // Specify the file containing your secrets.
+    propertiesFileName = "secrets.properties"
+
+    // A properties file containing default secret values. This file can be checked in version control.
+    defaultPropertiesFileName = "local.defaults.properties"
+
+    // Optionally, configure keys to be ignored by the plugin
+    ignoreList.add("sdk.*") // Example to ignore any key starting with "sdk."
 }
 
 tasks.register("clean", Delete) {
