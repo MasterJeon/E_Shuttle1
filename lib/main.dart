@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
           '/sos':(context) => SOS(),
           '/feedbacks':(context) => Feedbacks(),
           '/tickets':(context) => Tickets(),
+        
       },
     );
   }
