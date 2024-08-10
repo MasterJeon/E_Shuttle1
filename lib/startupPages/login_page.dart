@@ -1,7 +1,9 @@
 import 'package:e_shuttle/home/home.dart';
 import 'package:e_shuttle/startupPages/signup_page.dart';
 import 'package:flutter/material.dart';
-//import '../../signup_page.dart';
+
+//import 'package:firebase_auth/firebase_auth.dart';
+import '../../startupPages/signup_page.dart';
 import 'package:e_shuttle/services/database_service.dart';
 import '../../models/user.dart';
 
@@ -151,6 +153,7 @@ class Login extends StatelessWidget {
                             // Check if user exists and password matches
                             if (user != null && user.password == password) {
                               // Successful login
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text("Login Success"),

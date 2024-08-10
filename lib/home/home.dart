@@ -4,9 +4,11 @@ import 'package:e_shuttle/home/SOS/SOS.dart';
 import 'package:e_shuttle/home/changeRoute.dart';
 import 'package:e_shuttle/home/eTickets/scanPay.dart';
 import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
+import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
 import 'package:e_shuttle/home/myProfile/appSettings.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
 import 'package:e_shuttle/home/myWallet/eWallet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -181,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = ETickets();
+                        currentScreen = EWallet();
                         currentTab = 1;
                       });
                     },
