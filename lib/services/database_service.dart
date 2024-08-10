@@ -1,58 +1,82 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shuttle/models/user.dart';
+import '../../models/user.dart';
+import '../../models/userRegistration.dart';
 
-const String COLLECTION_REF = "user";
+const String COLLECTION_REF_USER = "user";
+const String COLLECTION_REF_REGISTER = "register";
+const String COLLECTION_REF_LOGIN = "login";
 
-class DatabaseService{
-  final _firestore = FirebaseFirestore.instance;
+class DatabaseService<T> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final CollectionReference<T> _ref;
 
-  late final CollectionReference _userRef;
-
-  DatabaseService(){
-    _userRef = _firestore.collection(COLLECTION_REF).withConverter<User>(fromFirestore: (snapshots, _)=> User.fromJson(snapshots.data()!,), toFirestore: (user, _)=>user.toJson());
+  DatabaseService(String collectionPath, T Function(Map<String, Object?> json) fromJson, Map<String, Object?> Function(T object) toJson) {
+    _ref = _firestore.collection(collectionPath).withConverter<T>(
+      fromFirestore: (snapshot, _) => fromJson(snapshot.data()!),
+      toFirestore: (object, _) => toJson(object),
+    );
   }
 
-  Stream<QuerySnapshot>getUser(){
-    return _userRef.snapshots();
+  Stream<QuerySnapshot<T>> getSnapshots() {
+    return _ref.snapshots();
   }
 
-  void addUser(User user) async {
-    _userRef.add(user);
-  }
-
-  // Method to get user by email or Student ID
-  Future<User?> getUserByEmailOrStudentID(String emailOrStudentID) async {
+  //Future<void> add(T object) async {
+  //try {
+  //await _ref.add(object);
+  //} catch (e) {
+  //print("Error adding object: $e");
+  //}
+  //}
+  Future<DocumentReference<T>> add(T object) async {
     try {
-      // Query Firestore for user with provided email or Student ID
-      QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
-          .collection(COLLECTION_REF)
-          .where('email_student_id', isEqualTo: emailOrStudentID)
-          .limit(1)
-          .get();
+      return await _ref.add(object);
+    } catch (e) {
+      print("Error adding object: $e");
+      rethrow;
+    }
+  }
 
-      // Check if user exists
+  Future<void> setWithId(String id, T object) async {
+    try {
+      await _ref.doc(id).set(object);
+    } catch (e) {
+      print("Error setting object with id: $e");
+    }
+  }
+
+  Future<T?> getByField(String field, String value) async {
+    try {
+      QuerySnapshot<T> snapshot = await _ref.where(field, isEqualTo: value).limit(1).get();
       if (snapshot.docs.isNotEmpty) {
-        // Convert the document snapshot to a User object
-        return User.fromJson(snapshot.docs.first.data());
+        return snapshot.docs.first.data();
       } else {
-        // User not found
         return null;
       }
     } catch (e) {
-      print("Error fetching user: $e");
+      print("Error fetching object: $e");
       return null;
     }
   }
-
-  // Method to add a user document to Firestore
-  Future<void> addUsertoDB(User user) async {
-    try {
-      // Add user document to Firestore
-      await _firestore.collection(COLLECTION_REF).add(user.toJson());
-    } catch (e) {
-      print("Error adding user: $e");
-    }
-  }
-
-
 }
+
+// Usage for User
+final userService = DatabaseService<User>(
+  COLLECTION_REF_USER,
+      (json) => User.fromJson(json),
+      (user) => user.toJson(),
+);
+
+// Usage for UserRegistration
+final registerService = DatabaseService<UserRegistration>(
+  COLLECTION_REF_REGISTER,
+      (json) => UserRegistration.fromJson(json),
+      (register) => register.toJson(),
+);
+
+// Usage for Login
+final loginService = DatabaseService<User>(
+  COLLECTION_REF_LOGIN,
+      (json) => User.fromJson(json),
+      (user) => user.toJson(),
+);

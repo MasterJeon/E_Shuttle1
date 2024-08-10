@@ -12,60 +12,91 @@ import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
 import 'package:e_shuttle/home/home.dart';
 import 'package:e_shuttle/home/myProfile/profile.dart';
 import 'package:e_shuttle/home/myWallet/wallet.dart';
-import 'package:e_shuttle/startupPages/login_page.dart';
-import 'package:e_shuttle/startupPages/signup_page.dart';
-
 import 'package:e_shuttle/welcome_pages/onboarding.dart';
 import 'package:e_shuttle/welcome_pages/splash_screen.dart';
-import 'package:e_shuttle/welcome_pages/wScreen1.dart';
-import 'package:e_shuttle/welcome_pages/welcomeScreen.dart';
-import 'package:e_shuttle/welcome_pages/wScreen2.dart';
-import 'package:e_shuttle/welcome_pages/wScreen3.dart';
-
+import 'package:e_shuttle/home/home.dart';
 import 'package:e_shuttle/home/eTickets/scanPay.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 
 
 
-void main()async {
+
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  FirebaseFirestore.instance.settings = const Settings(
-    persistenceEnabled: true,
-  );
-
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget{
-  //const MyApp({super.key});
-
-  //State<MyApp> createState() => _MyAppState();  
-//}
-
-//class _MyAppState extends State<MyApp>{
-
-  Widget build(BuildContext context){
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Flutter Firebase',
       initialRoute: '/',
-      
-      routes: { 
-        '/':(context) => SplashScreen(),
-        '/signupPage':(context) => SignUp(),
-         '/loginPage':(context) => Login(),
-          '/homePage':(context) => HomePage(),
+      routes: {
+        '/': (context) => SplashScreen(),
+          //child: AuthWrapper(),
+        //),
+        '/login': (context) => LoginPage(),
+        '/signUp': (context) => SignUpPage(),
+        '/home': (context) => HomePage(),
+
+        //'/signupPage':(context) => SignUp(),
+         //'/loginPage':(context) => Login(),
+          //'/homePage':(context) => HomePage(),
           '/profilePage':(context) => Profile(),
           '/wallet':(context) => EWallet(),
           '/tickets':(context) => scanPay(),
-          //'/sos':(context) => SOS(),
+          '/sos':(context) => SOS(),
           '/feedbacks':(context) => Feedbacks(),
           //'/tickets':(context) => Tickets(),
           '/appSettings':(context) => AppSettings(),
           '/helpCenter':(context) => Help_support(),
-          '/routeChnge':(context) => changeRoute()
+          '/routeChange':(context) => changeRoute()
       },
     );
   }
 }
+
+class AuthWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Get the current user from Firebase Auth
+    User? user = FirebaseAuth.instance.currentUser;
+
+    // If the user is logged in, navigate to HomePage; otherwise, navigate to LoginPage
+    if (user != null) {
+      // User is logged in
+      return HomePage();
+    } else {
+      // User is not logged in
+      return LoginPage();
+    }
+  }
+}
+
+//class SplashScreen extends StatelessWidget {
+  //final Widget child;
+  //SplashScreen({required this.child});
+
+  //@override
+  //Widget build(BuildContext context) {
+  //  // You can display a loading indicator or any splash animation here
+   // return Scaffold(
+   //   body: FutureBuilder(
+    //    // Add a small delay to show the splash screen for a bit
+     //   future: Future.delayed(Duration(seconds: 2)),
+      //  builder: (context, snapshot) {
+        //  if (snapshot.connectionState == ConnectionState.done) {
+       //     return child; // Navigate to the wrapped widget (either HomePage or LoginPage)
+        //  } else {
+       //     return Center(child: CircularProgressIndicator());
+       //   }
+       // },
+     // ),
+   // );
+ // }
+//}

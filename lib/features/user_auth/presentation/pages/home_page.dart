@@ -1,19 +1,3 @@
-import 'dart:ffi';
-import 'package:e_shuttle/home/Help.dart';
-import 'package:e_shuttle/home/SOS/SOS.dart';
-import 'package:e_shuttle/home/changeRoute.dart';
-import 'package:e_shuttle/home/eTickets/scanPay.dart';
-import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
-import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
-import 'package:e_shuttle/home/myProfile/appSettings.dart';
-import 'package:e_shuttle/home/myProfile/myProfile.dart';
-import 'package:e_shuttle/home/myWallet/eWallet.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +8,10 @@ import 'package:e_shuttle/welcome_pages/wScreen2.dart';
 import 'package:e_shuttle/welcome_pages/wScreen3.dart';
 
 import '../../../../global/common/toast.dart';
+
+
+//not using anymoooore
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,12 +24,11 @@ class _HomePageState extends State<HomePage> {
   int currentTab = 0;
   final List<Widget> screens = [
     HomeContent(), // Placeholder for home content
-    EWallet(),
-    AppSettings(),
-    MyProfile(),
-    Feedbacks(),
-    Help_support(),
-    changeRoute()
+    //ScanPay(),
+    //SOS(),
+    //MyProfile(),
+    //EWallet(),
+    //Feedbacks(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -49,12 +36,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text(''),
       ),
 
-     drawer: Drawer(
+      drawer: Drawer(
         child: Column(
           children: [
             UserAccountsDrawerHeader(
@@ -67,83 +56,72 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.blueAccent,
               ),
             ),
-
             ListTile(
-              leading: const Icon(Icons.account_circle_sharp),
-              title: const Text('My Profile'),
+              leading: const Icon(Icons.sos),
+              title: const Text('SOS-Emergency'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyProfile()),
-                );
+                //Navigator.push(
+                //context,
+                //MaterialPageRoute(builder: (context) => SOS()),
+                //);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.aod_sharp),
+              title: const Text('E-Tickets'),
+              onTap: () {
+                //Navigator.push(
+                //context,
+                //MaterialPageRoute(builder: (context) => ScanPay()),
+                //);
               },
             ),
             ListTile(
               leading: const Icon(Icons.account_balance_wallet),
               title: const Text('My Wallet'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>  EWallet()),
-                );
+                //Navigator.push(
+                //context,
+                //MaterialPageRoute(builder: (context) => EWallet()),
+                //);
+                // Implement My Wallet navigation
               },
             ),
-             ListTile(
-              leading: const Icon(Icons.settings_rounded),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AppSettings()),
-                );
-              },
-            ),
-
             ListTile(
-              leading: const Icon(Icons.edit_location_alt_rounded),
-              title: const Text('Change my Route'),
+              leading: const Icon(Icons.account_circle_sharp),
+              title: const Text('My Profile'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => changeRoute()),
-                );
+                //Navigator.push(
+                // context,
+                //MaterialPageRoute(builder: (context) => MyProfile()),
+                //);
               },
             ),
-
             Divider(),
 
             ListTile(
               leading: const Icon(Icons.message),
               title: const Text('Reviews and Feedbacks'),
               onTap: () {
-                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Feedbacks()),
-                );
-              },
-            ),
-
-            ListTile(
-              leading: const Icon(Icons.support_agent_sharp),
-              //leading: const Icon(Icons.help),
-              title: const Text('Help and Support'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Help_support()),
-                );
+                //Navigator.push(
+                //context,
+                //MaterialPageRoute(builder: (context) => Feedbacks()),
+                //);
+                // Implement Reviews and Feedbacks navigation
               },
             ),
 
 
+
+
             ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Sign Out'),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-                Navigator.pushNamed(context, "/login");
-                showToast(message: "Successfully signed out");
-              }
+                leading: const Icon(Icons.logout),
+                title: const Text('Sign Out'),
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushNamed(context, "/login");
+                  showToast(message: "Successfully signed out");
+                }
             ),
           ],
         ),
@@ -153,7 +131,6 @@ class _HomePageState extends State<HomePage> {
         child: currentScreen,
         bucket: bucket,
       ),
-
       //Middle Navigation Icon
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.share_location_sharp),
@@ -161,7 +138,6 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-      //Bottom Navigation Bar
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 10,
@@ -201,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen =  scanPay();
+                        //currentScreen = ScanPay();
                         currentTab = 1;
                       });
                     },
@@ -230,7 +206,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = SOS();
+                        //currentScreen = SOS();
                         currentTab = 2;
                       });
                     },
@@ -253,10 +229,10 @@ class _HomePageState extends State<HomePage> {
                   MaterialButton(
                     minWidth: 40,
                     onPressed: () {
-                      setState(() {
-                        currentScreen = MyProfile();
-                        currentTab = 3;
-                      });
+                      //setState(() {
+                      //  currentScreen = MyProfile();
+                      // currentTab = 3;
+                      // });
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -273,6 +249,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
+
                   ),
                 ],
               ),
@@ -280,78 +257,96 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      /*drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: const Text('Sasini Lekamge'),
-              accountEmail: const Text('sasini@gmail.com'),
-              currentAccountPicture: CircleAvatar(
-                child: ClipOval(child: Image.asset('images/profile.jpg')),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blueAccent,
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.sos),
-              title: const Text('SOS-Emergency'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SOS()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.aod_sharp),
-              title: const Text('E-Tickets'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ScanPay()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('My Wallet'),
-              onTap: () {
-                // Implement My Wallet navigation
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_circle_sharp),
-              title: const Text('My Profile'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyProfile()),
-                );
-              },
-            ),
-            Divider(),
 
-            ListTile(
-              leading: const Icon(Icons.message),
-              title: const Text('Reviews and Feedbacks'),
-              onTap: () {
-                // Implement Reviews and Feedbacks navigation
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Sign Out'),
-              onTap: () => print('Logout tapped'),
-            ),
-          ],
-        ),
-      ),*/
+
+
+
+
+
+
+
+
+
+
+
     );
+  }
+
+  Stream<List<UserModel>> _readData(){
+    final userCollection = FirebaseFirestore.instance.collection("users");
+
+    return userCollection.snapshots().map((querySnapshot)
+    => querySnapshot.docs.map((e)
+    => UserModel.fromSnapshot(e),).toList());
+  }
+
+  void _createData(UserModel userModel) {
+    final userCollection = FirebaseFirestore.instance.collection("users");
+
+    String id = userCollection.doc().id;
+
+    final newUser = UserModel(
+      username: userModel.username,
+      age: userModel.age,
+      address: userModel.address,
+      id: id,
+    ).toJson();
+
+    userCollection.doc(id).set(newUser);
+  }
+
+  void _updateData(UserModel userModel) {
+    final userCollection = FirebaseFirestore.instance.collection("users");
+
+    final newData = UserModel(
+      username: userModel.username,
+      id: userModel.id,
+      address: userModel.address,
+      age: userModel.age,
+    ).toJson();
+
+    userCollection.doc(userModel.id).update(newData);
+
+  }
+
+  void _deleteData(String id) {
+    final userCollection = FirebaseFirestore.instance.collection("users");
+
+    userCollection.doc(id).delete();
+
+  }
+
+}
+
+class UserModel{
+  final String? username;
+  final String? address;
+  final int? age;
+  final String? id;
+
+  UserModel({this.id,this.username, this.address, this.age});
+
+
+  static UserModel fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot){
+    final data = snapshot.data()!;
+    return UserModel(
+      username: data['username'],
+      address: data['address'],
+      age: data['age'],
+      id: snapshot.id,  // Using snapshot.id ensures that the id is correctly handled
+    );
+  }
+
+  Map<String, dynamic> toJson(){
+    return {
+      "username": username,
+      "age": age,
+      "id": id,
+      "address": address,  // Use "address" instead of "adress" if that's the correct field name
+    };
   }
 }
 
-// Placeholder widget for home content
 class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -360,4 +355,3 @@ class HomeContent extends StatelessWidget {
     );
   }
 }
-
