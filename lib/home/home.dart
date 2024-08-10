@@ -183,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = EWallet();
+                        currentScreen =  scanPay();
                         currentTab = 1;
                       });
                     },
