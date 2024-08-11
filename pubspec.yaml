@@ -82,6 +82,9 @@ flutter:
     - assets/e_ticket.png
     - assets/sos2.png
     - assets/welcome.png
+    - assets/images/profile.png
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

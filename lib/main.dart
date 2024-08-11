@@ -35,27 +35,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase',
-      initialRoute: '/',
+      home: AuthWrapper(),  // Use AuthWrapper as the home widget
       routes: {
-        '/': (context) => SplashScreen(),
-          //child: AuthWrapper(),
-        //),
         '/login': (context) => LoginPage(),
         '/signUp': (context) => SignUpPage(),
         '/home': (context) => HomePage(),
-
-        //'/signupPage':(context) => SignUp(),
-         //'/loginPage':(context) => Login(),
-          //'/homePage':(context) => HomePage(),
-          '/profilePage':(context) => Profile(),
-          '/wallet':(context) => EWallet(),
-          '/tickets':(context) => scanPay(),
-          '/sos':(context) => SOS(),
-          '/feedbacks':(context) => Feedbacks(),
-          //'/tickets':(context) => Tickets(),
-          '/appSettings':(context) => AppSettings(),
-          '/helpCenter':(context) => Help_support(),
-          '/routeChange':(context) => changeRoute()
+        '/profilePage': (context) => Profile(),
+        '/wallet': (context) => EWallet(),
+        '/tickets': (context) => scanPay(),
+        '/sos': (context) => SOS(),
+        '/feedbacks': (context) => Feedbacks(),
+        '/appSettings': (context) => AppSettings(),
+        '/helpCenter': (context) => Help_support(),
+        '/routeChange': (context) => changeRoute(),
       },
     );
   }
@@ -67,14 +59,30 @@ class AuthWrapper extends StatelessWidget {
     // Get the current user from Firebase Auth
     User? user = FirebaseAuth.instance.currentUser;
 
-    // If the user is logged in, navigate to HomePage; otherwise, navigate to LoginPage
-    if (user != null) {
-      // User is logged in
-      return HomePage();
-    } else {
-      // User is not logged in
-      return LoginPage();
-    }
+    // Return a FutureBuilder to wait for Firebase initialization
+    return FutureBuilder(
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+        // If Firebase is still initializing
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SplashScreen(); // Display splash screen while initializing
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error initializing Firebase'));
+        }
+
+        // If user is logged in, navigate to HomePage; otherwise, navigate to LoginPage
+        if (user != null) {
+          return HomePage();
+        } else {
+          return SplashScreen();
+        }
+      },
+    );
+  }
+  Future<void> _initializeApp() async {
+    // Initialize Firebase and any other necessary setup
+    await Firebase.initializeApp();
   }
 }
 
