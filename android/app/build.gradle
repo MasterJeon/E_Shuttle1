@@ -66,11 +66,14 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.debug
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "google_maps_key", secrets["MAPS_API_KEY"]
         }
         debug {
+            minifyEnabled false
+            shrinkResources false
             resValue "string", "google_maps_key", secrets["MAPS_API_KEY"]
         }
     }
