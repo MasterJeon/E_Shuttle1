@@ -12,6 +12,7 @@ class RechargePage extends StatefulWidget {
 
 class _RechargePageState extends State<RechargePage> {
   Map<String, dynamic>? paymentIntent;
+  final TextEditingController _amountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +20,41 @@ class _RechargePageState extends State<RechargePage> {
       appBar: AppBar(
         title: const Text('Recharge E-Wallet'),
       ),
-      body: Center(
-        child: TextButton(
-          child: const Text('Recharge your wallet'),
-          onPressed: () async {
-            await makePayment();
-          },
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _amountController,
+              decoration: const InputDecoration(
+                labelText: 'Enter amount to recharge',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 20),
+            TextButton(
+              child: const Text('Recharge your wallet'),
+              onPressed: () async {
+                if (_amountController.text.isNotEmpty) {
+                  await makePayment(_amountController.text);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please enter an amount')),
+                  );
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Future<void> makePayment() async {
+  Future<void> makePayment(String amount) async {
     try {
-      paymentIntent = await createPaymentIntent('10', 'USD');
+      paymentIntent = await createPaymentIntent(amount, 'LKR');
 
       // Initialize payment sheet
       await Stripe.instance.initPaymentSheet(
@@ -98,7 +120,7 @@ class _RechargePageState extends State<RechargePage> {
       var response = await http.post(
         Uri.parse('https://api.stripe.com/v1/payment_intents'),
         headers: {
-          'Authorization': 'Bearer YOUR_SECRET_KEY', // Replace with your actual Secret Key
+          'Authorization': 'Bearer sk_test_51PmYqFRwXCT02Fy3LMOqWpow9lmmYWaCVd397AQAKVx5evpCMbpTAX1IUgZiF84cfyc96BXlFPysaXHamySmrjJL00p6rvXCrl', // Replace with your actual Secret Key
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: body,
