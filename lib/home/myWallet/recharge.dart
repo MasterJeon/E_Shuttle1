@@ -19,6 +19,19 @@ class _RechargePageState extends State<RechargePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recharge E-Wallet'),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -28,15 +41,14 @@ class _RechargePageState extends State<RechargePage> {
             TextField(
               controller: _amountController,
               decoration: const InputDecoration(
-                labelText: 'Enter amount to recharge',
+                labelText: 'Enter the amount to recharge',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20),
-            TextButton(
-              child: const Text('Recharge your wallet'),
-              onPressed: () async {
+            GestureDetector(
+              onTap: () async {
                 if (_amountController.text.isNotEmpty) {
                   await makePayment(_amountController.text);
                 } else {
@@ -45,6 +57,27 @@ class _RechargePageState extends State<RechargePage> {
                   );
                 }
               },
+              child: Container(
+                height: 50,
+                margin: const EdgeInsets.symmetric(horizontal: 50),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color.fromRGBO(0, 69, 230, 1),
+                      Color.fromRGBO(0, 115, 239, 1),
+                      Color.fromRGBO(38, 201, 255, 1),
+                    ],
+                  ),
+                ),
+                child: const Center(
+                  child: Text(
+                    "Recharge your wallet",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

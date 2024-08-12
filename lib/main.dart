@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
           '/profilePage':(context) => Profile(),
           '/wallet':(context) => EWallet(),
           '/recharge': (context) => RechargePage(),
+          '/refund': (context) => RefundPage(),
           '/tickets':(context) => scanPay(),
           '/sos':(context) => SOS(),
           '/feedbacks':(context) => Feedbacks(),
