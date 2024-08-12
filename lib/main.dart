@@ -19,12 +19,17 @@ import 'package:e_shuttle/home/eTickets/scanPay.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:e_shuttle/home/myWallet/recharge.dart';
+import 'package:e_shuttle/home/myWallet/refund.dart';
 
 
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Initialize Firebase
+  Stripe.publishableKey = "pk_test_51PmYqFRwXCT02Fy3WC6V7Im7d8tkcQiLMK4j6Mu4QZucBoh4PlxXFRYxrEbR8azb9Fmki5hoAcOhz9qXwz7hmMHC00IHQtcaab"; // Initialize Stripe with your publishable key
+  runApp(MyApp());
   await Firebase.initializeApp();
   runApp(MyApp());
 }
@@ -40,14 +45,20 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/signUp': (context) => SignUpPage(),
         '/home': (context) => HomePage(),
-        '/profilePage': (context) => Profile(),
-        '/wallet': (context) => EWallet(),
-        '/tickets': (context) => scanPay(),
-        '/sos': (context) => SOS(),
-        '/feedbacks': (context) => Feedbacks(),
-        '/appSettings': (context) => AppSettings(),
-        '/helpCenter': (context) => Help_support(),
-        '/routeChange': (context) => changeRoute(),
+
+        //'/signupPage':(context) => SignUp(),
+         //'/loginPage':(context) => Login(),
+          //'/homePage':(context) => HomePage(),
+          '/profilePage':(context) => Profile(),
+          '/wallet':(context) => EWallet(),
+          '/recharge': (context) => RechargePage(),
+          '/tickets':(context) => scanPay(),
+          '/sos':(context) => SOS(),
+          '/feedbacks':(context) => Feedbacks(),
+          //'/tickets':(context) => Tickets(),
+          '/appSettings':(context) => AppSettings(),
+          '/helpCenter':(context) => Help_support(),
+          '/routeChange':(context) => changeRoute()
       },
     );
   }
