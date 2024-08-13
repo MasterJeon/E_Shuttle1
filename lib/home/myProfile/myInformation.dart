@@ -9,18 +9,18 @@ import 'package:intl/intl.dart'; // For date formatting
 void main() => runApp(
   const MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: MyProfile(),
+    home: MyInformation(),
   ),
 );
 
-class MyProfile extends StatefulWidget {
-  const MyProfile({Key? key}) : super(key: key);
+class MyInformation extends StatefulWidget {
+  const MyInformation({Key? key}) : super(key: key);
 
   @override
-  MyProfileState createState() => MyProfileState();
+  MyInformationState createState() => MyInformationState();
 }
 
-class MyProfileState extends State<MyProfile> {
+class MyInformationState extends State<MyInformation> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();

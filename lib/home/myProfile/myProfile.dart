@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/services/asset_bundle.dart';
 import 'package:e_shuttle/home/myProfile/appSettings.dart';
+import 'package:e_shuttle/home/myProfile/myInformation.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
@@ -89,10 +90,10 @@ class MyProfileState extends State<MyProfile> {
                   "My Information",
                   CupertinoIcons.person,
                   onTap: () {
-                   // Navigator.push(
-                    //  context,
-                     // MaterialPageRoute(builder: (context) => MyInformationPage()),
-                    //);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyInformation()),
+                    );
                   },
                 ),
                 SizedBox(height: 8),

@@ -22,6 +22,7 @@ import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:e_shuttle/home/myWallet/recharge.dart';
 import 'package:e_shuttle/home/myWallet/refund.dart';
+import 'package:e_shuttle/home/myProfile/myInformation.dart';
 
 
 
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
           '/tickets':(context) => scanPay(),
           '/sos':(context) => SOS(),
           '/feedbacks':(context) => Feedbacks(),
+        '/myinformation':(context) => MyInformation(),
           //'/tickets':(context) => Tickets(),
           '/appSettings':(context) => AppSettings(),
           '/helpCenter':(context) => Help_support(),

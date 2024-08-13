@@ -250,7 +250,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.pushNamed(context, "/login");
                             showToast(message: "Successfully signed out");
                           },
-                          child: Text('Exit'),
+                          child: Text('Sign out'),
                         ),
                       ],
                     ),);
