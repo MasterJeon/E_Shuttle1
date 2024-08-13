@@ -293,6 +293,7 @@ class _SignUpPageState extends State<SignUpPage> {
           email: email,
           full_name: fullName,
           guardian_contact_no: guardianContactNo,
+          wallet_balance: 0.0, // Initialize wallet balance
         );
 
         // Step 3: Save the user data to Firestore

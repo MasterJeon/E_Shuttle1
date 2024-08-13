@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RechargePage extends StatefulWidget {
   const RechargePage({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class RechargePage extends StatefulWidget {
 class _RechargePageState extends State<RechargePage> {
   Map<String, dynamic>? paymentIntent;
   final TextEditingController _amountController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,15 +102,22 @@ class _RechargePageState extends State<RechargePage> {
       );
 
       // Display the payment sheet
-      await displayPaymentSheet();
+      await displayPaymentSheet(context);
     } catch (e, s) {
       print('exception: $e$s');
     }
   }
 
-  Future<void> displayPaymentSheet() async {
+
+  Future<void> displayPaymentSheet(BuildContext context) async {
     try {
-      await Stripe.instance.presentPaymentSheet().then((value) {
+      await Stripe.instance.presentPaymentSheet().then((value) async {
+        // After payment is successful, update the wallet balance
+        final amount = double.tryParse(_amountController.text) ?? 0.0;
+        if (amount > 0) {
+          await updateWalletBalance(context, amount);
+        }
+
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
@@ -142,6 +152,8 @@ class _RechargePageState extends State<RechargePage> {
     }
   }
 
+
+
   Future<Map<String, dynamic>?> createPaymentIntent(String amount, String currency) async {
     try {
       Map<String, dynamic> body = {
@@ -172,3 +184,58 @@ class _RechargePageState extends State<RechargePage> {
     return calculatedAmount.toString();
   }
 }
+
+
+
+Future<void> updateWalletBalance(BuildContext context, double amount) async {
+  final user = FirebaseAuth.instance.currentUser;
+
+  if (user == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('User not logged in')),
+    );
+    return;
+  }
+
+  try {
+    final userDocRef = FirebaseFirestore.instance.collection('passenger').doc(user.uid);
+
+    // Get the current balance
+    final doc = await userDocRef.get();
+    if (!doc.exists) {
+      print('Document does not exist');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User document does not exist')),
+      );
+      return;
+    }
+
+    final data = doc.data();
+    final currentBalance = data?['wallet_balance'] ?? 0.0;
+    print('Current Balance: $currentBalance');
+
+    // Ensure currentBalance is a double
+    if (currentBalance is! double) {
+      print('Current balance is not a double');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid wallet balance format')),
+      );
+      return;
+    }
+
+    // Update the wallet balance
+    await userDocRef.update({
+      'wallet_balance': currentBalance + amount,
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Wallet balance updated successfully')),
+    );
+  } catch (e) {
+    print('Error updating wallet balance: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to update wallet balance: $e')),
+    );
+  }
+}
+
