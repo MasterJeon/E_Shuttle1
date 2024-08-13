@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For formatting the selected date
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../../models/refund_request.dart';
+import 'package:e_shuttle/services/database_service.dart';
 
 class RefundPage extends StatefulWidget {
   const RefundPage({Key? key}) : super(key: key);
@@ -45,32 +52,87 @@ class _RefundPageState extends State<RefundPage> {
     }
   }
 
-  void _sendRequest() {
+  void _sendRequest() async {
     if (_formKey.currentState!.validate()) {
+      // Assuming you have a way to get the current user's ID, such as from FirebaseAuth
+      String userId = FirebaseAuth.instance.currentUser!.uid;
+
+      final refundRequest = RefundRequest(
+        amount: _amountController.text,
+        date: _dateController.text,
+        route: _routeController.text,
+        stop: _stopController.text,
+        reason: _reasonController.text,
+        userId: userId, // Pass the user ID here
+      );
+
+      try {
+        await refundRequestService.add(refundRequest);
+
+        // Show a success dialog
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Request Sent'),
+            content: const Text('Your refund request has been submitted.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+
+        // Clear the form after submission
+        _formKey.currentState!.reset();
+        _dateController.clear();
+      } catch (e) {
+        // Show an error dialog if something goes wrong
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('There was an error submitting your request.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+
+  //void _sendRequest() {
+    //if (_formKey.currentState!.validate()) {
       // Process the refund request here
       // You can access the values using the controllers:
       // _amountController.text, _dateController.text, etc.
 
       // For now, let's just show a simple dialog
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Request Sent'),
-          content: const Text('Your refund request has been submitted.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+     // showDialog(
+      //  context: context,
+      //  builder: (_) => AlertDialog(
+      //    title: const Text('Request Sent'),
+       //   content: const Text('Your refund request has been submitted.'),
+       //   actions: [
+       //     TextButton(
+        //      onPressed: () => Navigator.pop(context),
+        //      child: const Text('OK'),
+        //    ),
+        //  ],
+        //),
+      //);
 
       // Clear the form after submission
-      _formKey.currentState!.reset();
-      _dateController.clear();
-    }
-  }
+      //_formKey.currentState!.reset();
+     // _dateController.clear();
+   // }
+ // }
 
   @override
   Widget build(BuildContext context) {

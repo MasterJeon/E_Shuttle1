@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/user.dart';
+import '../../models/refund_request.dart';
 import '../../models/userRegistration.dart';
 
 const String COLLECTION_REF_USER = "user";
@@ -79,4 +80,12 @@ final loginService = DatabaseService<User>(
   COLLECTION_REF_LOGIN,
       (json) => User.fromJson(json),
       (user) => user.toJson(),
+);
+
+const String COLLECTION_REF_REFUND_REQUEST = "refund_requests";
+
+final refundRequestService = DatabaseService<RefundRequest>(
+  COLLECTION_REF_REFUND_REQUEST,
+      (json) => RefundRequest.fromJson(json),
+      (refundRequest) => refundRequest.toJson(),
 );
