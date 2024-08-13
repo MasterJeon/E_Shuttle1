@@ -84,7 +84,7 @@ class MyProfileState extends State<MyProfile> {
       body: Padding(
         padding: EdgeInsets.symmetric(
           vertical: screenSize.height * 0.05,
-          horizontal: screenSize.width * 0.08,
+          horizontal: screenSize.width * 0.05,
         ),
         child: Form(
           key: _formKey,
@@ -135,7 +135,7 @@ class MyProfileState extends State<MyProfile> {
                       },
                     ),
                   ),
-                  const SizedBox(width: 16.0),
+                  const SizedBox(width: 10.0),
                   Expanded(
                     child: GestureDetector(
                       onTap: () => _selectDate(context),
