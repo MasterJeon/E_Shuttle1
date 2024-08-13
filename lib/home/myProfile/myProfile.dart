@@ -26,7 +26,7 @@ class MyProfileState extends State<MyProfile> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userDoc = await FirebaseFirestore.instance
-          .collection('register') // Your Firestore collection name
+          .collection('passenger') // Your Firestore collection name
           .doc(user.uid)
           .get();
       if (userDoc.exists) {
