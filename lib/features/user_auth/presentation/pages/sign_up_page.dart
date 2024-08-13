@@ -122,20 +122,22 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Container(
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40)),
                   color: Colors.white,
                 ),
                 height: double.infinity,
                 width: double.infinity,
-                child:  Padding(
-                  padding: const EdgeInsets.only(left: 18.0,right: 18),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 18.0, right: 18),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       FormContainerWidget(
                         controller: _fullNameController,
                         hintText: "",
-                        labelText: "Full Name", // Label text that will float above when typing
+                        labelText: "Full Name",
+                        // Label text that will float above when typing
                         isPasswordField: false,
                       ),
                       SizedBox(
@@ -144,7 +146,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       FormContainerWidget(
                         controller: _registrationNoController,
                         hintText: "",
-                        labelText: "Registration No. (Staff/Student)", // Label text that will float above when typing
+                        labelText: "Registration No. (Staff/Student)",
+                        // Label text that will float above when typing
                         isPasswordField: false,
                       ),
                       SizedBox(
@@ -153,7 +156,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       FormContainerWidget(
                         controller: _emailController,
                         hintText: "",
-                        labelText: "Email", // Label text that will float above when typing
+                        labelText: "Email",
+                        // Label text that will float above when typing
                         isPasswordField: false,
                       ),
                       SizedBox(
@@ -162,7 +166,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       FormContainerWidget(
                         controller: _addressController,
                         hintText: "",
-                        labelText: "Address", // Label text that will float above when typing
+                        labelText: "Address",
+                        // Label text that will float above when typing
                         isPasswordField: false,
                       ),
                       SizedBox(
@@ -171,7 +176,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       FormContainerWidget(
                         controller: _contactNoController,
                         hintText: "",
-                        labelText: "Contact No.", // Label text that will float above when typing
+                        labelText: "Contact No.",
+                        // Label text that will float above when typing
                         isPasswordField: false,
                       ),
                       SizedBox(
@@ -180,7 +186,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       FormContainerWidget(
                         controller: _guardianContactNoController,
                         hintText: "",
-                        labelText: "Guardian's Contact No.", // Label text that will float above when typing
+                        labelText: "Guardian's Contact No.",
+                        // Label text that will float above when typing
                         isPasswordField: false,
                       ),
                       SizedBox(
@@ -189,14 +196,16 @@ class _SignUpPageState extends State<SignUpPage> {
                       FormContainerWidget(
                         controller: _passwordController,
                         hintText: "",
-                        labelText: "Password", // Label text that will float above when typing
+                        labelText: "Password",
+                        // Label text that will float above when typing
                         isPasswordField: false,
                       ),
 
                       FormContainerWidget(
                         controller: _confirmPasswordController,
                         hintText: "",
-                        labelText: "Confirm Password", // Label text that will float above when typing
+                        labelText: "Confirm Password",
+                        // Label text that will float above when typing
                         isPasswordField: false,
                       ),
                       SizedBox(
@@ -253,7 +262,6 @@ class _SignUpPageState extends State<SignUpPage> {
       isSigningUp = true;
     });
 
-    //String username = _usernameController.text;
     String email = _emailController.text;
     String fullName = _fullNameController.text;
     String registrationNo = _registrationNoController.text;
@@ -270,13 +278,6 @@ class _SignUpPageState extends State<SignUpPage> {
       });
       return;
     }
-
-
-
-
-
-
-
 
     try {
       // Step 1: Create a new user with Firebase Authentication
@@ -297,7 +298,34 @@ class _SignUpPageState extends State<SignUpPage> {
         // Step 3: Save the user data to Firestore
         await registerService.setWithId(user.uid, userRegistration);
 
-        // Notify user of success and navigate to home
+        // Step 4: Create subcollections with empty attributes
+        final refundRequestRef = registerService.firestore
+            .collection(COLLECTION_REF_REGISTER)
+            .doc(user.uid)
+            .collection('refund_requests');
+
+        final boughtTicketsRef = registerService.firestore
+            .collection(COLLECTION_REF_REGISTER)
+            .doc(user.uid)
+            .collection('bought_tickets');
+
+        // Add empty documents with the specified fields
+        await refundRequestRef.add({
+          'amount': '',
+          'date': '',
+          'route': '',
+          'stop': '',
+          'reason': '',
+        });
+
+        await boughtTicketsRef.add({
+          'amount': '',
+          'stop_no': '',
+          'stop': '',
+          'time_date': '',
+        });
+
+        // Notify user of success and navigate to login
         showToast(message: "User successfully created");
         Navigator.pushNamed(context, "/login");
       } else {

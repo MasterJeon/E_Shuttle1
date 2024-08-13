@@ -4,7 +4,7 @@ import '../../models/refund_request.dart';
 import '../../models/userRegistration.dart';
 
 const String COLLECTION_REF_USER = "user";
-const String COLLECTION_REF_REGISTER = "register";
+const String COLLECTION_REF_REGISTER = "passenger";
 const String COLLECTION_REF_LOGIN = "login";
 
 class DatabaseService<T> {
@@ -17,6 +17,8 @@ class DatabaseService<T> {
       toFirestore: (object, _) => toJson(object),
     );
   }
+
+  FirebaseFirestore get firestore => _firestore;
 
   Stream<QuerySnapshot<T>> getSnapshots() {
     return _ref.snapshots();

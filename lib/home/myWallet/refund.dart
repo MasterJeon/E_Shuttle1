@@ -54,20 +54,40 @@ class _RefundPageState extends State<RefundPage> {
 
   void _sendRequest() async {
     if (_formKey.currentState!.validate()) {
-      // Assuming you have a way to get the current user's ID, such as from FirebaseAuth
+      // Step 1: Retrieve the user's UID
       String userId = FirebaseAuth.instance.currentUser!.uid;
 
+      // Step 2: Create the RefundRequest object
       final refundRequest = RefundRequest(
         amount: _amountController.text,
         date: _dateController.text,
         route: _routeController.text,
         stop: _stopController.text,
         reason: _reasonController.text,
-        userId: userId, // Pass the user ID here
+        userId: userId, // Set the userId in the request
       );
 
       try {
-        await refundRequestService.add(refundRequest);
+        // Step 3: Get the reference to the refund_requests subcollection of the current user
+        CollectionReference<RefundRequest> refundRequestRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('refund_requests')
+            .withConverter<RefundRequest>(
+          fromFirestore: (snapshot, _) => RefundRequest.fromJson(snapshot.data()!),
+          toFirestore: (refundRequest, _) => refundRequest.toJson(),
+        );
+
+        // Step 4: Add the RefundRequest to the subcollection
+        await refundRequestRef.add(refundRequest);
+
+        // Clear the form after submission
+        _formKey.currentState!.reset();
+        _amountController.clear();
+        _dateController.clear();
+        _routeController.clear();
+        _stopController.clear();
+        _reasonController.clear();
 
         // Show a success dialog
         showDialog(
@@ -84,9 +104,6 @@ class _RefundPageState extends State<RefundPage> {
           ),
         );
 
-        // Clear the form after submission
-        _formKey.currentState!.reset();
-        _dateController.clear();
       } catch (e) {
         // Show an error dialog if something goes wrong
         showDialog(
@@ -105,6 +122,9 @@ class _RefundPageState extends State<RefundPage> {
       }
     }
   }
+
+
+
 
 
   //void _sendRequest() {
