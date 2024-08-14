@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import 'dart:io'; // For File
 import 'package:image_picker/image_picker.dart'; // For ImagePicker and ImageSource
 import 'package:intl/intl.dart'; // For date formatting
+import 'package:intl/intl.dart'; // For date formatting
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 void main() => runApp(
@@ -28,13 +31,69 @@ class MyInformationState extends State<MyInformation> {
   final TextEditingController _intakeController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
 
   String _dropdownValue1 = 'Male';
   DateTime? _selectedDate; // To store the selected date
-
   File? _imageFile; // To store the selected image
 
   final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPassengerData();
+  }
+
+  Future<void> _fetchPassengerData() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      print('No user logged in.');
+      return; // Ensure the user is logged in
+    }
+    if (_selectedDate != null) {
+      _dobController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+    }
+
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('passenger')
+          .doc(user.uid)
+          .get();
+
+      final data = doc.data();
+
+      setState(() {
+        _nameController.text = data?['full_name'] ?? ''; // Default to an empty string if 'name' is null
+        _emailController.text = data?['email'] ?? ''; // Default to an empty string if 'email' is null
+        _facultyController.text = data?['faculty'] ?? ''; // Default to an empty string if 'faculty' is null
+        _intakeController.text = data?['intake'] ?? ''; // Default to an empty string if 'intake' is null
+        _contactController.text = data?['contact_no'] ?? ''; // Default to an empty string if 'contact' is null
+        _addressController.text = data?['address'] ?? ''; // Default to an empty string if 'address' is null
+        _dropdownValue1 = data?['gender'] ?? 'Male'; // Default to 'Male' if 'gender' is null
+        _selectedDate = data?['dob'] != null ? (data?['dob'] as Timestamp).toDate() : null; // Default to null if 'dob' is missing
+      });
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        _dobController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+      });
+    }
+  }
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -46,18 +105,33 @@ class MyInformationState extends State<MyInformation> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
 
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
+  Future<void> _updateUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return; // Handle case where user is not logged in
+    }
+
+    try {
+      final userDocRef = FirebaseFirestore.instance.collection('passenger').doc(user.uid);
+
+      await userDocRef.set({
+        'full_name': _nameController.text,
+        'email': _emailController.text,
+        'faculty': _facultyController.text,
+        'intake': _intakeController.text,
+        'contact_no': _contactController.text,
+        'address': _addressController.text,
+        'gender': _dropdownValue1,
+        'dob': _selectedDate != null ? Timestamp.fromDate(_selectedDate!) : FieldValue.delete(),
+      }, SetOptions(merge: true)); // Merge with existing data
+
+      // If you need to handle additional fields or special cases, you can add logic here
+
+      print('User data updated successfully');
+    } catch (e) {
+      print('Error updating user data: $e');
     }
   }
 
@@ -84,7 +158,7 @@ class MyInformationState extends State<MyInformation> {
       body: Padding(
         padding: EdgeInsets.symmetric(
           vertical: screenSize.height * 0.05,
-          horizontal: screenSize.width * 0.08,
+          horizontal: screenSize.width * 0.05,
         ),
         child: Form(
           key: _formKey,
@@ -96,14 +170,17 @@ class MyInformationState extends State<MyInformation> {
                   onTap: _pickImage,
                   child: CircleAvatar(
                     radius: 70,
-                    backgroundImage: _imageFile == null ? AssetImage('assets/b 3s.jpg') : FileImage(_imageFile!) as ImageProvider,
+                    backgroundImage: _imageFile == null
+                        ? AssetImage('assets/b 3s.jpg') as ImageProvider
+                        : FileImage(_imageFile!) as ImageProvider,child: Align(
+                      alignment: Alignment.bottomRight,
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: Icon(
                         Icons.edit,
                         color: Colors.white,
                         size: 20,
-                      ),
+                      ),),
                     ),
                   ),
                 ),
@@ -141,12 +218,10 @@ class MyInformationState extends State<MyInformation> {
                       onTap: () => _selectDate(context),
                       child: AbsorbPointer(
                         child: TextFormField(
-                          decoration: InputDecoration(
+                          controller: _dobController,
+                          decoration: const InputDecoration(
                             labelText: 'Date of Birth',
-                            border: const OutlineInputBorder(),
-                            hintText: _selectedDate == null
-                                ? 'Select your date of birth'
-                                : DateFormat('yyyy-MM-dd').format(_selectedDate!),
+                            border: OutlineInputBorder(),
                           ),
                         ),
                       ),
@@ -163,6 +238,7 @@ class MyInformationState extends State<MyInformation> {
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
                     // Handle form submission
+                    _updateUserData();
                   }
                 },
                 child: const Text('Save'),
