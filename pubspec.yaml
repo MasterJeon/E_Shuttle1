@@ -91,7 +91,7 @@ flutter:
     - assets/welcome.png
     - assets/images/profile.png
     - assets/logo1.png
-
+    - assets/recharge.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
