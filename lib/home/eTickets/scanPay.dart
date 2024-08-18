@@ -89,7 +89,7 @@ class _scanPayState extends State<scanPay> {
                 ],
               ),
             ),
-            SizedBox(height: 80),
+            SizedBox(height: 60),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.08),
               child: buildButtons(),

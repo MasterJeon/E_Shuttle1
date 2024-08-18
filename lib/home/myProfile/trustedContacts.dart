@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Help_support extends StatelessWidget{
-  const Help_support ({super.key});
+class TrustedContactsPage extends StatelessWidget{
+  const TrustedContactsPage ({super.key});
 
   Widget build(BuildContext context){
     final screenSize = MediaQuery.of(context).size;

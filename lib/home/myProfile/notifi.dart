@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Help_support extends StatelessWidget{
-  const Help_support ({super.key});
+class NotificationsPage extends StatelessWidget{
+  const NotificationsPage ({super.key});
 
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notification"),
+        title: const Text("Notifications"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(

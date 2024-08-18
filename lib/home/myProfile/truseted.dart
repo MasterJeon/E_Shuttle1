@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Help_support extends StatelessWidget{
-  const Help_support ({super.key});
+class TrustedContactsPage extends StatelessWidget{
+  const TrustedContactsPage ({super.key});
 
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notification"),
+        title: const Text("Trusted Contacts"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(

@@ -3,6 +3,9 @@ import 'package:e_shuttle/firebase_options.dart';
 import 'package:e_shuttle/home/Help.dart';
 import 'package:e_shuttle/home/changeRoute.dart';
 import 'package:e_shuttle/home/myProfile/appSettings.dart';
+import 'package:e_shuttle/home/myProfile/notifi.dart';
+import 'package:e_shuttle/home/myProfile/shareLiveLocation.dart';
+import 'package:e_shuttle/home/myProfile/trustedContacts.dart';
 import 'package:e_shuttle/home/myWallet/eWallet.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +17,6 @@ import 'package:e_shuttle/home/myProfile/profile.dart';
 import 'package:e_shuttle/home/myWallet/wallet.dart';
 import 'package:e_shuttle/welcome_pages/onboarding.dart';
 import 'package:e_shuttle/welcome_pages/splash_screen.dart';
-import 'package:e_shuttle/home/home.dart';
 import 'package:e_shuttle/home/eTickets/scanPay.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
@@ -48,20 +50,23 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
 
         //'/signupPage':(context) => SignUp(),
-         //'/loginPage':(context) => Login(),
-          //'/homePage':(context) => HomePage(),
-          '/profilePage':(context) => Profile(),
-          '/wallet':(context) => EWallet(),
-          '/recharge': (context) => RechargePage(),
-          '/refund': (context) => RefundPage(),
-          '/tickets':(context) => scanPay(),
-          '/sos':(context) => SOS(),
-          '/feedbacks':(context) => Feedbacks(),
+        //'/loginPage':(context) => Login(),
+        //'/homePage':(context) => HomePage(),
+        '/profilePage':(context) => Profile(),
+        '/wallet':(context) => EWallet(),
+        '/recharge': (context) => RechargePage(),
+        '/refund': (context) => RefundPage(),
+        '/tickets':(context) => scanPay(),
+        '/sos':(context) => SOS(),
+        '/feedbacks':(context) => Feedbacks(),
         '/myinformation':(context) => MyInformation(),
-          //'/tickets':(context) => Tickets(),
-          '/appSettings':(context) => AppSettings(),
-          '/helpCenter':(context) => Help_support(),
-          '/routeChange':(context) => changeRoute()
+        '/shareLocation':(context) => ShareLiveLocationPage(),
+        '/TrustedContacts':(context) => TrustedContactsPage(),
+        //'/tickets':(context) => Tickets(),
+        '/appSettings':(context) => AppSettings(),
+        '/notificationpage':(context) => NotificationsPage(),
+        '/helpCenter':(context) => Help_support(),
+        '/routeChange':(context) => changeRoute()
       },
     );
   }

@@ -7,6 +7,7 @@ import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
 import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
 import 'package:e_shuttle/home/myProfile/appSettings.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
+import 'package:e_shuttle/home/myProfile/notifi.dart';
 import 'package:e_shuttle/home/myWallet/eWallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -253,14 +254,15 @@ class _HomePageState extends State<HomePage> {
                           child: Text('Sign out'),
                         ),
                       ],
-                    ),);
-              }
-          ),
-        ],
-      );
-    }
-        ),
+                    ),
+                  );
+                }
+              ),
+            ],
+          );
+        }
       ),
+    ),
 
       body: PageStorage(
         child: currentScreen,
@@ -367,7 +369,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = MyProfile();
+                        currentScreen = NotificationsPage();
                         currentTab = 3;
                       });
                     },
@@ -375,11 +377,11 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.account_circle_sharp,
+                          Icons.notifications_active_rounded,
                           color: currentTab == 3 ? Colors.blue : Colors.grey,
                         ),
                         Text(
-                          'My Profile',
+                          'Notifications',
                           style: TextStyle(
                             color: currentTab == 3 ? Colors.blue : Colors.grey,
                           ),

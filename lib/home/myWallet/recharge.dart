@@ -36,11 +36,18 @@ class _RechargePageState extends State<RechargePage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
           children: [
+            const SizedBox(height: 10),
+            Image.asset(
+              'assets/recharge.png', 
+              height: 300, 
+              width: 300,  
+            ),
+            Expanded(child: Padding(padding: const EdgeInsets.all(16.0),
+            child: Column(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
             TextField(
               controller: _amountController,
               decoration: const InputDecoration(
@@ -85,6 +92,9 @@ class _RechargePageState extends State<RechargePage> {
           ],
         ),
       ),
+            ),
+          ],
+          ),
     );
   }
 

@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_shuttle/home/myProfile/notifi.dart';
+import 'package:e_shuttle/home/myProfile/shareLiveLocation.dart';
+import 'package:e_shuttle/home/myProfile/trustedContacts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -101,10 +104,10 @@ class MyProfileState extends State<MyProfile> {
                   "Notifications",
                   CupertinoIcons.news,
                   onTap: () {
-                   // Navigator.push(
-                    //  context,
-                    //  MaterialPageRoute(builder: (context) => NotificationsPage()),
-                    //);
+                   Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NotificationsPage()),
+                    );
                   },
                 ),
                 SizedBox(height: 8),
@@ -112,10 +115,10 @@ class MyProfileState extends State<MyProfile> {
                   "Share Live Location",
                   CupertinoIcons.location,
                   onTap: () {
-                    //Navigator.push(
-                     // context,
-                     // MaterialPageRoute(builder: (context) => ShareLiveLocationPage()),
-                    //);
+                    Navigator.push(
+                     context,
+                      MaterialPageRoute(builder: (context) => ShareLiveLocationPage()),
+                    );
                   },
                 ),
                 SizedBox(height: 8),
@@ -123,10 +126,10 @@ class MyProfileState extends State<MyProfile> {
                   "Trusted Contacts",
                   CupertinoIcons.person_2,
                   onTap: () {
-                    //Navigator.push(
-                      //context,
-                      //MaterialPageRoute(builder: (context) => TrustedContactsPage()),
-                    //);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TrustedContactsPage()),
+                    );
                   },
                 ),
                 SizedBox(height: 8),
