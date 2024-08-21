@@ -25,6 +25,11 @@ import 'package:e_shuttle/welcome_pages/wScreen3.dart';
 
 import '../../../../global/common/toast.dart';
 import 'dart:io' as io;
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io' as io;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,6 +40,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<UserProfile> _userProfileFuture;
+  late GoogleMapController mapController;
+
+  final LatLng _center = const LatLng(6.81750000, 79.89027778);
 
   @override
   void initState() {
@@ -54,6 +62,10 @@ class _HomePageState extends State<HomePage> {
       }
     }
     return UserProfile(full_name: 'N/A', email: 'N/A');
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
   }
 
 
@@ -275,6 +287,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       //Bottom Navigation Bar
+          //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 10,
@@ -469,8 +482,18 @@ class _HomePageState extends State<HomePage> {
 class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Home Content'),
+    return GoogleMap(
+      onMapCreated: (controller) {
+        final _HomePageState? state =
+        context.findAncestorStateOfType<_HomePageState>();
+        if (state != null) {
+          state._onMapCreated(controller);
+        }
+      },
+      initialCameraPosition: CameraPosition(
+        target: LatLng(6.81750000, 79.89027778),
+        zoom: 16.0,
+      ),
     );
   }
 }
