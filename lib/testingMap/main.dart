@@ -31,112 +31,49 @@ class _MyAppState extends State<MyApp>{
           onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
             target: _center,
-            zoom: 9.0
+            zoom: 16.0
             ),
-            markers:{
+            markers: {
               const Marker(
                 markerId: MarkerId('KDU'),
                 position: LatLng(6.817737497282897, 79.89141774801097),
+                infoWindow: InfoWindow(title: "KDU")
               ),
-              const Marker(
-                markerId: MarkerId('Panadura'),
-                position: LatLng(6.7104892147864605, 79.90773987399923),
-              ),
-              const Marker(
-                markerId: MarkerId('Bandaragama'),
-                position: LatLng(6.714151106845103, 79.99073558146642),
-              ),
-              const Marker(
-                markerId: MarkerId('Horana'),
-                position: LatLng(6.723170703502162, 80.06583043717407),
-              ),
-              const Marker(
-                markerId: MarkerId('Piliyandala'),
-                position: LatLng(6.801664896754592, 79.92279155884555),
-              ),
-              const Marker(
-                markerId: MarkerId('Kottawa'),
-                position: LatLng(6.841110311554549, 79.96538119310712),
-              ),
-              const Marker(
-                markerId: MarkerId('Godagama'),
-                position: LatLng(6.851902488708469, 80.03334731284404),
-              ),
-              const Marker(
-                markerId: MarkerId('Pahathgama'),
-                position: LatLng(6.896416594616102, 80.08231467508558),
-              ),
-              const Marker(
-                markerId: MarkerId('Maharagama'),
-                position: LatLng(6.850763264031758, 79.92749206117588),
-              ),
-              const Marker(
-                markerId: MarkerId('Koswatta'),
-                position: LatLng(6.908986729283659, 79.93080459154916),
-              ),
-              const Marker(
-                markerId: MarkerId('Kaduwela'),
-                position: LatLng(6.928927044316318, 79.9826355994138),
-              ),
-              const Marker(
-                markerId: MarkerId('Delgoda'),
-                position: LatLng(6.988008813288438, 80.0159422824388),
-              ),
-              const Marker(
-                markerId: MarkerId('Weliweriya'),
-                position: LatLng(7.0319529504541665, 80.02978339087662),
-              ),
-              const Marker(
-                markerId: MarkerId('Yakkala'),
-                position: LatLng(7.086412609614552, 80.03433536285229),
-              ),
-              const Marker(
-                markerId: MarkerId('Nittambuwa'),
-                position: LatLng(7.142191208759358, 80.10636908834084),
-              ),
-              const Marker(
-                markerId: MarkerId('Kesbewa'),
-                position: LatLng(6.7781983860413995, 79.9476704429502),
-              ),
-              const Marker(
-                markerId: MarkerId('Polgasowita/Kindelpitiya'),
-                position: LatLng(6.788272881361812, 79.99172337450369),
-              ),
-              const Marker(
-                markerId: MarkerId('Gonapola/Gammanpila'),
-                position: LatLng(6.755930079059569, 80.0166182135967),
-              ),
-              const Marker(
-                markerId: MarkerId('Kumbuka/Bandaragama'),
-                position: LatLng(6.736008281612015, 80.02806926808988),
-              ),
-              const Marker(
-                markerId: MarkerId('Pokunuwita'),
-                position: LatLng(6.72902450012628, 80.03227120891174),
-              ),
-              const Marker(
-                markerId: MarkerId('Aththidiya'),
-                position: LatLng(6.8397971035243135, 79.88561675594863),
-              ),
-              const Marker(
-                markerId: MarkerId('Nugegoda'),
-                position: LatLng(6.865207771841957, 79.89794010974578),
-              ),
-              const Marker(
-                markerId: MarkerId('Peliyagoda'),
-                position: LatLng(6.9589941781914835, 79.89336981001003),
-              ),
-              const Marker(
-                markerId: MarkerId('Ja-Ela'),
-                position: LatLng(7.067703587465936, 79.90154521053142),
-              ),
-              const Marker(
-                markerId: MarkerId('Negambo'),
-                position: LatLng(7.207330829673679, 79.85258837399863),
-              ),
-            }
+              createMarker('Panadura', const LatLng(6.7104892147864605, 79.90773987399923),"120.00"),
+              createMarker('Bandaragama', const LatLng(6.714151106845103, 79.99073558146642),"180.00"),
+              createMarker('Horana', const LatLng(6.723170703502162, 80.06583043717407),"220.00"),
+              createMarker('Piliyandala', const LatLng(6.801664896754592, 79.92279155884555),"60.00"),
+              createMarker('Kottawa', const LatLng(6.841110311554549, 79.96538119310712),"150.00"),
+              createMarker('Godagama', const LatLng(6.851902488708469, 80.03334731284404),"200.00"),
+              createMarker('Pahathgama', const LatLng(6.896416594616102, 80.08231467508558),"250.00"),
+              createMarker('Maharagama', const LatLng(6.850763264031758, 79.92749206117588),"70.00"),
+              createMarker('Koswatta', const LatLng(6.908986729283659, 79.93080459154916),"120.00"),
+              createMarker('Kaduwela', const LatLng(6.928927044316318, 79.9826355994138),"160.00"),
+              createMarker('Delgoda', const LatLng(6.988008813288438, 80.0159422824388),"200.00"),
+              createMarker('Weliweriya', const LatLng(7.0319529504541665, 80.02978339087662),"220.00"),
+              createMarker('Yakkala', const LatLng(7.086412609614552, 80.03433536285229),"260.00"),
+              createMarker('Nittambuwa', const LatLng(7.142191208759358, 80.10636908834084),"300.00"),
+              createMarker('Kesbewa', const LatLng(6.7781983860413995, 79.9476704429502),"60.00"),
+              createMarker('Polgasowita/Kindelpitiya', const LatLng(6.788272881361812, 79.99172337450369),"110.00"),
+              createMarker('Gonapola/Gammanpila', const LatLng(6.755930079059569, 80.0166182135967),"150.00"),
+              createMarker('Kumbuka/Bandaragama', const LatLng(6.736008281612015, 80.02806926808988),"170.00"),
+              createMarker('Pokunuwita', const LatLng(6.72902450012628, 80.03227120891174),"190.00"),
+              createMarker('Aththidiya', const LatLng(6.8397971035243135, 79.88561675594863),"40.00"),
+              createMarker('Nugegoda', const LatLng(6.865207771841957, 79.89794010974578),"70.00"),
+              createMarker('Peliyagoda', const LatLng(6.9589941781914835, 79.89336981001003),"170.00"),
+              createMarker('Ja-Ela', const LatLng(7.067703587465936, 79.90154521053142),"250.00"),
+              createMarker('Negambo', const LatLng(7.207330829673679, 79.85258837399863),"290.00"),
+          },
         )
       ),
+    );
+  }
+  Marker createMarker(String markerId, LatLng position, String price) {
+    return Marker(
+      markerId: MarkerId(markerId),
+      position: position,
+      infoWindow: InfoWindow(title: markerId, snippet: "Ticket price: Rs."+price),
+      icon: BitmapDescriptor.defaultMarker,
     );
   }
 }
