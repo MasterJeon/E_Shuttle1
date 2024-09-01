@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp>{
             markers: {
               const Marker(
                 markerId: MarkerId('KDU'),
-                position: LatLng(6.817737497282897, 79.89141774801097),
+                position: LatLng(6.817801415099614, 79.89069891600366),
                 infoWindow: InfoWindow(title: "KDU")
               ),
               createMarker('Panadura', const LatLng(6.7104892147864605, 79.90773987399923),"120.00"),
