@@ -68,6 +68,8 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _confirmPasswordController = TextEditingController();
 
   bool isSigningUp = false;
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   void dispose() {
@@ -93,6 +95,7 @@ class _SignUpPageState extends State<SignUpPage> {
         return false; // Prevent the default back button behavior
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: Stack(
           children: [
             Container(
@@ -130,123 +133,132 @@ class _SignUpPageState extends State<SignUpPage> {
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 18.0, right: 18),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FormContainerWidget(
-                        controller: _fullNameController,
-                        hintText: "",
-                        labelText: "Full Name",
-                        // Label text that will float above when typing
-                        isPasswordField: false,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      FormContainerWidget(
-                        controller: _registrationNoController,
-                        hintText: "",
-                        labelText: "Registration No. (Staff/Student)",
-                        // Label text that will float above when typing
-                        isPasswordField: false,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      FormContainerWidget(
-                        controller: _emailController,
-                        hintText: "",
-                        labelText: "Email",
-                        // Label text that will float above when typing
-                        isPasswordField: false,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      FormContainerWidget(
-                        controller: _addressController,
-                        hintText: "",
-                        labelText: "Address",
-                        // Label text that will float above when typing
-                        isPasswordField: false,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      FormContainerWidget(
-                        controller: _contactNoController,
-                        hintText: "",
-                        labelText: "Contact No.",
-                        // Label text that will float above when typing
-                        isPasswordField: false,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      FormContainerWidget(
-                        controller: _guardianContactNoController,
-                        hintText: "",
-                        labelText: "Guardian's Contact No.",
-                        // Label text that will float above when typing
-                        isPasswordField: false,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      FormContainerWidget(
-                        controller: _passwordController,
-                        hintText: "",
-                        labelText: "Password",
-                        // Label text that will float above when typing
-                        isPasswordField: false,
-                      ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FormContainerWidget(
+                          controller: _fullNameController,
+                          hintText: "",
+                          labelText: "Full Name",
+                          // Label text that will float above when typing
+                          isPasswordField: false,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FormContainerWidget(
+                          controller: _registrationNoController,
+                          hintText: "",
+                          labelText: "Registration No. (Staff/Student)",
+                          // Label text that will float above when typing
+                          isPasswordField: false,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FormContainerWidget(
+                          controller: _emailController,
+                          hintText: "",
+                          labelText: "Email",
+                          // Label text that will float above when typing
+                          isPasswordField: false,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FormContainerWidget(
+                          controller: _addressController,
+                          hintText: "",
+                          labelText: "Address",
+                          // Label text that will float above when typing
+                          isPasswordField: false,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FormContainerWidget(
+                          controller: _contactNoController,
+                          hintText: "",
+                          labelText: "Contact No.",
+                          // Label text that will float above when typing
+                          isPasswordField: false,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FormContainerWidget(
+                          controller: _guardianContactNoController,
+                          hintText: "",
+                          labelText: "Guardian's Contact No.",
+                          // Label text that will float above when typing
+                          isPasswordField: false,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        FormContainerWidget(
+                          controller: _passwordController,
+                          hintText: "",
+                          labelText: "Password",
+                          // Label text that will float above when typing
+                          isPasswordField: false,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
 
-                      FormContainerWidget(
-                        controller: _confirmPasswordController,
-                        hintText: "",
-                        labelText: "Confirm Password",
-                        // Label text that will float above when typing
-                        isPasswordField: false,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                        FormContainerWidget(
+                          controller: _confirmPasswordController,
+                          hintText: "",
+                          labelText: "Confirm Password",
+                          // Label text that will float above when typing
+                          isPasswordField: false,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
 
-                      //const TextField(
-                      // decoration: InputDecoration(
-                      //suffixIcon: Icon(Icons.check,color: Colors.grey,),
-                      //  label: Text('Address',style: TextStyle(
-                      //   fontWeight: FontWeight.bold,
-                      //   color: Colors.grey,
-                      // ),)
-                      // ),
-                      //  ),
-                      GestureDetector(
-                        onTap: () {
-                          _signUp();
-                        },
-                        child: Container(
-                          height: 40,
-                          margin: EdgeInsets.symmetric(horizontal: 50),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            gradient: const LinearGradient(colors: [
-                              Color.fromRGBO(0, 69, 230, 1),
-                              Color.fromRGBO(0, 115, 239, 1),
-                              Color.fromRGBO(38, 201, 255, 1)
-                            ]),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                        //const TextField(
+                        // decoration: InputDecoration(
+                        //suffixIcon: Icon(Icons.check,color: Colors.grey,),
+                        //  label: Text('Address',style: TextStyle(
+                        //   fontWeight: FontWeight.bold,
+                        //   color: Colors.grey,
+                        // ),)
+                        // ),
+                        //  ),
+                        SizedBox(height: 35,),
+                        GestureDetector(
+                          onTap: () {
+                            _signUp();
+                          },
+                          child: Container(
+                            height: 40,
+                            margin: EdgeInsets.symmetric(horizontal: 50),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              gradient: const LinearGradient(colors: [
+                                Color.fromRGBO(0, 69, 230, 1),
+                                Color.fromRGBO(0, 115, 239, 1),
+                                Color.fromRGBO(38, 201, 255, 1)
+                              ]),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    )
                   ),
                 ),
               ),),
