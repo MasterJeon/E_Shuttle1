@@ -33,6 +33,12 @@ class _MyAppState extends State<MyApp>{
             target: _center,
             zoom: 11.0
             ),
+            markers:{
+              const Marker(
+                markerId: MarkerId('Panadura'),
+                position: LatLng(6.7104892147864605, 79.90773987399923),
+              )
+            },
         )
       ),
     );
