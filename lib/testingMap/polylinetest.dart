@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart' show PolylinePoints;
 
 void main() => runApp(const MyApp());
 
@@ -15,10 +16,30 @@ class _MyAppState extends State<MyApp>{
 
   final LatLng _center = const LatLng(6.81750000, 79.89027778);
   
+  List<LatLng> polylineCoordinates = [];  // Initialize the polyline points list
+  PolylinePoints polylinePoints = PolylinePoints(); // Service to get polyline points
+
+  @override
+  void initState() {
+    super.initState();
+    _createRoute();
+  }
   void _onMapCreated(GoogleMapController controller){
     mapController = controller; 
   }
-  
+  void _createRoute() {
+    // Points for the route
+    List<LatLng> points = [
+      LatLng(6.817801415099614, 79.89069891600366),
+      LatLng(6.801664896754592, 79.92279155884555),
+      LatLng(6.841110311554549, 79.96538119310712),
+      LatLng(6.851902488708469, 80.03334731284404),
+    ];
+
+    setState(() {
+      polylineCoordinates = points;
+    });
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -65,6 +86,14 @@ class _MyAppState extends State<MyApp>{
               createMarker('Ja-Ela', const LatLng(7.067703587465936, 79.90154521053142),"250.00"),
               createMarker('Negambo', const LatLng(7.207330829673679, 79.85258837399863),"290.00"),
           },
+          polylines: {
+                Polyline(
+                  polylineId: const PolylineId('route'),
+                  color: Colors.red,
+                  width: 5,
+                  points: polylineCoordinates,  // Use the updated list
+                ),
+              },
         )
       ),
     );
