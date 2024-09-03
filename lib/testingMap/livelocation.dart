@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_webservice/directions.dart' hide Polyline;
+import 'package:geolocator/geolocator.dart';
 
 void main() => runApp(const MyApp());
 
@@ -29,12 +30,19 @@ class _MyAppState extends State<MyApp> {
   late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(6.81750000, 79.89027778);
+  
+  // To store user's current position
+  LatLng _currentPosition = LatLng(6.81750000, 79.89027778);
+  final Set<Marker> _markers = {};
+  final Set<Polyline> _polylines = {};
+
+  // Location stream subscription
+  StreamSubscription<Position>? _positionStreamSubscription;
+
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
-
-  final Set<Polyline> _polylines = {};
 
   final List<RouteDetails> _routes = [
     RouteDetails(
@@ -96,6 +104,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _getRoute();
+    _getCurrentLocation();
   }
 
   void _getRoute() async {
@@ -128,6 +137,54 @@ class _MyAppState extends State<MyApp> {
         });
       }
     }
+  }
+
+  // Method to get the current location and track the live location
+  void _getCurrentLocation() async {
+    // Request permission to access location
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    // Get the initial position
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    _updatePosition(position);
+
+    // Start listening to position changes
+    _positionStreamSubscription = Geolocator.getPositionStream(
+      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+    ).listen((Position newPosition) {
+      _updatePosition(newPosition);
+    });
+  }
+
+  // Update the user's location on the map
+  void _updatePosition(Position position) {
+    setState(() {
+      _currentPosition = LatLng(position.latitude, position.longitude);
+
+      // Update the marker on the map to the user's live location
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('userLocation'),
+          position: _currentPosition,
+          infoWindow: const InfoWindow(title: "You are here"),
+          zIndex: 2.0, // Higher zIndex to ensure it's on top
+        ),
+      );
+
+      // Move the camera to the user's current location
+      mapController.animateCamera(CameraUpdate.newLatLng(_currentPosition));
+    });
+  }
+
+  @override
+  void dispose() {
+    // Cancel the stream subscription when not needed
+    _positionStreamSubscription?.cancel();
+    super.dispose();
   }
 
   List<LatLng> _decodePolyline(String encoded) {
@@ -175,6 +232,8 @@ class _MyAppState extends State<MyApp> {
           ),
           markers: _createMarkers(),
           polylines: _polylines,
+          myLocationEnabled: true, // Shows the blue dot for current location
+          myLocationButtonEnabled: true, // Enables the my location button
         ),
       ),
     );
