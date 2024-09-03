@@ -35,6 +35,9 @@ class _MyAppState extends State<MyApp> {
   LatLng _currentPosition = LatLng(6.81750000, 79.89027778);
   final Set<Marker> _markers = {};
   final Set<Polyline> _polylines = {};
+  
+  bool _isMapInitialized = false;
+  bool _locationPermissionGranted = false;
 
   // Location stream subscription
   StreamSubscription<Position>? _positionStreamSubscription;
@@ -104,6 +107,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _getRoute();
+    _requestLocationPermission();
     _getCurrentLocation();
   }
 
@@ -139,50 +143,57 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // Method to get the current location and track the live location
-  void _getCurrentLocation() async {
-    // Request permission to access location
+Future<void> _requestLocationPermission() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
+    if (!serviceEnabled || permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
+    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+      setState(() {
+        _locationPermissionGranted = true;
+      });
+      _getCurrentLocation();
+    }
+  }
 
-    // Get the initial position
+  void _initializeMap(GoogleMapController controller) {
+    mapController = controller;
+    setState(() {
+      _isMapInitialized = true;
+    });
+  }
+
+  Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _updatePosition(position);
 
-    // Start listening to position changes
     _positionStreamSubscription = Geolocator.getPositionStream(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position newPosition) {
       _updatePosition(newPosition);
     });
   }
 
-  // Update the user's location on the map
   void _updatePosition(Position position) {
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
-
-      // Update the marker on the map to the user's live location
       _markers.add(
         Marker(
           markerId: const MarkerId('userLocation'),
           position: _currentPosition,
           infoWindow: const InfoWindow(title: "You are here"),
-          zIndex: 2.0, // Higher zIndex to ensure it's on top
         ),
       );
 
-      // Move the camera to the user's current location
-      mapController.animateCamera(CameraUpdate.newLatLng(_currentPosition));
+      if (_isMapInitialized) {
+        mapController.animateCamera(CameraUpdate.newLatLng(_currentPosition));
+      }
     });
   }
 
   @override
   void dispose() {
-    // Cancel the stream subscription when not needed
     _positionStreamSubscription?.cancel();
     super.dispose();
   }
