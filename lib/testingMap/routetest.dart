@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_webservice/directions.dart' hide Polyline;
+import 'package:geolocator/geolocator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const MyRoute());
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyRoute extends StatefulWidget {
+  const MyRoute({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MyRoute> createState() => _MyRouteState();
 }
 class RouteDetails {
   final LatLng startLocation;
@@ -25,16 +27,27 @@ class RouteDetails {
 }
 
 
-class _MyAppState extends State<MyApp> {
+class _MyRouteState extends State<MyRoute> {
   late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(6.81750000, 79.89027778);
+
+  // To store user's current position
+  LatLng _currentPosition = LatLng(6.81750000, 79.89027778);
+  final Set<Marker> _markers = {};
+  final Set<Polyline> _polylines = {};
+
+  bool _isMapInitialized = false;
+  bool _locationPermissionGranted = false;
+
+  // Location stream subscription
+  StreamSubscription<Position>? _positionStreamSubscription;
+
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
-  final Set<Polyline> _polylines = {};
 
   final List<RouteDetails> _routes = [
     RouteDetails(
@@ -96,6 +109,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _getRoute();
+    _requestLocationPermission();
+
   }
 
   void _getRoute() async {
@@ -130,6 +145,61 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _requestLocationPermission() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (!serviceEnabled || permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+      setState(() {
+        _locationPermissionGranted = true;
+      });
+      _getCurrentLocation();
+    }
+  }
+
+  void _initializeMap(GoogleMapController controller) {
+    mapController = controller;
+    setState(() {
+      _isMapInitialized = true;
+    });
+  }
+
+  Future<void> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    _updatePosition(position);
+
+    _positionStreamSubscription = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
+    ).listen((Position newPosition) {
+      _updatePosition(newPosition);
+    });
+  }
+
+  void _updatePosition(Position position) {
+    setState(() {
+      _currentPosition = LatLng(position.latitude, position.longitude);
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('userLocation'),
+          position: _currentPosition,
+          infoWindow: const InfoWindow(title: "You are here"),
+        ),
+      );
+
+      if (_isMapInitialized) {
+        mapController.animateCamera(CameraUpdate.newLatLng(_currentPosition));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _positionStreamSubscription?.cancel();
+    super.dispose();
+  }
+
   List<LatLng> _decodePolyline(String encoded) {
     List<LatLng> polyline = [];
     int index = 0, len = encoded.length;
@@ -159,6 +229,8 @@ class _MyAppState extends State<MyApp> {
     }
     return polyline;
   }
+
+
 
   @override
   Widget build(BuildContext context) {

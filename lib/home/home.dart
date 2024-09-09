@@ -31,6 +31,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io' as io;
+import 'package:e_shuttle/home/routemap.dart';
+import 'package:e_shuttle/testingMap/livelocation.dart';
+import 'package:e_shuttle/testingMap/routetest.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -82,7 +85,9 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = HomeContent(); // Placeholder for home content
+  Widget currentScreen = LiveLocation(); // Placeholder for home content
+  //Widget currentScreen = MyRoute();
+  //Widget currentScreen = RouteMapPage();
 
   Future<bool> _onWillPop() async {
     // Show confirmation dialog

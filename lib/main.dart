@@ -25,8 +25,9 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:e_shuttle/home/myWallet/recharge.dart';
 import 'package:e_shuttle/home/myWallet/refund.dart';
 import 'package:e_shuttle/home/myProfile/myInformation.dart';
-
-
+import 'package:e_shuttle/home/routemap.dart';
+import 'package:e_shuttle/testingMap/livelocation.dart';
+import 'package:e_shuttle/testingMap/routetest.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,7 +67,10 @@ class MyApp extends StatelessWidget {
         '/appSettings':(context) => AppSettings(),
         '/notificationpage':(context) => NotificationsPage(),
         '/helpCenter':(context) => Help_support(),
-        '/routeChange':(context) => changeRoute()
+        '/routeChange':(context) => changeRoute(),
+        'routemap':(context) => RouteMapPage(),
+        '/livelocation':(context) => LiveLocation(),
+        '/routetest':(context) => MyRoute(),
       },
     );
   }
