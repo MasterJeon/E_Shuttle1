@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_webservice/directions.dart' hide Polyline;
 import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:e_shuttle/home/myProfile/myProfile.dart';
 
 void main() => runApp(const LiveLocation());
 
@@ -30,6 +31,7 @@ class RouteDetails {
 
 class _LiveLocationState extends State<LiveLocation> {
   late GoogleMapController mapController;
+  late Future<UserProfile> _userProfileFuture;
 
   final LatLng _center = const LatLng(6.81750000, 79.89027778);
 
@@ -117,7 +119,19 @@ class _LiveLocationState extends State<LiveLocation> {
     _requestLocationPermission();
   }
 
-
+  Future<UserProfile> _fetchUserProfile() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('passenger') // Your Firestore collection name
+          .doc(user.uid)
+          .get();
+      if (userDoc.exists) {
+        return UserProfile.fromFirestore(userDoc);
+      }
+    }
+    return UserProfile(full_name: 'N/A', email: 'N/A', routeno: 'N/A');
+  }
 
   Future<void> _getMarkerDataFromRoute(String routeId) async {
     final markersSnapshot = await FirebaseFirestore.instance
@@ -153,6 +167,80 @@ class _LiveLocationState extends State<LiveLocation> {
   }
 
   Future<void> _getRouteDataFromDB() async {
+    // Fetch the user's profile to get the selected route number
+    final userProfile = await _fetchUserProfile();
+    final selectedRouteNumber = userProfile.routeno;
+
+    // Fetch only the route document that matches the selected route number
+    if (selectedRouteNumber.isNotEmpty && selectedRouteNumber != 'N/A') {
+      final routeDoc = await FirebaseFirestore.instance
+          .collection('routes')
+          .doc(selectedRouteNumber)
+          .get();
+
+      if (routeDoc.exists) {
+        var data = routeDoc.data();
+
+        if (data != null) {
+          print("Route ID: ${routeDoc.id}");
+
+          _getMarkerDataFromRoute(routeDoc.id);
+
+          print("Start Location: ${data['startLocation']}");
+          print("End Location: ${data['endLocation']}");
+          print("Waypoints: ${data['waypoints']}");
+
+          // Use null-aware operators to safely access GeoPoint values
+          GeoPoint? startGeo = data['startLocation'] as GeoPoint?;
+          GeoPoint? endGeo = data['endLocation'] as GeoPoint?;
+
+          if (startGeo != null && endGeo != null) {
+            LatLng start = LatLng(startGeo.latitude, startGeo.longitude);
+            LatLng end = LatLng(endGeo.latitude, endGeo.longitude);
+
+            List<LatLng> waypoints = (data['waypoints'] as List?)
+                ?.map((wp) => LatLng(wp.latitude, wp.longitude))
+                .toList() ?? [];
+
+            print("Start: $start, End: $end, Waypoints: $waypoints");
+
+            // Call Google Directions API
+            final directions = GoogleMapsDirections(apiKey: "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs");
+            final result = await directions.directionsWithLocation(
+              Location(lat: start.latitude, lng: start.longitude),
+              Location(lat: end.latitude, lng: end.longitude),
+              waypoints: waypoints.map((wp) => Waypoint(value: '${wp.latitude},${wp.longitude}')).toList(),
+            );
+
+            if (result.isOkay) {
+              List<LatLng> routeCoords = _decodePolyline(result.routes[0].overviewPolyline.points);
+              setState(() {
+                _polylines.add(Polyline(
+                  polylineId: PolylineId(routeDoc.id),
+                  visible: true,
+                  points: routeCoords,
+                  color: Colors.blue,
+                  width: 4,
+                ));
+              });
+            }
+          } else {
+            print("Start or End location is null.");
+          }
+        } else {
+          print("Route data is null.");
+        }
+      } else {
+        print("No route found for the selected route number: $selectedRouteNumber.");
+      }
+    } else {
+      print("No valid route number found in user profile: $selectedRouteNumber.");
+    }
+  }
+
+
+
+  /*Future<void> _getRouteDataFromDB() async {
     final routesSnapshot = await FirebaseFirestore.instance.collection('routes').get();
     print("Total routes fetched: ${routesSnapshot.docs.length}");final directions = GoogleMapsDirections(apiKey: "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs");
 
@@ -197,7 +285,7 @@ class _LiveLocationState extends State<LiveLocation> {
         });
       }
     }
-  }
+  }*/
 
 
 

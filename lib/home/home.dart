@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
         return UserProfile.fromFirestore(userDoc);
       }
     }
-    return UserProfile(full_name: 'N/A', email: 'N/A');
+    return UserProfile(full_name: 'N/A', email: 'N/A', routeno: 'N/A');
   }
 
   void _onMapCreated(GoogleMapController controller) {

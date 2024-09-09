@@ -36,7 +36,7 @@ class MyProfileState extends State<MyProfile> {
         return UserProfile.fromFirestore(userDoc);
       }
     }
-    return UserProfile(full_name: 'N/A', email: 'N/A');
+    return UserProfile(full_name: 'N/A', email: 'N/A', routeno: 'N/A');
   }
 
   @override
@@ -181,14 +181,16 @@ class MyProfileState extends State<MyProfile> {
 class UserProfile {
   final String full_name;
   final String email;
+  final String routeno;
 
-  UserProfile({required this.full_name, required this.email});
+  UserProfile({required this.full_name, required this.email, required this.routeno});
 
   factory UserProfile.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return UserProfile(
       full_name: data['full_name'] ?? 'N/A',
       email: data['email'] ?? 'N/A',
+      routeno: data['routeno'] ?? 'N/A',
     );
   }
 }
