@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 //import 'features/user_auth/presentation/pages/forgot_password1.dart'; // Import your reset password page here
+import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -111,7 +112,7 @@ class _forgotPW_ResetState extends State<forgotPW_Reset> {
                 // Back to Log In with GestureDetector
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(context); // Navigate back to login page
+                    Navigator.pushNamed(context, "/login");// Navigate back to login page
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
