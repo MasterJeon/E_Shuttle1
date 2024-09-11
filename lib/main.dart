@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password1.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password2.dart';
 import 'package:e_shuttle/firebase_options.dart';
 import 'package:e_shuttle/home/Help.dart';
 import 'package:e_shuttle/home/changeRoute.dart';
@@ -50,6 +53,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/signUp': (context) => SignUpPage(),
+        '/forgotPassword':(context) => ForgotPasswordPage(),
+        '/forgotPasswordOTP':(context) => forgotPW_OTP(),
+        '/forgotPasswordReset':(context) => forgotPW_Reset(),
         '/home': (context) => HomePage(),
 
         //'/signupPage':(context) => SignUp(),

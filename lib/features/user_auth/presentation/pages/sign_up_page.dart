@@ -95,6 +95,7 @@ class _SignUpPageState extends State<SignUpPage> {
         return false; // Prevent the default back button behavior
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: true, //this will prevent the keyboar ftom coveing the content
         body: Stack(
           children: [
             Container(
@@ -130,11 +131,15 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 height: double.infinity,
                 width: double.infinity,
-                child: Padding(
+
+                child: SingleChildScrollView(
                   padding: const EdgeInsets.only(left: 18.0, right: 18),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      SizedBox(
+                        height: 13,
+                      ),
                       FormContainerWidget(
                         controller: _fullNameController,
                         hintText: "",
@@ -143,7 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         isPasswordField: false,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 13,
                       ),
                       FormContainerWidget(
                         controller: _registrationNoController,
@@ -153,7 +158,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         isPasswordField: false,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 13,
                       ),
                       FormContainerWidget(
                         controller: _emailController,
@@ -163,7 +168,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         isPasswordField: false,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 13,
                       ),
                       FormContainerWidget(
                         controller: _addressController,
@@ -173,7 +178,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         isPasswordField: false,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 13,
                       ),
                       FormContainerWidget(
                         controller: _contactNoController,
@@ -183,7 +188,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         isPasswordField: false,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 13,
                       ),
                       FormContainerWidget(
                         controller: _guardianContactNoController,
@@ -193,7 +198,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         isPasswordField: false,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 13,
                       ),
                       FormContainerWidget(
                         controller: _passwordController,
@@ -201,6 +206,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         labelText: "Password",
                         // Label text that will float above when typing
                         isPasswordField: false,
+                      ),
+                      SizedBox(
+                        height: 13,
                       ),
 
                       FormContainerWidget(
@@ -211,18 +219,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         isPasswordField: false,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 25,
                       ),
 
-                      //const TextField(
-                      // decoration: InputDecoration(
-                      //suffixIcon: Icon(Icons.check,color: Colors.grey,),
-                      //  label: Text('Address',style: TextStyle(
-                      //   fontWeight: FontWeight.bold,
-                      //   color: Colors.grey,
-                      // ),)
-                      // ),
-                      //  ),
+                    
                       GestureDetector(
                         onTap: () {
                           _signUp();
