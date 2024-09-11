@@ -60,7 +60,7 @@ class forgotPW_OTPState extends State<forgotPW_OTP> {
                 ),
                 SizedBox(height: 40),
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -172,8 +172,8 @@ class forgotPW_OTPState extends State<forgotPW_OTP> {
   // Make sure this method is within the same class
   Widget textFieldOTP({required bool first, required bool last}) {
     return Container(
-      height: 40,
-      width: 38,
+      height: 60,
+      width: 43,
       child: TextField(
         autofocus: first,
         onChanged: (value) {
@@ -183,16 +183,17 @@ class forgotPW_OTPState extends State<forgotPW_OTP> {
             FocusScope.of(context).previousFocus();
           }
         },
-        showCursor: false,
+        showCursor: true,
         readOnly: false,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,  color: Colors.black,),
         keyboardType: TextInputType.number,
         inputFormatters: [
           LengthLimitingTextInputFormatter(1),
           FilteringTextInputFormatter.digitsOnly,
         ],
         decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 15),  // Adjust padding for better visual alignment
           counter: Offstage(),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(width: 2, color: Colors.black12),
