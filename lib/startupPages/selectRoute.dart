@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 void main() => runApp(
     const MaterialApp(
@@ -16,6 +20,8 @@ class SelectRoute extends StatefulWidget {
 }
 
 class SelectRouteState extends State<SelectRoute> {
+  int selected = 0;
+
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get the size of the screen
@@ -138,7 +144,7 @@ class SelectRouteState extends State<SelectRoute> {
       ),
     );
   }
-  int selected = 0;
+
   Widget routeOption(String text, int index) {
   return SizedBox(
     width:40,
@@ -147,6 +153,9 @@ class SelectRouteState extends State<SelectRoute> {
       setState(() {
         selected = index;
       });
+      // Call addRouteNo when a route is selected
+      addRouteNo(context, text);  // Pass the selected route as the 'routeno'
+      Navigator.pushNamed(context, "/login");
     },
     child: Text(
       text,
@@ -168,4 +177,33 @@ class SelectRouteState extends State<SelectRoute> {
     ),
   );
 }
+
+  Future<void> addRouteNo(BuildContext context, String routeno) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User not logged in')),
+      );
+      return;
+    }
+
+    try {
+      final userDocRef = FirebaseFirestore.instance.collection('passenger').doc(user.uid);
+
+      // Update the route number in the Firestore database
+      await userDocRef.update({
+        'routeno': "r" + routeno,  // Update with the selected routeno
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Route no added successfully')),
+      );
+    } catch (e) {
+      print('Error adding route: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add route: $e')),
+      );
+    }
+  }
 }

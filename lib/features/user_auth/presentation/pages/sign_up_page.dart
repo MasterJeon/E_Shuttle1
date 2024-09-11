@@ -47,6 +47,8 @@ import 'package:e_shuttle/features/user_auth/presentation/pages/home_page.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
 import 'package:e_shuttle/firebase_options.dart';
+import 'package:e_shuttle/startupPages/selectRoute.dart';
+
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -294,6 +296,7 @@ class _SignUpPageState extends State<SignUpPage> {
           full_name: fullName,
           guardian_contact_no: guardianContactNo,
           wallet_balance: 0.0, // Initialize wallet balance
+          routeno: ' ', //Initialize route no
         );
 
         // Step 3: Save the user data to Firestore
@@ -328,7 +331,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
         // Notify user of success and navigate to login
         showToast(message: "User successfully created");
-        Navigator.pushNamed(context, "/login");
+        Navigator.pushNamed(context, "/selectRoute");
       } else {
         showToast(message: "An error occurred during sign-up.");
       }

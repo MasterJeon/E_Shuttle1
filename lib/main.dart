@@ -28,6 +28,8 @@ import 'package:e_shuttle/home/myProfile/myInformation.dart';
 import 'package:e_shuttle/home/routemap.dart';
 import 'package:e_shuttle/testingMap/livelocation.dart';
 import 'package:e_shuttle/testingMap/routetest.dart';
+import 'package:e_shuttle/startupPages/selectRoute.dart';
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,6 +73,7 @@ class MyApp extends StatelessWidget {
         'routemap':(context) => RouteMapPage(),
         '/livelocation':(context) => LiveLocation(),
         '/routetest':(context) => MyRoute(),
+        '/selectRoute':(context) => SelectRoute(),
       },
     );
   }

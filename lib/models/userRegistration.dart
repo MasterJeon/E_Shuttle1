@@ -7,6 +7,7 @@ class UserRegistration {
   String password_confirm;
   String student_id;
   final double wallet_balance;
+  final String routeno;
 
   UserRegistration({
     required this.password,
@@ -17,6 +18,7 @@ class UserRegistration {
     required this.password_confirm,
     required this.student_id,
     this.wallet_balance = 0.0,
+    this.routeno = ' ',
   });
 
   UserRegistration.fromJson(Map<String, Object?> json)
@@ -29,6 +31,7 @@ class UserRegistration {
     full_name: json['full_name']! as String,
     guardian_contact_no: json['guardian_contact_no']! as String,
     wallet_balance: (json['wallet_balance'] as num?)?.toDouble() ?? 0.0,
+    routeno: (json['routeno'] as String?).toString() ?? ' ',
   );
 
   UserRegistration copyWith({
@@ -40,6 +43,7 @@ class UserRegistration {
     String? password_confirm,
     String? student_id,
     double? wallet_balance,
+    String? routeno,
   }) {
     return UserRegistration(
       student_id: student_id ?? this.student_id,
@@ -50,6 +54,7 @@ class UserRegistration {
       full_name: full_name ?? this.full_name,
       guardian_contact_no: guardian_contact_no ?? this.guardian_contact_no,
       wallet_balance: wallet_balance ?? this.wallet_balance,
+      routeno: routeno ?? this.routeno,
     );
   }
 
@@ -63,6 +68,7 @@ class UserRegistration {
       'guardian_contact_no': guardian_contact_no,
       'password_confirm': password_confirm,
       'wallet_balance': wallet_balance,
+      'routeno': routeno,
     };
   }
 }
