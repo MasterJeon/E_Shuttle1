@@ -81,7 +81,8 @@ class _HomePageState extends State<HomePage> {
     MyProfile(),
     Feedbacks(),
     Help_support(),
-    changeRoute()
+    changeRoute(),
+    LiveLocation()
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
@@ -310,7 +311,8 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = HomeContent(); // Placeholder for home content
+                        currentScreen = LiveLocation();
+                        //currentScreen = HomeContent(); // Placeholder for home content
                         currentTab = 0;
                       });
                     },
