@@ -92,7 +92,7 @@ class _forgotPW_ResetState extends State<forgotPW_Reset> {
                         confirmPasswordController.text &&
                         passwordController.text.length >= 8) {
                       // Navigate to Login Page after password reset
-                      Navigator.pop(context); // Assuming the previous page is the login page
+                      Navigator.pushNamed(context, "/login"); // Assuming the previous page is the login page
                     } else {
                       // Show error if passwords don't match or are too short
                       ScaffoldMessenger.of(context).showSnackBar(
