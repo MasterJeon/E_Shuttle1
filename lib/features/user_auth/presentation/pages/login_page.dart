@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -79,11 +80,9 @@ class _LoginPageState extends State<LoginPage> {
                     Color.fromARGB(255, 230, 81, 0),
                     const Color.fromRGBO(239, 108, 0, 1),
                     const Color.fromRGBO(255, 167, 38, 1)
-                  ]
+                  ],
               )
           ),
-
-
 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                   width: double.infinity,
 
                   child: Padding(
-                    padding: EdgeInsets.all(25), //length of the box
+                    padding: EdgeInsets.all(25),
+                    child: SingleChildScrollView( //length of the box
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 50,),
@@ -149,10 +149,26 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
 
-                        SizedBox(height: 30,),
-                        Text("Forgot Password?", style: TextStyle(color: Colors.grey),),
+                         SizedBox(height: 30,),
 
-                        SizedBox(height: 30,),
+                       // Wrap "Forgot Password?" with GestureDetector
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                          );
+                        },
+                        child: Text(
+                          "Forgot Password?",
+                          style: TextStyle(color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                        SizedBox(height: 50,),
 
                         GestureDetector(
                           onTap: () {
@@ -216,43 +232,9 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
+                  ),
                 ),
               ),
-
-
-
-
-
-              //GestureDetector(
-              //onTap: () {
-              // _signInWithGoogle();
-
-              // },
-              // child: Container(
-              //  width: double.infinity,
-              //  height: 45,
-              // decoration: BoxDecoration(
-              //  color: Colors.red,
-              //  borderRadius: BorderRadius.circular(10),
-              // ),
-              // child: Center(
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //    children: [
-              //      Icon(FontAwesomeIcons.google, color: Colors.white,),
-              //      SizedBox(width: 5,),
-              //     Text(
-              //      "Sign in with Google",
-              //      style: TextStyle(
-              //        color: Colors.white,
-              //       fontWeight: FontWeight.bold,
-              //    ),
-              //  ),
-              // ],
-              //),
-              //  ),
-              //  ),
-              // ),
 
             ],
           ),
