@@ -453,6 +453,7 @@ Future<void> _requestLocationPermission() async {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Google Maps in Flutter'),
