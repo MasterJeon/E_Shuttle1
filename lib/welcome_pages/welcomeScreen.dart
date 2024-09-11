@@ -35,7 +35,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                 end: Alignment.bottomLeft,
               ),
             ),
-            child: SingleChildScrollView(
+            child: Padding(
               padding: EdgeInsets.symmetric(
                 vertical: screenSize.height * 0.05,
                 horizontal: screenSize.width * 0.08,
