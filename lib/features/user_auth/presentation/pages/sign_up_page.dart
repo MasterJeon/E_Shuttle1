@@ -6,6 +6,8 @@ import 'package:e_shuttle/features/user_auth/presentation/widgets/form_container
 import 'package:e_shuttle/global/common/toast.dart';
 import 'package:e_shuttle/services/database_service.dart';
 import 'package:e_shuttle/models/userRegistration.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/email_verification_page.dart';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -330,8 +332,12 @@ class _SignUpPageState extends State<SignUpPage> {
         });
 
         // Notify user of success and navigate to login
-        showToast(message: "User successfully created");
-        Navigator.pushNamed(context, "/selectRoute");
+        showToast(message: "User successfully created. Please verify your email.");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => EmailVerificationScreen()),
+        );
+        //Navigator.pushNamed(context, "/selectRoute");
       } else {
         showToast(message: "An error occurred during sign-up.");
       }

@@ -32,6 +32,7 @@ import 'package:e_shuttle/home/routemap.dart';
 import 'package:e_shuttle/testingMap/livelocation.dart';
 import 'package:e_shuttle/testingMap/routetest.dart';
 import 'package:e_shuttle/startupPages/selectRoute.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/email_verification_page.dart';
 
 
 Future main() async {
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
         '/livelocation':(context) => LiveLocation(),
         '/routetest':(context) => MyRoute(),
         '/selectRoute':(context) => SelectRoute(),
+        '/emailVerification':(context) => EmailVerificationScreen(),
       },
     );
   }
