@@ -1,6 +1,7 @@
 import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:email_auth/email_auth.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -17,8 +18,60 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController otpController = TextEditingController();
+  EmailAuth emailAuth =  new EmailAuth(sessionName: "Sample session");
+  //late EmailAuth emailAuth;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
+
+  final TextEditingController _otpController1 = TextEditingController();
+  final TextEditingController _otpController2 = TextEditingController();
+  final TextEditingController _otpController3 = TextEditingController();
+  final TextEditingController _otpController4 = TextEditingController();
+  final TextEditingController _otpController5 = TextEditingController();
+  final TextEditingController _otpController6 = TextEditingController();
+
+  String getOtp() {
+    // Concatenating the values from each OTP controller to form the full OTP
+    return _otpController1.text +
+        _otpController2.text +
+        _otpController3.text +
+        _otpController4.text +
+        _otpController5.text +
+        _otpController6.text;
+  }
+
+  void initState() {
+    super.initState();
+    //emailAuth = EmailAuth(sessionName: "eShuttle Password Reset");
+  }
+
+  void sendOtp() async {
+    try {
+      bool result = await emailAuth.sendOtp(recipientMail: _emailController.value.text, otpLength: 6);
+      if (result) {
+        print("OTP sent successfully to: ${_emailController.text}");
+      } else {
+        print("Failed to send OTP.");
+      }
+    } catch (e) {
+      print("Error sending OTP: $e");
+    }
+  }
+
+  void verifyOtp() async {
+    String otp = getOtp();
+    bool isVerified = emailAuth.validateOtp(
+      recipientMail: _emailController.value.text, // Use 'recipient' instead of 'receiverMail'
+      userOtp: otp,
+    );
+    if (isVerified) {
+      print("OTP verification successful!");
+      // Navigate to password reset screen
+    } else {
+      print("OTP verification failed.");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +115,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
               // Email TextField
               TextField(
-                controller: emailController,
+                controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   hintText: 'Enter your email',
@@ -87,10 +140,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Trigger OTP sending logic
-                    print("OTP sent to: ${emailController.text}");
-                  },
+                  onPressed: sendOtp,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 60,
@@ -125,12 +175,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  otpTextField(first: true, last: false),
-                  otpTextField(first: false, last: false),
-                  otpTextField(first: false, last: false),
-                  otpTextField(first: false, last: false),
-                  otpTextField(first: false, last: false),
-                  otpTextField(first: false, last: true),
+                  otpTextField(controller: _otpController1, first: true, last: false),
+                  otpTextField(controller: _otpController2, first: false, last: false),
+                  otpTextField(controller: _otpController3, first: false, last: false),
+                  otpTextField(controller: _otpController4, first: false, last: false),
+                  otpTextField(controller: _otpController5, first: false, last: false),
+                  otpTextField(controller: _otpController6, first: false, last: true),
                 ],
               ),
               const SizedBox(height: 40),
@@ -150,7 +200,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                    print("Reset password link sent to: ${emailController.text}");
+                    String otp = getOtp();
+                    print("Entered OTP: $otp");
+                    print("Reset password link sent to: ${_emailController.text}");
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 16),
@@ -166,6 +218,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
+
+
+
+
+
               const SizedBox(height: 40),
 
               // Resend OTP
@@ -189,7 +246,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         /*recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             // Add your logic here to resend the OTP/email
-                            print("Resending OTP to: ${emailController.text}");
+                            print("Resending OTP to: ${_emailController.text}");
                           },*/
                       ),
                     ],
@@ -226,12 +283,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   // OTP TextField Helper
-  Widget otpTextField({required bool first, required bool last}) {
+  Widget otpTextField({
+    required TextEditingController controller,
+    required bool first,
+    required bool last,
+  }) {
     return SizedBox(
       height: 60,
       width: 45,
       child: TextField(
-        autofocus: false, // Disable autofocus for OTP fields
+        controller: controller,
         onChanged: (value) {
           if (value.length == 1 && !last) {
             FocusScope.of(context).nextFocus();
@@ -239,8 +300,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             FocusScope.of(context).previousFocus();
           }
         },
-        showCursor: true,
-        readOnly: false,
         textAlign: TextAlign.center,
         style: const TextStyle(
           fontSize: 20,
@@ -253,8 +312,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           FilteringTextInputFormatter.digitsOnly,
         ],
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 15),
-          counter: const Offstage(),
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(width: 2, color: Colors.black12),
             borderRadius: BorderRadius.circular(12),
