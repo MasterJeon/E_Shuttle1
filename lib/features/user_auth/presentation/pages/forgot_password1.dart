@@ -1,4 +1,4 @@
-import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password2.dart';
+/*import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password2.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -207,4 +207,4 @@ class forgotPW_OTPState extends State<forgotPW_OTP> {
       ),
     );
   }
-}
+}*/

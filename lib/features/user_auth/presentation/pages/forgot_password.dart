@@ -1,4 +1,4 @@
-import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password1.dart';
+/*import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password1.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -130,4 +130,4 @@ class ForgotPasswordPage extends StatelessWidget {
       ),
     );
   }
-}
+}*/
