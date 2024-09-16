@@ -36,7 +36,7 @@ class _scanPayState extends State<scanPay> {
   }
 
   // Method to generate a random QR code and save it to Firestore
-  Future<void> generateAndSaveQrCode() async {
+  void generateAndSaveQrCode() async {
     // Get the current user ID from Firebase Authentication
     final user = FirebaseAuth.instance.currentUser;
     final userId = user?.uid ?? "unknown_user";
