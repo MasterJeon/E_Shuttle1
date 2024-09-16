@@ -6,6 +6,7 @@ import '../../models/userRegistration.dart';
 const String COLLECTION_REF_USER = "user";
 const String COLLECTION_REF_REGISTER = "passenger";
 const String COLLECTION_REF_LOGIN = "login";
+const String COLLECTION_REF_DRIVER = "driver";
 
 class DatabaseService<T> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -83,6 +84,8 @@ final loginService = DatabaseService<User>(
       (json) => User.fromJson(json),
       (user) => user.toJson(),
 );
+
+
 
 const String COLLECTION_REF_REFUND_REQUEST = "refund_requests";
 
