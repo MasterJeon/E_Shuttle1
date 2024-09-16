@@ -2,6 +2,7 @@ import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:email_auth/email_auth.dart';
+import 'package:e_shuttle/auth.config.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -18,8 +19,15 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  EmailAuth emailAuth =  new EmailAuth(sessionName: "Sample session");
-  //late EmailAuth emailAuth;
+  late EmailAuth emailAuth;
+
+  void initState() {
+    super.initState();
+    emailAuth =  new EmailAuth(sessionName: "Sample session");
+
+    emailAuth.config(remoteServerConfiguration);
+    //emailAuth = EmailAuth(sessionName: "eShuttle Password Reset");
+  }
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
@@ -39,11 +47,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         _otpController4.text +
         _otpController5.text +
         _otpController6.text;
-  }
-
-  void initState() {
-    super.initState();
-    //emailAuth = EmailAuth(sessionName: "eShuttle Password Reset");
   }
 
   void sendOtp() async {

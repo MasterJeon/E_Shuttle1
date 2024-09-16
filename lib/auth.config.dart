@@ -1,0 +1,1 @@
+var remoteServerConfiguration = {"server" : "https://shuttleservervone-ca11a376beb6.herokuapp.com", "serverKey" : "sErviCeShUtTle24"};

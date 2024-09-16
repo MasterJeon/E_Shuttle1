@@ -11,6 +11,7 @@ import 'package:e_shuttle/home/myProfile/notifi.dart';
 import 'package:e_shuttle/home/myProfile/shareLiveLocation.dart';
 import 'package:e_shuttle/home/myProfile/trustedContacts.dart';
 import 'package:e_shuttle/home/myWallet/eWallet.dart';
+import 'package:email_auth/email_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shuttle/home/SOS/SOS.dart';
@@ -34,7 +35,7 @@ import 'package:e_shuttle/testingMap/livelocation.dart';
 import 'package:e_shuttle/testingMap/routetest.dart';
 import 'package:e_shuttle/startupPages/selectRoute.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/email_verification_page.dart';
-
+import 'package:e_shuttle/auth.config.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +44,8 @@ Future main() async {
   runApp(MyApp());
   await Firebase.initializeApp();
   runApp(MyApp());
+  //EmailAuth emailAuth = new EmailAuth(sessionName: "Sample");
+  //emailAuth.config(remoteServerConfiguration);
 }
 
 class MyApp extends StatelessWidget {
