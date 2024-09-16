@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/forgotPW.dart';
+//import 'package:e_shuttle/features/user_auth/presentation/pages/forgotPW.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password1.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password2.dart';
@@ -55,10 +55,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/signUp': (context) => SignUpPage(),
-        //'/forgotPassword':(context) => ForgotPasswordPage(),
+        '/forgotPassword':(context) => ForgotPasswordPage(),
         //'/forgotPasswordOTP':(context) => forgotPW_OTP(),
         //'/forgotPasswordReset':(context) => forgotPW_Reset(),
-        '/forgotPasswordPageNew':(context) => ForgotPasswordPage(),
+        //'/forgotPasswordPageNew':(context) => ForgotPasswordPage(),
         '/home': (context) => HomePage(),
 
         //'/signupPage':(context) => SignUp(),
