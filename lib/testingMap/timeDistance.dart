@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_webservice/directions.dart' hide Polyline;
 import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 void main() => runApp(const MyRoute());
 
@@ -176,12 +177,42 @@ class _MyRouteState extends State<MyRoute> {
         final distance = elements['distance']['text'];
         final duration = elements['duration']['text'];
 
+        // Parse the duration (in minutes or hours) and add it to the current time
+        final durationParts = duration.split(' ');
+        int durationMinutes = 0;
+
+        // Check if the duration contains hours and minutes
+        if (durationParts.length == 4) {
+          durationMinutes = int.parse(durationParts[0]) * 60 + int.parse(durationParts[2]);
+        } else if (durationParts.length == 2) {
+          if (durationParts[1] == "hours" || durationParts[1] == "hour") {
+            durationMinutes = int.parse(durationParts[0]) * 60;
+          } else {
+            durationMinutes = int.parse(durationParts[0]);
+          }
+        }
+
+        // Calculate the arrival time by adding the duration to the current time
+        final currentTime = DateTime.now();
+        final arrivalTime = currentTime.add(Duration(minutes: durationMinutes));
+
+        // Format the arrival time
+        final formattedArrivalTime = DateFormat.jm().format(arrivalTime);
+
         // Store the distance and duration
         setState(() {
           if (_routeSummaries.length <= routeIndex) {
-            _routeSummaries.add({'distance': distance, 'duration': duration});
+            _routeSummaries.add({
+              'distance': distance,
+              'duration': duration, // Add duration
+              'arrival_time': formattedArrivalTime,
+            });
           } else {
-            _routeSummaries[routeIndex] = {'distance': distance, 'duration': duration};
+            _routeSummaries[routeIndex] = {
+              'distance': distance,
+              'duration': duration, // Add duration
+              'arrival_time': formattedArrivalTime,
+            };
           }
         });
 
@@ -305,6 +336,7 @@ class _MyRouteState extends State<MyRoute> {
                 child: RouteSummaryWidget(
                   distance: _routeSummaries[0]['distance'] ?? '',
                   duration: _routeSummaries[0]['duration'] ?? '',
+                   arrivalTime: _routeSummaries[0]['arrival_time'] ?? '',  // Ensure this is arrival_time
                 ),
               ),
           ],
@@ -366,11 +398,13 @@ class _MyRouteState extends State<MyRoute> {
 class RouteSummaryWidget extends StatelessWidget {
   final String distance;
   final String duration;
+  final String arrivalTime;
 
   const RouteSummaryWidget({
     Key? key,
     required this.distance,
     required this.duration,
+    required this.arrivalTime,
   }) : super(key: key);
 
   @override
@@ -388,14 +422,45 @@ class RouteSummaryWidget extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.directions_car, color: Colors.blue),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('$duration', style: TextStyle(fontSize: 32)),
-              Text('$distance', style: TextStyle(fontSize: 16)),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0), // Increased left padding
+            child: Icon(Icons.directions_bus, color: Colors.blue),
+          ),  // Bus icon added here
+          Expanded( 
+            child: Center(// Expands the column to take available space
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,  // Centers the content vertically within the Column
+              children: [
+                Text(
+                  '$duration', 
+                  style: TextStyle(
+                    fontSize: 32, 
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center, // Centers the text horizontally
+                ),
+                Text(
+                  '$distance | $arrivalTime', 
+                  style: TextStyle(
+                    fontSize: 16, 
+                    //fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center, // Centers the text horizontally
+                ),
+              ],
+            ),
+          ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 0.0), // Add padding to create space between text and logo
+            child: Image.asset(
+              'assets/kdu_logo.png', // Path to your logo image
+              height: 50,  // Adjust the height based on your needs
+              width: 50,   // Adjust the width based on your needs
+            ),
           ),
         ],
       ),
