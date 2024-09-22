@@ -415,73 +415,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      /*drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: const Text('Sasini Lekamge'),
-              accountEmail: const Text('sasini@gmail.com'),
-              currentAccountPicture: CircleAvatar(
-                child: ClipOval(child: Image.asset('images/profile.jpg')),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blueAccent,
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.sos),
-              title: const Text('SOS-Emergency'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SOS()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.aod_sharp),
-              title: const Text('E-Tickets'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ScanPay()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('My Wallet'),
-              onTap: () {
-                // Implement My Wallet navigation
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_circle_sharp),
-              title: const Text('My Profile'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyProfile()),
-                );
-              },
-            ),
-            Divider(),
 
-            ListTile(
-              leading: const Icon(Icons.message),
-              title: const Text('Reviews and Feedbacks'),
-              onTap: () {
-                // Implement Reviews and Feedbacks navigation
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Sign Out'),
-              onTap: () => print('Logout tapped'),
-            ),
-          ],
-        ),
-      ),*/
         ),
     );
   }

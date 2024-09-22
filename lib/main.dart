@@ -11,6 +11,7 @@ import 'package:e_shuttle/home/myProfile/notifi.dart';
 import 'package:e_shuttle/home/myProfile/shareLiveLocation.dart';
 import 'package:e_shuttle/home/myProfile/trustedContacts.dart';
 import 'package:e_shuttle/home/myWallet/eWallet.dart';
+import 'package:e_shuttle/services/notifi_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shuttle/home/SOS/SOS.dart';
@@ -42,6 +43,8 @@ Future main() async {
   Stripe.publishableKey = "pk_test_51PmYqFRwXCT02Fy3WC6V7Im7d8tkcQiLMK4j6Mu4QZucBoh4PlxXFRYxrEbR8azb9Fmki5hoAcOhz9qXwz7hmMHC00IHQtcaab"; // Initialize Stripe with your publishable key
   runApp(MyApp());
   await Firebase.initializeApp();
+
+  NotificationService().initNotification(); //initialize the notification service
   runApp(MyApp());
 }
 
@@ -122,25 +125,4 @@ class AuthWrapper extends StatelessWidget {
   }
 }
 
-//class SplashScreen extends StatelessWidget {
-  //final Widget child;
-  //SplashScreen({required this.child});
 
-  //@override
-  //Widget build(BuildContext context) {
-  //  // You can display a loading indicator or any splash animation here
-   // return Scaffold(
-   //   body: FutureBuilder(
-    //    // Add a small delay to show the splash screen for a bit
-     //   future: Future.delayed(Duration(seconds: 2)),
-      //  builder: (context, snapshot) {
-        //  if (snapshot.connectionState == ConnectionState.done) {
-       //     return child; // Navigate to the wrapped widget (either HomePage or LoginPage)
-        //  } else {
-       //     return Center(child: CircularProgressIndicator());
-       //   }
-       // },
-     // ),
-   // );
- // }
-//}
