@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
   late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(6.81750000, 79.89027778);
+  int notificationCount = 3; // Example notification count, replace with actual data
 
   @override
   void initState() {
@@ -121,9 +122,56 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
-        appBar: AppBar(
-        title: Text(''),
-    ),
+               appBar: AppBar(
+          title: Text('H'),
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
+          actions: [
+            Stack(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.notifications),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotificationsPage()),
+                    );
+                  },
+                ),
+                if (notificationCount > 0)
+                  Positioned(
+                    right: 11,
+                    top: 11,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        '$notificationCount',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+
     drawer: Drawer(
     child: FutureBuilder<UserProfile>(
     future: _userProfileFuture,
@@ -365,7 +413,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = SOS();
+                        currentScreen = EWallet();
                         currentTab = 2;
                       });
                     },
@@ -373,11 +421,11 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.sos,
+                          Icons.account_balance_wallet,
                           color: currentTab == 2 ? Colors.blue : Colors.grey,
                         ),
                         Text(
-                          'SOS',
+                          'E-Wallet',
                           style: TextStyle(
                             color: currentTab == 2 ? Colors.blue : Colors.grey,
                           ),
@@ -389,7 +437,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = NotificationsPage();
+                        currentScreen = SOS();
                         currentTab = 3;
                       });
                     },
@@ -397,11 +445,11 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.notifications_active_rounded,
+                          Icons.sos,
                           color: currentTab == 3 ? Colors.blue : Colors.grey,
                         ),
                         Text(
-                          'Notifications',
+                          'SOS',
                           style: TextStyle(
                             color: currentTab == 3 ? Colors.blue : Colors.grey,
                           ),
