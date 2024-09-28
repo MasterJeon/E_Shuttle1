@@ -387,15 +387,93 @@ Future<void> _requestLocationPermission() async {
   }
 
   Future<void> _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    _updatePosition(position);
+  Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  _updatePosition(position);
 
-    _positionStreamSubscription = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
-    ).listen((Position newPosition) {
-      _updatePosition(newPosition);
-    });
+  // Stream to update location in real-time
+  _positionStreamSubscription = Geolocator.getPositionStream(
+    locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
+  ).listen((Position newPosition) {
+    _updatePosition(newPosition);
+
+    // Check if the current position is near any main stops or waypoints
+    _checkNearbyStops(newPosition);
+  });
+}
+
+void _checkNearbyStops(Position position) {
+  LatLng currentLocation = LatLng(position.latitude, position.longitude);
+
+  for (RouteDetails route in _routes) {
+    for (LatLng stop in route.waypoints) {
+      double distanceToStop = Geolocator.distanceBetween(
+        currentLocation.latitude, currentLocation.longitude,
+        stop.latitude, stop.longitude
+      );
+
+      // Define a radius threshold for "nearby"
+      const double nearbyThreshold = 1000.0; // 1000 meters
+
+      if (distanceToStop < nearbyThreshold) {
+        print("You are near the stop: ${stop.latitude}, ${stop.longitude}");
+
+        // Logic to handle pricing based on the stop (e.g., show ticket price)
+        String ticketPrice = _getTicketPriceForStop(stop);
+        print("Ticket Price for this stop: Rs. $ticketPrice");
+
+        // You can trigger UI changes here or show pop-ups
+        _showTicketPriceMarker(currentLocation, ticketPrice);
+      }
+    }
   }
+}
+
+String _getTicketPriceForStop(LatLng stop) {
+  // Define your stop pricing logic here
+  if (stop == LatLng(6.81750000, 79.89027778)) {
+    return "100.00"; // Example price for stop 1
+  } else if (stop == LatLng(6.713937790150642, 79.98895190786376)) {
+    return "500.00"; // Example price for stop 2
+  } 
+  // Add more conditions for other stops
+  return "Unknown Price";
+}
+// Function to show the marker with ticket price at the current location
+void _showTicketPriceMarker(LatLng location, String ticketPrice) {
+  setState(() {
+    _markers.add(
+      Marker(
+        markerId: MarkerId('current_location_ticket'),
+        position: location,
+        infoWindow: InfoWindow(
+          title: 'Ticket Price',
+          snippet: 'Rs. $ticketPrice',
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure), // Customize marker icon
+      ),
+    );
+  });
+}
+
+void _showTicketPricePopup(String price) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Ticket Price"),
+        content: Text("The ticket price for this stop is Rs. $price"),
+        actions: [
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
   void _updatePosition(Position position) {
     setState(() {
@@ -488,30 +566,30 @@ Future<void> _requestLocationPermission() async {
         position: LatLng(6.825240929708998, 79.9082921331989),
         infoWindow: InfoWindow(title: "UHKDU"),
       ),
-      //createMarker('Panadura', const LatLng(6.7104892147864605, 79.90773987399923), "120.00"),
-      //createMarker('Bandaragama', const LatLng(6.714151106845103, 79.99073558146642), "180.00"),
-      //createMarker('Horana', const LatLng(6.723170703502162, 80.06583043717407), "220.00"),
-      //createMarker('Piliyandala', const LatLng(6.801664896754592, 79.92279155884555), "60.00"),
-      /*createMarker('Kottawa', const LatLng(6.841110311554549, 79.96538119310712), "150.00"),
-      createMarker('Godagama', const LatLng(6.851902488708469, 80.03334731284404), "200.00"),
-      createMarker('Pahathgama', const LatLng(6.896416594616102, 80.08231467508558), "250.00"),
-      createMarker('Maharagama', const LatLng(6.850763264031758, 79.92749206117588), "70.00"),
-      createMarker('Koswatta', const LatLng(6.908986729283659, 79.93080459154916), "120.00"),
-      createMarker('Kaduwela', const LatLng(6.928927044316318, 79.9826355994138), "160.00"),
-      createMarker('Delgoda', const LatLng(6.988008813288438, 80.0159422824388), "200.00"),
-      createMarker('Weliweriya', const LatLng(7.0319529504541665, 80.02978339087662), "220.00"),
-      createMarker('Yakkala', const LatLng(7.086412609614552, 80.03433536285229), "260.00"),
-      createMarker('Nittambuwa', const LatLng(7.142191208759358, 80.10636908834084), "300.00"),
-      createMarker('Kesbewa', const LatLng(6.7781983860413995, 79.9476704429502), "60.00"),
-      createMarker('Polgasowita/Kindelpitiya', const LatLng(6.788272881361812, 79.99172337450369), "110.00"),
-      createMarker('Gonapola/Gammanpila', const LatLng(6.755930079059569, 80.0166182135967), "150.00"),
-      createMarker('Kumbuka/Bandaragama', const LatLng(6.736008281612015, 80.02806926808988), "170.00"),
-      createMarker('Pokunuwita', const LatLng(6.72902450012628, 80.03227120891174), "190.00"),
-      createMarker('Aththidiya', const LatLng(6.8397971035243135, 79.88561675594863), "40.00"),
-      createMarker('Nugegoda', const LatLng(6.865207771841957, 79.89794010974578), "70.00"),
-      createMarker('Peliyagoda', const LatLng(6.9589941781914835, 79.89336981001003), "170.00"),
-      createMarker('Ja-Ela', const LatLng(7.067703587465936, 79.90154521053142), "250.00"),
-      createMarker('Negambo', const LatLng(7.207330829673679, 79.85258837399863), "290.00"),*/
+      createMarker('Panadura', const LatLng(6.7104892147864605, 79.90773987399923), 'Panadura', "120.00"),
+      createMarker('Bandaragama', const LatLng(6.714151106845103, 79.99073558146642), 'Bandaragama',"180.00"),
+      createMarker('Horana', const LatLng(6.723170703502162, 80.06583043717407), 'Horana',"220.00"),
+      createMarker('Piliyandala', const LatLng(6.801664896754592, 79.92279155884555), 'Piliyandala',"60.00"),
+      createMarker('Kottawa', const LatLng(6.841110311554549, 79.96538119310712), 'Kottawa',"150.00"),
+      createMarker('Godagama', const LatLng(6.851902488708469, 80.03334731284404), 'Godagama',"200.00"),
+      createMarker('Pahathgama', const LatLng(6.896416594616102, 80.08231467508558), 'Pahathgama',"250.00"),
+      createMarker('Maharagama', const LatLng(6.850763264031758, 79.92749206117588), 'Maharagama',"70.00"),
+      createMarker('Koswatta', const LatLng(6.908986729283659, 79.93080459154916), 'Koswatta',"120.00"),
+      createMarker('Kaduwela', const LatLng(6.928927044316318, 79.9826355994138), 'Kaduwela',"160.00"),
+      createMarker('Delgoda', const LatLng(6.988008813288438, 80.0159422824388), 'Delgoda', "200.00"),
+      createMarker('Weliweriya', const LatLng(7.0319529504541665, 80.02978339087662), 'Weliweriya',"220.00"),
+      createMarker('Yakkala', const LatLng(7.086412609614552, 80.03433536285229), 'Yakkala',"260.00"),
+      createMarker('Nittambuwa', const LatLng(7.142191208759358, 80.10636908834084), 'Nittambuwa',"300.00"),
+      createMarker('Kesbewa', const LatLng(6.7781983860413995, 79.9476704429502), 'Kesbewa',"60.00"),
+      createMarker('Polgasowita/Kindelpitiya', const LatLng(6.788272881361812, 79.99172337450369), 'Polgasowita/Kindelpitiya',"110.00"),
+      createMarker('Gonapola/Gammanpila', const LatLng(6.755930079059569, 80.0166182135967), 'Gonapola/Gammanpila',"150.00"),
+      createMarker('Kumbuka/Bandaragama', const LatLng(6.736008281612015, 80.02806926808988), 'Kumbuka/Bandaragama',"170.00"),
+      createMarker('Pokunuwita', const LatLng(6.72902450012628, 80.03227120891174), 'Pokunuwita',"190.00"),
+      createMarker('Aththidiya', const LatLng(6.8397971035243135, 79.88561675594863), 'Aththidiya',"40.00"),
+      createMarker('Nugegoda', const LatLng(6.865207771841957, 79.89794010974578), 'Nugegoda',"70.00"),
+      createMarker('Peliyagoda', const LatLng(6.9589941781914835, 79.89336981001003), 'Peliyagoda',"170.00"),
+      createMarker('Ja-Ela', const LatLng(7.067703587465936, 79.90154521053142), 'Ja-Ela',"250.00"),
+      createMarker('Negambo', const LatLng(7.207330829673679, 79.85258837399863), 'Negambo',"290.00"),
     };
   }
 
