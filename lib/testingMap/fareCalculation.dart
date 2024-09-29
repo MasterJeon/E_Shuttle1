@@ -118,6 +118,28 @@ class _LiveLocationState extends State<LiveLocation> {
     //_getMarkerDataFromDB();
     _requestLocationPermission();
   }
+  Future<void> _requestLocationPermission() async {
+  LocationPermission permission = await Geolocator.checkPermission();
+  
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    
+    if (permission == LocationPermission.denied) {
+      // Handle the case where permission is denied
+      print('Location permissions are denied');
+      return;
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Handle the case where permissions are denied forever
+    print('Location permissions are permanently denied');
+    return;
+  }
+
+  // If permissions are granted, proceed with getting the location
+  _getCurrentLocation();
+}
 
   Future<UserProfile> _fetchUserProfile() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -165,7 +187,7 @@ class _LiveLocationState extends State<LiveLocation> {
       }
     });
   }
-
+  
   Future<void> _getRouteDataFromDB() async {
     // Fetch the user's profile to get the selected route number
     final userProfile = await _fetchUserProfile();
@@ -365,42 +387,29 @@ class _LiveLocationState extends State<LiveLocation> {
     }
   }*/
 
-Future<void> _requestLocationPermission() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (!serviceEnabled || permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
-      setState(() {
-        _locationPermissionGranted = true;
-      });
-      _getCurrentLocation();
-    }
-  }
-
-  void _initializeMap(GoogleMapController controller) {
-    mapController = controller;
-    setState(() {
-      _isMapInitialized = true;
-    });
-  }
-
-  Future<void> _getCurrentLocation() async {
+Future<void> _getCurrentLocation() async {
+  // Get the current location
   Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  _updatePosition(position);
+  _updatePosition(position); // Call a method to update position if needed
 
-  // Stream to update location in real-time
+  // Stream to continuously update location in real-time
   _positionStreamSubscription = Geolocator.getPositionStream(
     locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
   ).listen((Position newPosition) {
-    _updatePosition(newPosition);
+    _updatePosition(newPosition); // Update position each time a new one is received
 
-    // Check if the current position is near any main stops or waypoints
+    // Check if the current position is near any stops and get the ticket price
     _checkNearbyStops(newPosition);
+
+    // Get ticket price for the live location
+    String ticketPrice = _getTicketPriceForLiveLocation(newPosition);
+
+    // Add marker for the live location with ticket price
+    _addLiveLocationMarker(newPosition, ticketPrice);
   });
 }
 
+// This method will check if the user is near a stop and possibly show a popup
 void _checkNearbyStops(Position position) {
   LatLng currentLocation = LatLng(position.latitude, position.longitude);
 
@@ -408,53 +417,77 @@ void _checkNearbyStops(Position position) {
     for (LatLng stop in route.waypoints) {
       double distanceToStop = Geolocator.distanceBetween(
         currentLocation.latitude, currentLocation.longitude,
-        stop.latitude, stop.longitude
+        stop.latitude, stop.longitude,
       );
 
-      // Define a radius threshold for "nearby"
-      const double nearbyThreshold = 1000.0; // 1000 meters
+      const double nearbyThreshold = 100.0; // 100 meters threshold for "nearby"
 
       if (distanceToStop < nearbyThreshold) {
         print("You are near the stop: ${stop.latitude}, ${stop.longitude}");
 
-        // Logic to handle pricing based on the stop (e.g., show ticket price)
+        // Fetch ticket price for the stop
         String ticketPrice = _getTicketPriceForStop(stop);
         print("Ticket Price for this stop: Rs. $ticketPrice");
 
-        // You can trigger UI changes here or show pop-ups
-        _showTicketPriceMarker(currentLocation, ticketPrice);
+        // Optionally show a pop-up with the ticket price
+        _showTicketPricePopup(ticketPrice);
       }
     }
   }
 }
 
+// Fetch ticket price based on a specific stop
 String _getTicketPriceForStop(LatLng stop) {
   // Define your stop pricing logic here
   if (stop == LatLng(6.81750000, 79.89027778)) {
     return "100.00"; // Example price for stop 1
   } else if (stop == LatLng(6.713937790150642, 79.98895190786376)) {
     return "500.00"; // Example price for stop 2
-  } 
-  // Add more conditions for other stops
+  }
+  // Add more conditions for other stops or return a default value
   return "Unknown Price";
 }
-// Function to show the marker with ticket price at the current location
-void _showTicketPriceMarker(LatLng location, String ticketPrice) {
-  setState(() {
-    _markers.add(
-      Marker(
-        markerId: MarkerId('current_location_ticket'),
-        position: location,
-        infoWindow: InfoWindow(
-          title: 'Ticket Price',
-          snippet: 'Rs. $ticketPrice',
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure), // Customize marker icon
-      ),
-    );
-  });
+
+// Calculate the ticket price based on the user's live location
+String _getTicketPriceForLiveLocation(Position position) {
+  LatLng currentLocation = LatLng(position.latitude, position.longitude);
+
+  // Assuming ticket price is based on proximity to stops
+  for (RouteDetails route in _routes) {
+    for (LatLng stop in route.waypoints) {
+      double distanceToStop = Geolocator.distanceBetween(
+        currentLocation.latitude, currentLocation.longitude,
+        stop.latitude, stop.longitude,
+      );
+
+      const double nearbyThreshold = 100.0; // 100 meters
+
+      if (distanceToStop < nearbyThreshold) {
+        // Return the ticket price for the nearby stop
+        return _getTicketPriceForStop(stop);
+      }
+    }
+  }
+  return "N/A"; // Default price or message if no stop is nearby
 }
 
+// Add a marker at the user's live location with the ticket price
+void _addLiveLocationMarker(Position position, String ticketPrice) {
+    LatLng currentLocation = LatLng(position.latitude, position.longitude);
+
+    setState(() {
+      _markers.add(
+        createMarker(
+          "live_location", // Marker ID for live location
+          currentLocation, // LatLng position for live location
+          "Your", // Instead of cityName, using the string 'Your'
+          ticketPrice, // Display the ticket price
+        ),
+      );
+    });
+  }
+
+// Show a popup with the ticket price
 void _showTicketPricePopup(String price) {
   showDialog(
     context: context,
@@ -474,6 +507,7 @@ void _showTicketPricePopup(String price) {
     },
   );
 }
+
 
   void _updatePosition(Position position) {
     setState(() {
