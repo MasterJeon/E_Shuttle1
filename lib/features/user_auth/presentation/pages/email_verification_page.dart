@@ -103,17 +103,17 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 const SizedBox(height: 30),
 
                 // Confirm email button
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
-                    textStyle: const TextStyle(fontSize: 18),
-                  ),
-                  child: const Text('Confirm email'),
-                  onPressed: () {
-                    checkEmailVerified();
-                  },
-                ),
+                //ElevatedButton(
+                 // style: ElevatedButton.styleFrom(
+                 //   padding: const EdgeInsets.symmetric(
+                 //       horizontal: 50, vertical: 15),
+                 //   textStyle: const TextStyle(fontSize: 18),
+                 // ),
+                 // child: const Text('Confirm email'),
+                 // onPressed: () {
+                  //  checkEmailVerified();
+                 // },
+               // ),
 
                 const SizedBox(height: 35),
 
