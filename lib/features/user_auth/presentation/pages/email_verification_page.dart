@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
-import 'package:e_shuttle/startupPages/selectRoute.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({Key? key}) : super(key: key);
@@ -15,11 +13,13 @@ class EmailVerificationScreen extends StatefulWidget {
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   bool isEmailVerified = false;
   Timer? timer;
+
   @override
   void initState() {
     super.initState();
     FirebaseAuth.instance.currentUser?.sendEmailVerification();
-    timer = Timer.periodic(const Duration(seconds: 3), (_) => checkEmailVerified());
+    timer = Timer.periodic(
+        const Duration(seconds: 3), (_) => checkEmailVerified());
   }
 
   Future<void> checkEmailVerified() async {
@@ -30,12 +30,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     });
 
     if (isEmailVerified) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Email Successfully Verified")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Email Successfully Verified")));
 
       timer?.cancel();
       Navigator.pushReplacementNamed(context, "/selectRoute");
-      //Navigator.pushReplacementNamed(context, "/login");
     }
   }
 
@@ -47,58 +46,113 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize userEmail to fetch the current user's email
+    String? userEmail = FirebaseAuth.instance.currentUser?.email;
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 35),
-              const SizedBox(height: 30),
-              const Center(
-                child: Text(
-                  'Check your \n Email',
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+
+                // Placeholder for the image at the top
+                Image.asset(
+                  'assets/emailVeri.png',
+                ),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  'Verify your Email',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                child: Center(
-                  child: Text(
-                    'We have sent you a Email to ${FirebaseAuth.instance.currentUser?.email}',
-                    textAlign: TextAlign.center,
+
+                const SizedBox(height: 35),
+
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: 'An email has been sent to your email address ',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 26, 26, 26),
+                    ),
+                    children: [
+                      TextSpan(
+                        text: userEmail, // This will be bold now
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const TextSpan(
+                        text:
+                            '. Please click on the link to verify your email.',
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              const Center(child: CircularProgressIndicator()),
-              const SizedBox(height: 8),
-              const Padding(
-                padding: EdgeInsets
-                    .symmetric(horizontal: 32.0),
-                child: Center(
-                  child: Text(
-                    'Verifying email....',
-                    textAlign: TextAlign.center,
-                  ),
+
+                const SizedBox(height: 30),
+
+                // Confirm email button
+                //ElevatedButton(
+                 // style: ElevatedButton.styleFrom(
+                 //   padding: const EdgeInsets.symmetric(
+                 //       horizontal: 50, vertical: 15),
+                 //   textStyle: const TextStyle(fontSize: 18),
+                 // ),
+                 // child: const Text('Confirm email'),
+                 // onPressed: () {
+                  //  checkEmailVerified();
+                 // },
+               // ),
+
+                const SizedBox(height: 35),
+
+                const Text(
+                  "Didn't receive the email?",
+                  style: TextStyle(fontSize: 15),
                 ),
-              ),
-              const SizedBox(height: 57),
-              Padding(
-                padding: const EdgeInsets
-                    .symmetric(horizontal: 32.0),
-                child: ElevatedButton(
+
+                const SizedBox(height: 10),
+
+                // Resend email button
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
+                    textStyle: const TextStyle(fontSize: 18),
+                  ),
                   child: const Text('Resend'),
                   onPressed: () async {
-                    await FirebaseAuth.instance.currentUser?.sendEmailVerification();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Verification email resent.")),
-                    );
-                    },
+                    await FirebaseAuth.instance.currentUser
+                        ?.sendEmailVerification();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Verification email resent.")));
+                  },
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 30),
+
+                const Center(child: CircularProgressIndicator()),
+
+                const SizedBox(height: 8),
+
+                const Text(
+                  'Verifying email....',
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:e_shuttle/services/notifi_service.dart'; // Import your notification service
 
-class NotificationsPage extends StatelessWidget{
-  const NotificationsPage ({super.key});
+class NotificationsPage extends StatelessWidget {
+  const NotificationsPage({super.key});
 
-  Widget build(BuildContext context){
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Notifications"),
@@ -21,6 +23,16 @@ class NotificationsPage extends StatelessWidget{
           ),
         ),
       ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Call the showNotification method when the button is pressed
+            NotificationService()
+                .showNotification(title: 'Notification Title', body: 'Notification Body');
+          },
+          child: const Text('Show Notification'),
+        ),
+      ),
     );
-  }    
+  }
 }
