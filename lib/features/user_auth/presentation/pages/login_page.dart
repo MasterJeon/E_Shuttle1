@@ -35,6 +35,7 @@ import 'package:e_shuttle/welcome_pages/wScreen1.dart';
 import 'package:e_shuttle/welcome_pages/welcomeScreen.dart';
 import 'package:e_shuttle/welcome_pages/wScreen2.dart';
 import 'package:e_shuttle/welcome_pages/wScreen3.dart';
+
 import 'package:e_shuttle/home/eTickets/scanPay.dart';
 //import 'package:e_shuttle/features/user_auth/presentation/pages/home_page.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
