@@ -6,7 +6,7 @@ class Help_support extends StatelessWidget{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notification"),
+        title: const Text("Help and Support"),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(

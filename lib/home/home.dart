@@ -1,10 +1,12 @@
 import 'dart:ffi';
 import 'package:e_shuttle/home/Help.dart';
+import 'package:e_shuttle/home/find_shuttle.dart';
 import 'package:e_shuttle/home/SOS/SOS.dart';
 import 'package:e_shuttle/home/changeRoute.dart';
 import 'package:e_shuttle/home/eTickets/scanPay.dart';
 import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
 import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
+import 'package:e_shuttle/home/find_shuttle.dart';
 import 'package:e_shuttle/home/myProfile/appSettings.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
 import 'package:e_shuttle/home/myProfile/notifi.dart';
@@ -338,7 +340,12 @@ class _HomePageState extends State<HomePage> {
       //Middle Navigation Icon
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.share_location_sharp),
-        onPressed: () {},
+        onPressed: () {
+         Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ShuttleDetailsPage()),
+         );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
@@ -463,8 +470,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-
-        ),
+      ),
     );
   }
 }

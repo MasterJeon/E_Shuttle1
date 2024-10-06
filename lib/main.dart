@@ -6,6 +6,7 @@ import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password2
 import 'package:e_shuttle/firebase_options.dart';
 import 'package:e_shuttle/home/Help.dart';
 import 'package:e_shuttle/home/changeRoute.dart';
+import 'package:e_shuttle/home/find_shuttle.dart';
 import 'package:e_shuttle/home/myProfile/appSettings.dart';
 import 'package:e_shuttle/home/myProfile/notifi.dart';
 import 'package:e_shuttle/home/myProfile/shareLiveLocation.dart';
@@ -86,6 +87,7 @@ class MyApp extends StatelessWidget {
         '/livelocation':(context) => LiveLocation(),
         '/routetest':(context) => MyRoute(),
         '/selectRoute':(context) => SelectRoute(),
+        '/findShuttle':(context) => ShuttleDetailsPage(),
         '/emailVerification':(context) => EmailVerificationScreen(),
       },
     );
