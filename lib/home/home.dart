@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
     MyProfile(),
     Feedbacks(),
     Help_support(),
-    changeRoute(),
+    ChangeRoute(),
     LiveLocation()
   ];
 
@@ -267,7 +267,7 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => changeRoute()),
+                MaterialPageRoute(builder: (context) => ChangeRoute()),
               );
             },
           ),

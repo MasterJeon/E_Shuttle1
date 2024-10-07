@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
         '/appSettings':(context) => AppSettings(),
         '/notificationpage':(context) => NotificationsPage(),
         '/helpCenter':(context) => Help_support(),
-        '/routeChange':(context) => changeRoute(),
+        '/routeChange':(context) => ChangeRoute(),
         'routemap':(context) => RouteMapPage(),
         '/livelocation':(context) => LiveLocation(),
         '/routetest':(context) => MyRoute(),
