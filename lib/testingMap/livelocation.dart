@@ -450,15 +450,98 @@ Future<void> _requestLocationPermission() async {
     return polyline;
   }
 
+  String departureLocation = "Kottawa"; // Replace with data fetched from the database
+  String arrivalLocation = "KDU"; // Replace with data fetched from the database
+  String departureTime = "6.00 AM"; // Replace with data fetched from the database
+  String arrivalTime = "8.00 AM"; // Replace with data fetched from the database
+  String Distance = "39 km"; // Replace with data fetched from the database
+  String Duration = "1h 26min"; // Replace with data fetched from the database
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Google Maps in Flutter'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70.0), // Set your desired height here
+        child: AppBar(
+        backgroundColor: Colors.blue,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0, bottom: 16.0), // Adjust the top padding here
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Departure Info
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Departure',
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
+                Text(
+                  departureTime, // Replace with your actual departure time
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
+                Text(
+                  departureLocation, // Replace with your actual departure location
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+              ],
+            ),
+            // Center Info (Distance and Duration)
+            Column(
+              children: [
+                Text(
+                  Distance,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                Row(
+              children: [
+                Text(
+                  '-   -   -   -   -   -', // Replace with desired number of dashes
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: const Color.fromARGB(255, 255, 255, 255)),
+                ),
+                SizedBox(width: 8), // Space between dashes and arrow
+                Icon(
+                  Icons.arrow_forward, // Arrow icon between Departure and Arrival
+                  color: Colors.white,
+                ),
+                SizedBox(width: 8),
+                  ],
+                ), // Space between arrow and duration
+                Text(
+                  Duration,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ],
+            ),
+            // Arrival Info
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Arrival',
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
+                Text(
+                  arrivalTime, // Replace with your actual arrival time
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
+                Text(
+                  arrivalLocation, // Replace with your actual arrival location
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                ],
+                ),
+              ],
+            ),
+          ),
         ),
-        body: GoogleMap(
+      ),
+      body: Stack( // Use Stack to overlay the button on the map
+        children: [
+          GoogleMap(
           onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
             target: _center,
@@ -472,6 +555,35 @@ Future<void> _requestLocationPermission() async {
           myLocationEnabled: true, // Shows the blue dot for current location
           myLocationButtonEnabled: true, // Enables the my location button
         ),
+        Positioned(
+            bottom: 20, // Adjusts the button's vertical position
+            left: 20, // Adjusts the button's horizontal position
+            child: GestureDetector(
+              onTap: () {
+                // Handle tap action here
+                print('Tap to Track button pressed!');
+              },
+              child: Container(
+                width: 120, // Button width
+                height: 50, // Button height
+                decoration: BoxDecoration(
+                  color: Colors.blue, // Button color
+                  borderRadius: BorderRadius.circular(10), // Rounded corners
+                ),
+                child: Center(
+                  child: Text(
+                    'Tap to Track',
+                    style: TextStyle(
+                      color: Colors.white, // Text color
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                ),
+            ),
+        ),
+        ],
+      ),
       ),
     );
   }
