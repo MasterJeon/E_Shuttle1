@@ -1,16 +1,18 @@
-/*import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password1.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
 
-void main() {
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ForgotPasswordPage(),
-    ),
-  );
+class ForgotPasswordPage extends StatefulWidget {
+  @override
+  _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
 }
 
-class ForgotPasswordPage extends StatelessWidget {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -28,12 +30,9 @@ class ForgotPasswordPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(
-                'assets/Forgot pw.png',
-                ),
+                Image.asset('assets/Forgot pw.png'),
                 SizedBox(height: 30),
 
-                // Title Text
                 Text(
                   "Forgot password?",
                   style: TextStyle(
@@ -45,7 +44,6 @@ class ForgotPasswordPage extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
 
-                // Subtitle Text
                 Text(
                   "No worries, we'll send you reset instructions.",
                   style: TextStyle(
@@ -57,8 +55,8 @@ class ForgotPasswordPage extends StatelessWidget {
                 ),
                 SizedBox(height: 40),
 
-                // Email TextField
                 TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     hintText: 'Enter your email',
@@ -69,40 +67,77 @@ class ForgotPasswordPage extends StatelessWidget {
                 ),
                 SizedBox(height: 24),
 
-                // Reset Password Button
                 SizedBox(
                   width: double.infinity,
-
                   child: ElevatedButton(
-                    onPressed: () {
-                       // Navigate to forgotPW_OTP page
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => forgotPW_OTP(),
-                        ),
-                      );
+                    onPressed: () async {
+                      final email = _emailController.text.trim();
+
+                      if (email.isNotEmpty) {
+                        try {
+                          // Check if the email exists in Firestore
+                          QuerySnapshot userSnapshot = await _firestore
+                              .collection('passenger') // Replace with your collection name
+                              .where('email', isEqualTo: email)
+                              .get();
+
+                          if (userSnapshot.docs.isNotEmpty) {
+                            // If user exists, send password reset email
+                            await _auth.sendPasswordResetEmail(email: email);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Password reset email sent. Check your inbox.'),
+                              ),
+                            );
+                            // Navigate to login page after sending email
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          } else {
+                            // If user does not exist in Firestore
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('No account found for this email.'),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error: ${e.toString()}'),
+                            ),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please enter your email address.'),
+                          ),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // Use backgroundColor instead of primary
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16), // Example padding
+                      backgroundColor: Colors.blue,
+                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8), // Customize shape
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: Text(
                       'Submit',
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
-                  )
+                  ),
                 ),
                 SizedBox(height: 24),
 
-                // Back to log in with GestureDetector for navigation
                 GestureDetector(
                   onTap: () {
-                    // Handle back to login navigation
-                    Navigator.pop(context); // Assuming the previous page is login
+                    Navigator.pop(context);
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -130,4 +165,4 @@ class ForgotPasswordPage extends StatelessWidget {
       ),
     );
   }
-}*/
+}

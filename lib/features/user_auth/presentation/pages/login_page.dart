@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/forgotPW.dart';
+//import 'package:e_shuttle/features/user_auth/presentation/pages/forgotPW.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -263,6 +263,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       User? user = await _auth.signInWithEmailAndPassword(email, password);
       if (user != null) {
+        await _updatePasswordInFirestore(user.uid, password);
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         showToast(message: "Email or Password incorrect");
@@ -272,6 +273,34 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> _updatePasswordInFirestore(String uid, String newPassword) async {
+    // Reference to the Firestore collection
+    CollectionReference passengers = FirebaseFirestore.instance.collection('passenger');
+
+    // Fetch the user's document by UID
+    DocumentSnapshot snapshot = await passengers.doc(uid).get();
+
+    if (snapshot.exists) {
+      // Extract the existing password and password_confirm from Firestore
+      String existingPassword = snapshot.get('password');
+      String existingPasswordConfirm = snapshot.get('password_confirm');
+
+      // Compare the new password with the existing one
+      if (newPassword != existingPassword || newPassword != existingPasswordConfirm) {
+        // If the passwords don't match, update them
+        await passengers.doc(uid).update({
+          'password': newPassword,
+          'password_confirm': newPassword
+        });
+
+        showToast(message: "Password updated successfully.");
+      } else {
+        showToast(message: "Password is already up-to-date.");
+      }
+    } else {
+      showToast(message: "User not found in database.");
+    }
+  }
 
   _signInWithGoogle()async{
 
