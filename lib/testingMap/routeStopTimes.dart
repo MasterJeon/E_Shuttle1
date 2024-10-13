@@ -217,4 +217,31 @@ class _LiveLocationState extends State<LiveLocation> {
       ),
     );
   }
+  Widget profileTab(String departureLocation, String departureTime, String distance, String duration, String arrivalLocation, String arrivalTime, {Widget? trailing}){
+    return Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 37, 137, 232),
+                borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                    ),
+                  ],
+              ),
+              child: ListTile(
+                
+                title: Text(
+                  title,
+                  style: TextStyle(color : Colors.white),),
+                
+                //subtitle: Text(subtitle),
+                //leading: Icon(iconData),
+                trailing: trailing,
+                tileColor: const Color.fromARGB(255, 255, 255, 255),
+              ),);
+  }
 }
+
