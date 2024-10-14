@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,15 +22,75 @@ class ShuttleDetailsPage extends StatefulWidget {
 }
 
 class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
-  String? selectedStart;
-  String? selectedDestination;
+  String? selectedStart = "KDU"; // Set default value to KDU
+  String? selectedDestination = "KDU"; // Set default value to KDU
+  String? selectedRoute;
+  String? selectedStop;
+  double? ticketPrice;
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  Future<void> fetchRouteDetails(String stop) async {
+    final routesRef = firestore.collection('routes');
+    final routesSnapshot = await routesRef.get();
+
+    if (routesSnapshot.docs.isNotEmpty) {
+      for (var routeDoc in routesSnapshot.docs) {
+        final markersRef = routeDoc.reference.collection('markers');
+
+        // Attempt to fetch the marker document using the stop name directly
+        final markerDoc = await markersRef.doc(stop).get();
+
+        if (markerDoc.exists) {
+          // Fetching the ticket price, ensuring correct type handling
+          final priceData = markerDoc.data()?['ticketPrice'];
+          double price = 0.00; // Default value
+
+          if (priceData is double) {
+            price = priceData; // Use directly if it's a double
+          } else if (priceData is int) {
+            price = priceData.toDouble(); // Convert to double if it's an int
+          }
+
+          final routeNumber = routeDoc.id; // Get the route number
+
+          // Set state only if valid data is found
+          if (mounted) {
+            setState(() {
+              ticketPrice = price; // Set the ticket price for the selected stop
+              selectedRoute = routeNumber; // Set the selected route ID
+            });
+          }
+          return; // Exit once the price and route are found
+        }
+      }
+      // If no marker found, reset ticket price
+      if (mounted) {
+        setState(() {
+          ticketPrice = 0.00;
+          selectedRoute = null; // Clear selected route
+        });
+      }
+    } else {
+      // No routes found
+      if (mounted) {
+        setState(() {
+          ticketPrice = 0.00;
+          selectedRoute = null;
+        });
+      }
+    }
+  }
+
+
 
   Widget buildShuttleDetails() {
     final pickupPoint = selectedStart ?? "Kottawa";
     final pickOffPoint = selectedDestination ?? "KDU";
-    final ticketPrice = "Rs. 180/=";
-    final travelTime = "1h 30min";
-    final distance = "2Km";
+    final priceString = ticketPrice != null && ticketPrice! > 0
+        ? "Rs. ${ticketPrice!.toStringAsFixed(2)}/="
+        : "Not Available";
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,7 +106,7 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "R2: $pickupPoint ➔ $pickOffPoint",
+                "$selectedRoute: $pickupPoint ➔ $pickOffPoint",
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
             ],
@@ -70,13 +131,13 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Text(
-                  "Ticket Price: $ticketPrice",
+                  "Ticket Price: $priceString",
                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(height: 20.0),
 
-              // Route Points with Dotted Line
+              // Route Points
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -98,20 +159,20 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
               ),
               SizedBox(height: 10.0),
 
-              // Dotted Line with Distance and Time
+              // Placeholder for Distance and Time (if not calculated)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(distance, style: TextStyle(fontSize: 16.0, color: Colors.white)),
+                  Text("Distance: N/A", style: TextStyle(fontSize: 16.0, color: Colors.white)),
                   SizedBox(width: 5.0),
-                Dash(
-                  direction: Axis.horizontal,
-                  length: 100,
-                  dashLength: 5,
-                  dashColor: Colors.white,
-                ),
+                  Dash(
+                    direction: Axis.horizontal,
+                    length: 100,
+                    dashLength: 5,
+                    dashColor: Colors.white,
+                  ),
                   SizedBox(width: 5.0),
-                  Text(travelTime, style: TextStyle(fontSize: 16.0, color: Colors.white)),
+                  Text("Time: N/A", style: TextStyle(fontSize: 16.0, color: Colors.white)),
                 ],
               ),
             ],
@@ -121,27 +182,42 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
     );
   }
 
+  void handleStartSelection(String? value) {
+    setState(() {
+      selectedStart = value;
+      selectedDestination = "KDU"; // Automatically set destination to KDU
+      // Set selectedStop to selectedDestination, making sure to handle null.
+      selectedStop = selectedStart ?? ''; // Set selectedStop to selectedDestination if not null
+    });
+    if (selectedStop != null) {
+      print('Fetching details for Stop: $selectedStop');
+      fetchRouteDetails(selectedStop!); // Fetch details for the selected route
+    }
+  }
+
+  void handleDestinationSelection(String? value) {
+    setState(() {
+      selectedDestination = value;
+      selectedStart = "KDU"; // Automatically set start to KDU
+
+      // Set selectedStop to selectedDestination, making sure to handle null.
+      selectedStop = selectedDestination ?? ''; // Set selectedStop to selectedDestination if not null
+    });
+
+    // Check if selectedStop is not null or empty before proceeding.
+    if (selectedStop!=null) {
+      print('Fetching details for Stop: $selectedStop');
+      fetchRouteDetails(selectedStop!); // Fetch details for the selected route
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[100],
-        /*leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            // Add navigation logic here
-          },
-        ),*/
         title: Text("FIND MY SHUTTLE", style: TextStyle(color: Colors.black)),
         centerTitle: true,
-        /*actions: [
-          IconButton(
-            icon: Icon(Icons.menu, color: Colors.black),
-            onPressed: () {
-              // Add menu functionality here
-            },
-          ),
-        ],*/
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -151,34 +227,40 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
             Text("Start", style: TextStyle(fontSize: 16, color: Colors.black)),
             SizedBox(height: 10.0),
             DropdownButtonFormField(
+              value: selectedStart, // Set the current selected value
               decoration: InputDecoration(border: OutlineInputBorder()),
-              items: ["KDU", "UH-KDU", "Aththidiya", "Bandaragama", "Delgoda", "Gammanpila", "Godagama","Gonapola", "Horana", "Ja-Ela", "Kaduwela", "Kesbewa", "Kindelapitiya", "Koswatta","Kottawa", "Kumbuka", "Maharagama", "Negambo", "Nittambuwa", "Nugegoda", "Pahathgama","Panadura", "Peliyagoda", "Piliyandala", "Pokunuwita", "Polgasowita", "Weliweriya", "Yakkala"].map((String stop) {
+              items: [
+                "KDU", "UH-KDU", "Aththidiya", "Bandaragama", "Delgoda", "Gammanpila", "Godagama",
+                "Gonapola", "Horana", "JaEla", "Kaduwela", "Kesbewa", "Kindelapitiya",
+                "Koswatta", "Kottawa", "Kumbuka", "Maharagama", "Negombo",
+                "Nittambuwa", "Nugegoda", "Pahathgama", "Panadura",
+                "Peliyagoda", "Piliyandala", "Pokunuwita", "Polgasowita",
+                "Weliweriya", "Yakkala"
+              ].map((String stop) {
                 return DropdownMenuItem(value: stop, child: Text(stop));
               }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedStart = value as String?;
-                });
-              },
+              onChanged: handleStartSelection,
             ),
             SizedBox(height: 20.0),
             Text("Destination", style: TextStyle(fontSize: 16, color: Colors.black)),
             SizedBox(height: 10.0),
             DropdownButtonFormField(
+              value: selectedDestination, // Set the current selected value
               decoration: InputDecoration(border: OutlineInputBorder()),
-              items: ["KDU", "UH-KDU", "Aththidiya", "Bandaragama", "Delgoda", "Gammanpila", "Godagama","Gonapola", "Horana", "Ja-Ela", "Kaduwela", "Kesbewa", "Kindelapitiya", "Koswatta","Kottawa", "Kumbuka", "Maharagama", "Negambo", "Nittambuwa", "Nugegoda", "Pahathgama","Panadura", "Peliyagoda", "Piliyandala", "Pokunuwita", "Polgasowita", "Weliweriya", "Yakkala"].map((String destination) {
-                return DropdownMenuItem(value: destination, child: Text(destination));
+              items: [
+                "KDU", "UH-KDU", "Aththidiya", "Bandaragama", "Delgoda", "Gammanpila", "Godagama",
+                "Gonapola", "Horana", "JaEla", "Kaduwela", "Kesbewa", "Kindelapitiya",
+                "Koswatta", "Kottawa", "Kumbuka", "Maharagama", "Negombo",
+                "Nittambuwa", "Nugegoda", "Pahathgama", "Panadura",
+                "Peliyagoda", "Piliyandala", "Pokunuwita", "Polgasowita",
+                "Weliweriya", "Yakkala"
+              ].map((String stop) {
+                return DropdownMenuItem(value: stop, child: Text(stop));
               }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedDestination = value as String?;
-                });
-              },
+              onChanged: handleDestinationSelection,
             ),
             SizedBox(height: 20.0),
-
-            // Display Shuttle Details after Selection
-            if (selectedStart != null && selectedDestination != null) buildShuttleDetails(),
+            Expanded(child: buildShuttleDetails()),
           ],
         ),
       ),
