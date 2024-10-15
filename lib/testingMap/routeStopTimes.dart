@@ -36,14 +36,23 @@ class _LiveLocationState extends State<LiveLocation> {
   StreamSubscription<Position>? _positionStreamSubscription;
 
   // Variables for live location
-  String _liveLocation = "Fetching...";
+  String _liveLocation = "Fetching..."; //must be updated real time
 
   String departureLocation = "Kottawa";
   String arrivalLocation = "KDU";
-  String departureTime = "6:00 AM";
-  String arrivalTime = "8:00 AM";
+  String departureTime = "6:00 AM"; 
+  String arrivalTime = "8:00 AM"; //must be updated real time
   String distance = "39 km";
   String duration = "1h 26min";
+
+  // Bus stops and times
+  final List<Map<String, String>> busStops = [
+    {"stop": "Pahathgama", "time": "6:34 AM"},
+    {"stop": "Godagama", "time": "6:57 AM"},
+    {"stop": "Kottawa", "time": "7:16 AM"},
+    {"stop": "Piliyandala", "time": "7:41 AM"},
+    {"stop": "KDU", "time": "8:00 AM"},
+  ];
 
   RouteDetails? _routeDetails;
 
@@ -165,83 +174,152 @@ class _LiveLocationState extends State<LiveLocation> {
         appBar: AppBar(
           title: Text('Live Location: $_liveLocation'),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Departure:", style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 5),
-                    Text(departureTime),
-                    Text(departureLocation, style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(distance, style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(width: 10),
-                        Icon(Icons.arrow_forward),
-                        SizedBox(width: 10),
-                        Text(duration, style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Text("Arrival:", style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 5),
-                    Text(arrivalTime),
-                    Text(arrivalLocation, style: TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-            ],
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: 
+              journeyDetail(departureLocation, departureTime, distance, duration, arrivalLocation, arrivalTime),
+           ),
+           Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: stopsTime(),
           ),
-        ),
+         ],
+       ),
       ),
     );
   }
-  Widget profileTab(String departureLocation, String departureTime, String distance, String duration, String arrivalLocation, String arrivalTime, {Widget? trailing}){
+  Widget journeyDetail(String departureLocation, String departureTime, String distance, String duration, String arrivalLocation, String arrivalTime) {
     return Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 37, 137, 232),
-                borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                    ),
-                  ],
+      width: 350,  // Set desired width here
+      height: 120, // Set desired height here
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 37, 137, 232),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Departure Info
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Departure",
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
-              child: ListTile(
-                
-                title: Text(
-                  title,
-                  style: TextStyle(color : Colors.white),),
-                
-                //subtitle: Text(subtitle),
-                //leading: Icon(iconData),
-                trailing: trailing,
-                tileColor: const Color.fromARGB(255, 255, 255, 255),
-              ),);
+              SizedBox(height: 5),
+              Text(
+                departureTime,
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+              SizedBox(height: 5),
+              Text(
+                departureLocation,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ],
+          ),
+          // Distance and Duration
+          Column(
+              children: [
+                Text(
+                  distance,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                Row(
+              children: [
+                Text(
+                  '-   -   -   -   -   -', // Replace with desired number of dashes
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: const Color.fromARGB(255, 255, 255, 255)),
+                ),
+                SizedBox(width: 8), // Space between dashes and arrow
+                Icon(
+                  Icons.arrow_forward, // Arrow icon between Departure and Arrival
+                  color: Colors.white,
+                ),
+                SizedBox(width: 8),
+                  ],
+                ), // Space between arrow and duration
+                Text(
+                  duration,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ],
+            ),
+          // Arrival Info
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Arrival",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              SizedBox(height: 5),
+              Text(
+                arrivalTime,
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+              SizedBox(height: 5),
+              Text(
+                arrivalLocation,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+  
+
+  Widget stopsTime() {
+    return Container(
+      width: 350,
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.lightBlueAccent,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Bus Route", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          SizedBox(height: 10),
+          ...busStops.map((stop) => _buildStopTimeRow(stop["stop"]!, stop["time"]!)).toList(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStopTimeRow(String stop, String time) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(stop, style: TextStyle(fontSize: 16)),
+          Text(time, style: TextStyle(fontSize: 16)),
+        ],
+      ),
+    );
   }
 }
 
