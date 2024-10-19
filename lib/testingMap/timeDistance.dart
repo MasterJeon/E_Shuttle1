@@ -339,6 +339,37 @@ class _MyRouteState extends State<MyRoute> {
                    arrivalTime: _routeSummaries[0]['arrival_time'] ?? '',  // Ensure this is arrival_time
                 ),
               ),
+            Positioned(
+              bottom: 90,
+              left: 10,
+              child: Container(
+                padding:const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.directions_bus_rounded, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      'Bus Stops',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -394,6 +425,7 @@ class _MyRouteState extends State<MyRoute> {
   }
 }
 
+
 // Add the RouteSummaryWidget class here
 class RouteSummaryWidget extends StatelessWidget {
   final String distance;
@@ -425,8 +457,8 @@ class RouteSummaryWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20.0), // Increased left padding
-            child: Icon(Icons.directions_bus, color: Colors.blue),
+            padding: const EdgeInsets.only(left: 10.0), // Increased left padding
+            child: Icon(Icons.person_pin_circle_rounded, size: 40, color: Colors.blue),
           ),  // Bus icon added here
           Expanded( 
             child: Center(// Expands the column to take available space
