@@ -13,6 +13,7 @@ import 'package:e_shuttle/home/myProfile/shareLiveLocation.dart';
 import 'package:e_shuttle/home/myProfile/trustedContacts.dart';
 import 'package:e_shuttle/home/myWallet/eWallet.dart';
 import 'package:e_shuttle/services/notifi_service.dart';
+import 'package:e_shuttle/testingMap/mapfront.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shuttle/home/SOS/SOS.dart';
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
         '/helpCenter':(context) => Help_support(),
         '/routeChange':(context) => ChangeRoute(),
         'routemap':(context) => RouteMapPage(),
+        '/mappageone':(context) => MapFront(),
         '/livelocation':(context) => LiveLocation(),
         '/routetest':(context) => MyRoute(),
         '/selectRoute':(context) => SelectRoute(),
