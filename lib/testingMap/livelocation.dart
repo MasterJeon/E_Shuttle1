@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:e_shuttle/testingMap/routetest.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
+import 'package:e_shuttle/testingMap/distanceTLiveloc.dart';
 
 void main() => runApp(const LiveLocation());
 
@@ -561,6 +563,10 @@ Future<void> _requestLocationPermission() async {
             child: GestureDetector(
               onTap: () {
                 // Handle tap action here
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyRoute()),
+                  );
                 print('Tap to Track button pressed!');
               },
               child: Container(

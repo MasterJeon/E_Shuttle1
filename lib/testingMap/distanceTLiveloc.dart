@@ -342,6 +342,14 @@ class _MyRouteState extends State<MyRoute> {
             Positioned(
               bottom: 90,
               left: 10,
+              // Navigate to the BusStopPage on tap
+              /*child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => BusStopPage()),
+                  );
+                },*/
               child: Container(
                 padding:const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
