@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:766732878424:android:33238617703de065bec02d",
+        "android_client_info": {
+          "package_name": "com.adminportal.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB_7Upmc0VZ7jTRxh-EQlYaV2n1ST2sLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:766732878424:android:90e683b9103c6f8bbec02d",
         "android_client_info": {
           "package_name": "com.example.e_shuttle"

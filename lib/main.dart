@@ -45,7 +45,7 @@ Future main() async {
   runApp(MyApp());
   await Firebase.initializeApp();
 
-  NotificationService().initNotification(); //initialize the notification service
+  await NotificationService().initNotification(); //initialize the notification service
   runApp(MyApp());
 }
 

@@ -1,8 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:e_shuttle/services/notifi_service.dart'; // Import your notification service
+import 'package:e_shuttle/services/notifi_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart'; // Import your notification service
 
-class NotificationsPage extends StatelessWidget {
+class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
+
+  @override
+  _NotificationsPageState createState() => _NotificationsPageState();
+}
+
+class _NotificationsPageState extends State<NotificationsPage> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _requestNotificationPermission();
+    _configureFCM();
+  }
+
+  void _requestNotificationPermission() async {
+    // Request notification permissions on iOS
+    await _firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
+  void _configureFCM() {
+    // Get the device token for FCM
+    _firebaseMessaging.getToken().then((token) {
+      print("FCM Token: $token");
+      // You can send this token to your backend server if needed
+    });
+
+    // Listen for foreground messages
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Received message: ${message.notification?.title}');
+      NotificationService().showNotification(
+        title: message.notification?.title,
+        body: message.notification?.body,
+      );
+    });
+
+    // Handle background messages
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Message clicked!');
+      // Handle what happens when the user clicks on the notification
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
