@@ -1,6 +1,10 @@
+import 'package:e_shuttle/main.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -25,14 +29,14 @@ class NotificationService {
 
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, 
-        iOS: initializationSettingsIOS
+        iOS: initializationSettingsIOS,
       );
 
     await notificationsPlugin.initialize(
       initializationSettings,
-        onDidReceiveNotificationResponse:
+      onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) async {
-              // Handle notification response
+              _handleNotificationClick(notificationResponse);
             },
           );
         }
@@ -68,11 +72,80 @@ class NotificationService {
 
   Future showNotification(
       {
-        int id = 0, String? title, String? body, String? payLoad,
+        int id = 0, 
+        String? title, 
+        String? body, 
+        String? payLoad,
         }) async {
-    return notificationsPlugin.show(
+        await notificationsPlugin.show(
         id, title, body, await notificationDetails(),
         );
+        saveNotification(title, body);
   }
+
+  Future<void>  saveNotification(String? title, String? body) async {
+    final prefs = await SharedPreferences.getInstance();
+    final notifications = prefs.getStringList('notifications') ?? [];
+    
+    // Add the new notification
+    final newNotification = jsonEncode({
+      'title': title,
+      'body': body,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+    notifications.add(newNotification);
+
+    // Save updated notifications list
+    prefs.setStringList('notifications', notifications);
+    _cleanOldNotifications();
+  }
+
+  Future<void> _cleanOldNotifications() async {
+    final prefs = await SharedPreferences.getInstance();
+    final notifications = prefs.getStringList('notifications') ?? [];
+    final now = DateTime.now();
+
+  // Keep only notifications from the last 30 days
+  final recentNotifications = notifications.where((notif) {
+    try {
+      final map = jsonDecode(notif);
+      final timestamp = DateTime.parse(map['timestamp']);
+      return now.difference(timestamp).inDays <= 30;
+    } catch (e) {
+      return false; // In case of error, exclude the notification
+    }
+  }).toList();
+
+    // Save the filtered list
+    prefs.setStringList('notifications', recentNotifications);
+  }
+
+Future<List<Map<String, String>>> getNotifications() async {
+  final prefs = await SharedPreferences.getInstance();
+  final notifications = prefs.getStringList('notifications') ?? [];
+
+  return notifications.map((notif) {
+    try {
+      final map = jsonDecode(notif);
+      return {
+        'title': map['title']?.toString() ?? 'No Title',
+        'body': map['body']?.toString() ?? 'No Body',
+        'timestamp': map['timestamp']?.toString() ?? '',
+      };
+    } catch (e) {
+      // Handle any errors in decoding the notification
+      return {
+        'title': 'Invalid Data',
+        'body': 'Unable to decode notification',
+        'timestamp': '',
+      };
+    }
+  }).toList();
 }
 
+
+  void _handleNotificationClick(NotificationResponse response) {
+    // Assuming the app's navigator key is set up globally
+    navigatorKey.currentState?.pushNamed('/notificationpage');
+  }
+}

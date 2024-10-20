@@ -37,7 +37,7 @@ import 'package:e_shuttle/testingMap/routetest.dart';
 import 'package:e_shuttle/startupPages/selectRoute.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/email_verification_page.dart';
 
-
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase',
       home: AuthWrapper(),  // Use AuthWrapper as the home widget

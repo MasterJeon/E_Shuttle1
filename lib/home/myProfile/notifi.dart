@@ -11,12 +11,14 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  List<Map<String, String>> _notifications = []; // List to hold notification data
 
   @override
   void initState() {
     super.initState();
     _requestNotificationPermission();
     _configureFCM();
+    _loadNotifications(); // Load past notifications on initialization
   }
 
   void _requestNotificationPermission() async {
@@ -42,16 +44,29 @@ class _NotificationsPageState extends State<NotificationsPage> {
         title: message.notification?.title,
         body: message.notification?.body,
       );
+      _saveNotification(message.notification?.title, message.notification?.body);
     });
 
     // Handle background messages
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('Notification clicked!');
-      // Handle what happens when the user clicks on the notification
+      Navigator.pushNamed(context, '/notificationpage'); // Navigate to NotificationsPage
     });
   }
 
-  // Optional: Handle background message (works for both Android and iOS)
+  // Load past notifications
+  Future<void> _loadNotifications() async {
+    final notifications = await NotificationService().getNotifications();
+    setState(() {
+      _notifications = notifications;
+    });
+  }
+
+    // Save the notification
+  void _saveNotification(String? title, String? body) {
+    NotificationService().saveNotification(title, body);
+    _loadNotifications(); // Reload the notifications list
+  }
 
 // Background message handler
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -78,7 +93,22 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           ),
         ),
       ),
-      body: Center(
+      body: _notifications.isEmpty
+          ? const Center(child: Text("No notifications"))
+          : ListView.builder(
+              itemCount: _notifications.length,
+              itemBuilder: (context, index) {
+                final notification = _notifications[index];
+                return ListTile(
+                  title: Text(notification['title'] ?? 'No Title'),
+                  subtitle: Text(notification['body'] ?? 'No Content'),
+                  trailing: Text(notification['timestamp'] ?? ''),
+                );
+              },
+            ),
+
+
+      /*body: Center(
         child: ElevatedButton(
           onPressed: () {
             // Call the showNotification method when the button is pressed
@@ -87,7 +117,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           },
           child: const Text('Show Notification'),
         ),
-      ),
+      ),*/
     );
   }
 }
