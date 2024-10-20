@@ -38,6 +38,7 @@ import 'package:e_shuttle/startupPages/selectRoute.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/email_verification_page.dart';
 
 
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Initialize Firebase
