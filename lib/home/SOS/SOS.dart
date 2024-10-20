@@ -107,6 +107,27 @@ class SOS extends StatelessWidget {
                           return InkWell(
                             onTap: () {
                               // Handle onTap for each service
+                              if (index == 0) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => AmbulancePage()),
+                                );
+                              } else if (index == 1) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => HospitalPage()),
+                                );
+                              } else if (index == 2) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => PolicePage()),
+                                );
+                              } else if (index == 3) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => KDUPage()),
+                                );
+                              }
                             },
                             child: Container(
                               decoration: BoxDecoration(
