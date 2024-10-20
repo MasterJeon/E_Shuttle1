@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:io'; // For File
 import 'package:image_picker/image_picker.dart'; // For ImagePicker and ImageSource
 import 'package:intl/intl.dart'; // For date formatting
-import 'package:intl/intl.dart'; // For date formatting
+// For date formatting
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

@@ -1,14 +1,9 @@
-import 'package:e_shuttle/main.dart';
-import 'package:e_shuttle/startupPages/login_page.dart';
 import 'package:e_shuttle/welcome_pages/wScreen1.dart';
 import 'package:e_shuttle/welcome_pages/wScreen2.dart';
 import 'package:e_shuttle/welcome_pages/wScreen3.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/home_page.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
 
 
 void main() {

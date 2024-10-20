@@ -106,7 +106,10 @@ flutter:
     - assets/resetPW.png
     - assets/OTPcode.png
     - assets/emailVeri.png
-
+    - assets/images/ambulance.png
+    - assets/images/hospital.png
+    - assets/images/policeman.png
+    - assets/images/kdu_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

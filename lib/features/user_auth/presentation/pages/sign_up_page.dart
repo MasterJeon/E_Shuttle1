@@ -9,47 +9,10 @@ import 'package:e_shuttle/models/userRegistration.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/email_verification_page.dart';
 
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
-import 'package:e_shuttle/features/user_auth/presentation/widgets/form_container_widget.dart';
-import 'package:e_shuttle/global/common/toast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../firebase_auth_implementation/firebase_auth_services.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Import your pages
-import 'package:e_shuttle/home/Help.dart';
-import 'package:e_shuttle/home/changeRoute.dart';
-import 'package:e_shuttle/home/myProfile/appSettings.dart';
-import 'package:e_shuttle/home/myWallet/eWallet.dart';
-import 'package:e_shuttle/home/SOS/SOS.dart';
-import 'package:e_shuttle/home/eTickets/tickets.dart';
-import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
-import 'package:e_shuttle/home/home.dart';
-import 'package:e_shuttle/home/myProfile/profile.dart';
-import 'package:e_shuttle/home/myWallet/wallet.dart';
-import 'package:e_shuttle/welcome_pages/onboarding.dart';
-import 'package:e_shuttle/welcome_pages/splash_screen.dart';
-import 'package:e_shuttle/welcome_pages/wScreen1.dart';
-import 'package:e_shuttle/welcome_pages/welcomeScreen.dart';
-import 'package:e_shuttle/welcome_pages/wScreen2.dart';
-import 'package:e_shuttle/welcome_pages/wScreen3.dart';
-import 'package:e_shuttle/home/eTickets/scanPay.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/home_page.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
-import 'package:e_shuttle/firebase_options.dart';
-import 'package:e_shuttle/startupPages/selectRoute.dart';
 
 
 class SignUpPage extends StatefulWidget {

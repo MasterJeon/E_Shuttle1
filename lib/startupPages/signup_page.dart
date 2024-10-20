@@ -140,10 +140,10 @@ class SignUp extends StatelessWidget {
                           );
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Color.fromRGBO(0, 69, 230, 1)),
-                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 50, vertical: 10)),
-                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
-                          elevation: MaterialStateProperty.all(0),
+                          backgroundColor: WidgetStateProperty.all(Color.fromRGBO(0, 69, 230, 1)),
+                          padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 50, vertical: 10)),
+                          shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
+                          elevation: WidgetStateProperty.all(0),
                         ),
                         child: const Center(
                           child: Text(

@@ -157,7 +157,7 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
               }).toList(),
               onChanged: (value) {
                 setState(() {
-                  selectedStart = value as String?;
+                  selectedStart = value;
                 });
               },
             ),
@@ -171,7 +171,7 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
               }).toList(),
               onChanged: (value) {
                 setState(() {
-                  selectedDestination = value as String?;
+                  selectedDestination = value;
                 });
               },
             ),

@@ -90,11 +90,11 @@ class AccountVerificationState extends State<AccountVerification> {
                             },
                           style: ButtonStyle(
                             foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
+                                WidgetStateProperty.all<Color>(Colors.white),
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.purple),
+                                WidgetStateProperty.all<Color>(Colors.purple),
                             shape:
-                                MaterialStateProperty.all<RoundedRectangleBorder>(
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24.0),
                               ),

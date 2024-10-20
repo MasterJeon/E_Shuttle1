@@ -5,7 +5,6 @@ import 'package:e_shuttle/home/myProfile/trustedContacts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/services/asset_bundle.dart';
 import 'package:e_shuttle/home/myProfile/appSettings.dart';
 import 'package:e_shuttle/home/myProfile/myInformation.dart';
 
