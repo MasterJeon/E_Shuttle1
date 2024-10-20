@@ -122,10 +122,10 @@ class AuthWrapper extends StatelessWidget {
       },
     );
   }
-  Future<void> _initializeApp() async {
+  //Future<void> _initializeApp() async {
     // Initialize Firebase and any other necessary setup
-    await Firebase.initializeApp();
-  }
+    //await Firebase.initializeApp();
+  //}
 }
 
 

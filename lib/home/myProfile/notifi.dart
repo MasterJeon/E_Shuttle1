@@ -46,11 +46,18 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     // Handle background messages
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Message clicked!');
+      print('Notification clicked!');
       // Handle what happens when the user clicks on the notification
     });
   }
 
+  // Optional: Handle background message (works for both Android and iOS)
+
+// Background message handler
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+  // You can show notifications here if needed for background
+}
 
   @override
   Widget build(BuildContext context) {

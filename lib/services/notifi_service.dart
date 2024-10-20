@@ -18,18 +18,24 @@ class NotificationService {
         requestBadgePermission: true,
         requestSoundPermission: true,
         onDidReceiveLocalNotification:
-            (int id, String? title, String? body, String? payload) async {});
+            (int id, String? title, String? body, String? payload) async {
+               // Handle what happens when a local notification is tapped on iOS
+            },
+          );
 
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, 
-        iOS: initializationSettingsIOS);
+        iOS: initializationSettingsIOS
+      );
 
     await notificationsPlugin.initialize(
       initializationSettings,
         onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) async {}
-            );
-  }
+            (NotificationResponse notificationResponse) async {
+              // Handle notification response
+            },
+          );
+        }
 
   NotificationDetails notificationDetails() {
     return const NotificationDetails(
