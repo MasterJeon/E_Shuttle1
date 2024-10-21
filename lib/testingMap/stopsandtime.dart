@@ -7,13 +7,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
 
-void main() => runApp(const LiveLocation());
+void main() => runApp(const LiveLocations());
 
-class LiveLocation extends StatefulWidget {
-  const LiveLocation({super.key});
+class LiveLocations extends StatefulWidget {
+  const LiveLocations({super.key});
 
   @override
-  State<LiveLocation> createState() => _LiveLocationState();
+  State<LiveLocations> createState() => _LiveLocationsState();
 }
 
 class RouteDetails {
@@ -28,7 +28,7 @@ class RouteDetails {
   });
 }
 
-class _LiveLocationState extends State<LiveLocation> {
+class _LiveLocationsState extends State<LiveLocations> {
   late Future<UserProfile> _userProfileFuture;
   bool _locationPermissionGranted = false;
 

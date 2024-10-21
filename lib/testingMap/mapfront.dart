@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
 import 'package:e_shuttle/testingMap/timewithdistance.dart';
+//import 'package:e_shuttle/testingMap/distanceTlive.dart';
+
 void main() => runApp(const MapFront());
 
 class MapFront extends StatefulWidget {
