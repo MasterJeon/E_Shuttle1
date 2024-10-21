@@ -27,6 +27,8 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
   String? selectedRoute;
   String? selectedStop;
   double? ticketPrice;
+  int? distance;
+  String? timee;
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -45,12 +47,15 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
           // Fetching the ticket price, ensuring correct type handling
           final priceData = markerDoc.data()?['ticketPrice'];
           double price = 0.00; // Default value
+          final distancefromlocation = markerDoc.data()?['distance'];
+          final timefromlocation = markerDoc.data()?['timee'];
 
           if (priceData is double) {
             price = priceData; // Use directly if it's a double
           } else if (priceData is int) {
             price = priceData.toDouble(); // Convert to double if it's an int
           }
+
 
           final routeNumber = routeDoc.id; // Get the route number
 
@@ -59,6 +64,8 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
             setState(() {
               ticketPrice = price; // Set the ticket price for the selected stop
               selectedRoute = routeNumber; // Set the selected route ID
+              distance = distancefromlocation;
+              timee = timefromlocation;
             });
           }
           return; // Exit once the price and route are found
@@ -87,6 +94,8 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
   Widget buildShuttleDetails() {
     final pickupPoint = selectedStart ?? "Kottawa";
     final pickOffPoint = selectedDestination ?? "KDU";
+    final dist = distance != null ? distance.toString() : "N/A";
+    final timetaken = timee != null ? timee : "N/A";
     final priceString = ticketPrice != null && ticketPrice! > 0
         ? "Rs. ${ticketPrice!.toStringAsFixed(2)}/="
         : "Not Available";
@@ -163,16 +172,16 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Distance: N/A", style: TextStyle(fontSize: 16.0, color: Colors.white)),
+                  Text("Distance: $dist km", style: TextStyle(fontSize: 16.0, color: Colors.white)),
                   SizedBox(width: 5.0),
                   Dash(
                     direction: Axis.horizontal,
-                    length: 100,
-                    dashLength: 5,
+                    length: 70,
+                    dashLength: 4,
                     dashColor: Colors.white,
                   ),
                   SizedBox(width: 5.0),
-                  Text("Time: N/A", style: TextStyle(fontSize: 16.0, color: Colors.white)),
+                  Text("Time: $timetaken hrs", style: TextStyle(fontSize: 16.0, color: Colors.white)),
                 ],
               ),
             ],
