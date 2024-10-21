@@ -13,6 +13,7 @@ import 'package:e_shuttle/home/myProfile/notifi.dart';
 import 'package:e_shuttle/home/myWallet/eWallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:e_shuttle/testingMap/mapfront.dart';
 
 import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
@@ -85,11 +86,13 @@ class _HomePageState extends State<HomePage> {
     Feedbacks(),
     Help_support(),
     ChangeRoute(),
-    LiveLocation()
+    LiveLocation(),
+    MapFront()
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = LiveLocation(); // Placeholder for home content
+  //Widget currentScreen = LiveLocation(); // Placeholder for home content
+  Widget currentScreen = MapFront();
   //Widget currentScreen = MyRoute();
   //Widget currentScreen = RouteMapPage();
 
