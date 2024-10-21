@@ -33,7 +33,7 @@ import 'package:e_shuttle/home/myWallet/recharge.dart';
 import 'package:e_shuttle/home/myWallet/refund.dart';
 import 'package:e_shuttle/home/myProfile/myInformation.dart';
 import 'package:e_shuttle/home/routemap.dart';
-import 'package:e_shuttle/testingMap/livelocation.dart';
+//import 'package:e_shuttle/testingMap/livelocation.dart';
 import 'package:e_shuttle/testingMap/routetest.dart';
 import 'package:e_shuttle/startupPages/selectRoute.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/email_verification_page.dart';
@@ -86,7 +86,7 @@ class MyApp extends StatelessWidget {
         '/routeChange':(context) => ChangeRoute(),
         'routemap':(context) => RouteMapPage(),
         '/mappageone':(context) => MapFront(),
-        '/livelocation':(context) => LiveLocation(),
+        //'/livelocation':(context) => LiveLocation(),
         '/routetest':(context) => MyRoute(),
         '/selectRoute':(context) => SelectRoute(),
         '/findShuttle':(context) => ShuttleDetailsPage(),

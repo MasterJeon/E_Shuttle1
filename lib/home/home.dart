@@ -35,7 +35,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io' as io;
 import 'package:e_shuttle/home/routemap.dart';
-import 'package:e_shuttle/testingMap/livelocation.dart';
+//import 'package:e_shuttle/testingMap/livelocation.dart';
 import 'package:e_shuttle/testingMap/routetest.dart';
 
 class HomePage extends StatefulWidget {
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
     Feedbacks(),
     Help_support(),
     ChangeRoute(),
-    LiveLocation(),
+    //LiveLocation(),
     MapFront()
   ];
 
@@ -369,7 +369,8 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = LiveLocation();
+                        currentScreen = MapFront();
+                        //currentScreen = LiveLocation();
                         //currentScreen = HomeContent(); // Placeholder for home content
                         currentTab = 0;
                       });
