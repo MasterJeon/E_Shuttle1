@@ -11,9 +11,9 @@ class AmbulancePageApp extends StatelessWidget {
     return MaterialApp(
       title: '',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.indigo,
-      ),
+      //theme: ThemeData(
+        //primarySwatch: Colors.indigo,
+      //),
       home: AmbulancePage(),
     );
   }
@@ -23,7 +23,7 @@ class AmbulancePage extends StatelessWidget {
   final List<Map<String, String>> ambulanceServices = [
     {
       'name': 'Suwa Sariya',
-      'phone': '1990',
+      'phone': '0352283332',
       'icon': 'assets/suwa_sariya.png', // Replace with your ambulance icon
     },
     {
@@ -44,7 +44,19 @@ class AmbulancePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Ambulance Service Contacts'),
         centerTitle: true,
-        backgroundColor: Colors.indigo, // Adjust to your theme color
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
+          ),
+        ), // Adjust to your theme color
       ),
       body: ListView.builder(
         itemCount: ambulanceServices.length,
@@ -73,7 +85,7 @@ class AmbulancePage extends StatelessWidget {
                 },
                 child: Text('Call'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: const Color.fromARGB(255, 80, 139, 240),
                   padding: EdgeInsets.symmetric(horizontal: 20),
                 ),
               ),

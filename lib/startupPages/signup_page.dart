@@ -1,8 +1,5 @@
 import 'package:e_shuttle/startupPages/accountVerification.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
-import 'package:e_shuttle/services/database_service.dart';
-import '../../models/user.dart';
 
 void main() => runApp(
     MaterialApp(

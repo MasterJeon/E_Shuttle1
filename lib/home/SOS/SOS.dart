@@ -1,5 +1,9 @@
 import 'package:e_shuttle/home/SOS/ambulance.dart';
+import 'package:e_shuttle/home/SOS/hospital.dart';
+import 'package:e_shuttle/home/SOS/kdu.dart';
+import 'package:e_shuttle/home/SOS/police.dart';
 import 'package:flutter/material.dart';
+
 
 void main() {
   runApp(SOSApp());
@@ -11,9 +15,6 @@ class SOSApp extends StatelessWidget {
     return MaterialApp(
       title: '',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.indigo,
-      ),
       home: SOS(),
     );
   }
@@ -42,7 +43,17 @@ class SOS extends StatelessWidget {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        color: Colors.indigo,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(0, 69, 230, 1),
+              Color.fromRGBO(0, 115, 239, 1),
+              Color.fromRGBO(38, 201, 255, 1),
+            ],
+            begin: Alignment.topRight,
+            end: Alignment.topLeft,
+          ),
+        ),
         height: height,
         width: width,
         child: Column(
@@ -94,6 +105,7 @@ class SOS extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
+                    SizedBox(height: 30), // Adjust this value to move the boxes down
                     Expanded(
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -121,16 +133,17 @@ class SOS extends StatelessWidget {
                               } else if (index == 2) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => PolicePage()),
+                                  MaterialPageRoute(builder: (context) => PoliceStationPage()),
                                 );
                               } else if (index == 3) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => KDUPage()),
+                                  MaterialPageRoute(builder: (context) => KDU()),
                                 );
                               }
                             },
-                            child: Container(
+                             child: AnimatedContainer(
+                              duration: Duration(milliseconds: 200), // Animation for click effect
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white,

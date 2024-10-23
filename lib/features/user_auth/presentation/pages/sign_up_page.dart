@@ -9,7 +9,6 @@ import 'package:e_shuttle/models/userRegistration.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/email_verification_page.dart';
 
 
-import 'package:firebase_auth/firebase_auth.dart';
 
 
 // Import your pages
