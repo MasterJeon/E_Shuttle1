@@ -176,7 +176,7 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
                   SizedBox(width: 5.0),
                   Dash(
                     direction: Axis.horizontal,
-                    length: 70,
+                    length: 60,
                     dashLength: 4,
                     dashColor: Colors.white,
                   ),
