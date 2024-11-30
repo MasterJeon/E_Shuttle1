@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
 import 'package:e_shuttle/testingMap/timewithdistance.dart';
 //import 'package:e_shuttle/testingMap/distanceTlive.dart';
+import 'dart:convert';
+import 'package:intl/intl.dart';
 
 void main() => runApp(const MapFront());
 
@@ -34,6 +36,8 @@ class RouteDetails {
 class _MapFrontState extends State<MapFront> {
   late GoogleMapController mapController;
   late Future<UserProfile> _userProfileFuture;
+
+  String cityname = 'fetching';
 
   final LatLng _center = const LatLng(6.81750000, 79.89027778);
 
@@ -63,7 +67,7 @@ class _MapFrontState extends State<MapFront> {
     //_getRoute();
     _markers.addAll(_createMarkers());
     _getRouteDataFromDB();
-    //_getMarkerDataFromDB();
+    //_getMarkerDataFromRoute();
     _requestLocationPermission();
   }
 
@@ -79,39 +83,6 @@ class _MapFrontState extends State<MapFront> {
       }
     }
     return UserProfile(full_name: 'N/A', email: 'N/A', routeno: 'N/A');
-  }
-
-  Future<void> _getMarkerDataFromRoute(String routeId) async {
-    final markersSnapshot = await FirebaseFirestore.instance
-        .collection('routes')
-        .doc(routeId) // routeId must be a String
-        .collection('markers')
-        .get();
-
-    print("Total markers fetched for route $routeId: ${markersSnapshot.docs.length}");
-
-    setState(() {
-      for (var doc in markersSnapshot.docs) {
-        var data = doc.data();
-        print("Marker ID: ${doc.id}");
-        print("Coordinates: ${data['coordinates']}");
-        print("City Name: ${data['cityName']}");
-        print("Ticket Price: ${data['ticketPrice']}");
-
-        GeoPoint geoPoint = data['coordinates'];
-        LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
-
-        // Add dynamic markers from Firestore
-        _markers.add(
-          createMarker(
-            doc.id, // Marker ID from Firestore document
-            position, // LatLng position from Firestore document
-            data['cityName'], // City name from Firestore document
-            data['ticketPrice'].toString(), // Ticket price converted to string
-          ),
-        );
-      }
-    });
   }
 
   Future<void> _getRouteDataFromDB() async {
@@ -132,7 +103,7 @@ class _MapFrontState extends State<MapFront> {
         if (data != null) {
           print("Route ID: ${routeDoc.id}");
 
-          _getMarkerDataFromRoute(routeDoc.id);
+          await _getMarkerDataFromRoute(routeDoc.id);
 
           print("Start Location: ${data['startLocation']}");
           print("End Location: ${data['endLocation']}");
@@ -142,15 +113,73 @@ class _MapFrontState extends State<MapFront> {
           GeoPoint? startGeo = data['startLocation'] as GeoPoint?;
           GeoPoint? endGeo = data['endLocation'] as GeoPoint?;
 
-          if (startGeo != null && endGeo != null) {
-            LatLng start = LatLng(startGeo.latitude, startGeo.longitude);
-            LatLng end = LatLng(endGeo.latitude, endGeo.longitude);
+          // Determine time of day and set end location dynamically
+          final now = DateTime.now();
+          final morningEndTime = TimeOfDay(hour: 12, minute: 0);
+          final eveningStartTime = TimeOfDay(hour: 12, minute: 1);
+
+          // Define dynamic end location based on time
+          GeoPoint? dynamicStartGeo;
+          GeoPoint? dynamicEndGeo;
+          if (now.hour < morningEndTime.hour ||
+              (now.hour == morningEndTime.hour && now.minute <= morningEndTime.minute)) {
+            // Morning: Set KDU as the end location
+            dynamicEndGeo = startGeo; // Replace with actual KDU coordinates
+            dynamicStartGeo = endGeo;
+            print("It's morning. End location set to KDU.");
+          } else if (now.hour > eveningStartTime.hour ||
+              (now.hour == eveningStartTime.hour && now.minute >= eveningStartTime.minute)) {
+            // Evening: Set route's end location
+            dynamicStartGeo = startGeo;
+            dynamicEndGeo = endGeo;
+            print("It's evening. End location set to route's original end.");
+          }
+
+          print("Cityname after markers: $cityname");
+
+
+          if (dynamicStartGeo != null && dynamicEndGeo != null) {
+            Timestamp? passedStartGeoAtTimestamp = data['passedStartGeoAt'];
+            DateTime? departureDateTime;
+            String departureTimeFormatted = "N/A";
+
+            // Convert the Timestamp to DateTime and format it
+            if (passedStartGeoAtTimestamp != null) {
+              DateTime passedStartGeoAt = passedStartGeoAtTimestamp.toDate();
+              departureDateTime = passedStartGeoAtTimestamp.toDate().toLocal(); // Convert to local time
+              departureTimeFormatted = DateFormat.jm().format(passedStartGeoAt); // e.g., "6:00 AM"
+            }
+
+            setState(() {
+              if (dynamicEndGeo == endGeo) {
+                // Evening
+                departureLocation = "KDU";
+                arrivalLocation = "$cityname";
+              } else {
+                // Morning
+                departureLocation = "$cityname";
+                arrivalLocation = "KDU";
+              }
+              departureTime = departureTimeFormatted; // Replace with dynamic value if available
+              // Replace with dynamic value if available
+              // Replace with dynamic value if calculated
+            });
+
+            LatLng start = LatLng(dynamicStartGeo.latitude, dynamicStartGeo.longitude);
+            LatLng end = LatLng(dynamicEndGeo.latitude, dynamicEndGeo.longitude);
 
             List<LatLng> waypoints = (data['waypoints'] as List?)
                 ?.map((wp) => LatLng(wp.latitude, wp.longitude))
                 .toList() ?? [];
 
             print("Start: $start, End: $end, Waypoints: $waypoints");
+            RouteDetails routeDetails = RouteDetails(
+              startLocation: start,
+              endLocation: end,
+              waypoints: waypoints,
+            );
+            await _getDistanceMatrix(routeDetails, departureDateTime ?? DateTime.now()); // Use a suitable routeIndex (e.g., 0)
+
 
             // Call Google Directions API
             final directions = GoogleMapsDirections(apiKey: "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs");
@@ -172,6 +201,7 @@ class _MapFrontState extends State<MapFront> {
                 ));
               });
             }
+
           } else {
             print("Start or End location is null.");
           }
@@ -185,6 +215,50 @@ class _MapFrontState extends State<MapFront> {
       print("No valid route number found in user profile: $selectedRouteNumber.");
     }
   }
+
+  Future<void> _getMarkerDataFromRoute(String routeId) async {
+    final markersSnapshot = await FirebaseFirestore.instance
+        .collection('routes')
+        .doc(routeId) // routeId must be a String
+        .collection('markers')
+        .get();
+
+    print("Total markers fetched for route $routeId: ${markersSnapshot.docs.length}");
+
+    setState(() {
+      String highestPriceMarkerName = '';
+      int highestTicketPrice = 0;
+
+      for (var doc in markersSnapshot.docs) {
+        var data = doc.data();
+        print("Marker ID: ${doc.id}");
+        print("Coordinates: ${data['coordinates']}");
+        print("City Name: ${data['cityName']}");
+        print("Ticket Price: ${data['ticketPrice']}");
+        if (data['ticketPrice'] > highestTicketPrice) {
+          highestTicketPrice = data['ticketPrice'];
+          cityname = data['cityName'] ?? 'Unknown';
+          print("City iss: $cityname");// Marker name field
+        }
+
+        GeoPoint geoPoint = data['coordinates'];
+        LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
+
+        // Add dynamic markers from Firestore
+        _markers.add(
+          createMarker(
+            doc.id, // Marker ID from Firestore document
+            position, // LatLng position from Firestore document
+            data['cityName'], // City name from Firestore document
+            data['ticketPrice'].toString(), // Ticket price converted to string
+          ),
+        );
+      }
+
+    });
+  }
+
+
 
 
 
@@ -327,6 +401,78 @@ class _MapFrontState extends State<MapFront> {
     }
   }
 
+  Future<void> _getDistanceMatrix(RouteDetails route, DateTime departureTime) async {
+    String googleAPIKey = "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs";
+    // Construct origins and destinations
+    String origins = '${route.startLocation.latitude},${route.startLocation.longitude}';
+    String destinations = '${route.endLocation.latitude},${route.endLocation.longitude}';
+
+    // If there are waypoints, concatenate them
+    if (route.waypoints.isNotEmpty) {
+      String waypointStr = route.waypoints.map((point) => '${point.latitude},${point.longitude}').join('|');
+      origins += '|$waypointStr';
+    }
+
+    // Make the Distance Matrix API request
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origins&destinations=$destinations&key=$googleAPIKey&units=metric');
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        // Extract distance and duration
+        final elements = data['rows'][0]['elements'][0];
+        final distance = elements['distance']['text'];
+        final duration = elements['duration']['text'];
+
+        print("Locations fetched: $origins , $destinations");
+
+        // Parse the duration (in minutes or hours) and add it to the current time
+        final durationParts = duration.split(' ');
+        int durationMinutes = 0;
+
+        // Check if the duration contains hours and minutes
+        if (durationParts.length == 4) {
+          durationMinutes = int.parse(durationParts[0]) * 60 + int.parse(durationParts[2]);
+        } else if (durationParts.length == 2) {
+          if (durationParts[1] == "hours" || durationParts[1] == "hour") {
+            durationMinutes = int.parse(durationParts[0]) * 60;
+          } else {
+            durationMinutes = int.parse(durationParts[0]);
+          }
+        }
+
+
+
+        // Calculate the arrival time by adding the duration to the current time
+        final currentTime = DateTime.now();
+        final arrivalTimee = departureTime.add(Duration(minutes: durationMinutes));
+
+        //final arrivalTimee = currentTime.add(Duration(minutes: durationMinutes));
+
+        // Format the arrival time
+        //final formattedArrivalTime = DateFormat.jm().format(arrivalTime);
+        final formattedArrivalTime = DateFormat.jm().format(arrivalTimee);
+
+        // Store the distance and duration
+        setState(() {
+          ddistance = distance; // Replace with dynamic value if calculated
+          dduration = duration;
+          arrivalTime = formattedArrivalTime;
+        });
+        print("Locations fetched: $origins , $destinations");
+
+        print('Distance: $distance, Duration: $duration');
+      } else {
+        print('Error: Unable to retrieve data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   void _initializeMap(GoogleMapController controller) {
     mapController = controller;
     setState(() {
@@ -398,12 +544,12 @@ class _MapFrontState extends State<MapFront> {
     return polyline;
   }
 
-  String departureLocation = "Kottawa"; // Replace with data fetched from the database
-  String arrivalLocation = "KDU"; // Replace with data fetched from the database
-  String departureTime = "6.00 AM"; // Replace with data fetched from the database
-  String arrivalTime = "8.00 AM"; // Replace with data fetched from the database
-  String Distance = "39 km"; // Replace with data fetched from the database
-  String Duration = "1h 26min"; // Replace with data fetched from the database
+  String departureLocation = "Fetching..."; // Replace with data fetched from the database
+  String arrivalLocation = "Fetching..."; // Replace with data fetched from the database
+  String departureTime = "Fetching..."; // Replace with data fetched from the database
+  String arrivalTime = "Fetching..."; // Replace with data fetched from the database
+  String ddistance = "Fetching..."; // Replace with data fetched from the database
+  String dduration = "Fetching..."; // Replace with data fetched from the database
 
   @override
   Widget build(BuildContext context) {
@@ -441,13 +587,13 @@ class _MapFrontState extends State<MapFront> {
                   Column(
                     children: [
                       Text(
-                        Distance,
+                        ddistance,
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                       Row(
                         children: [
                           Text(
-                            '-   -   -   -   -   -', // Replace with desired number of dashes
+                            '-   -   -  -', // Replace with desired number of dashes
                             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: const Color.fromARGB(255, 255, 255, 255)),
                           ),
                           SizedBox(width: 8), // Space between dashes and arrow
@@ -459,7 +605,7 @@ class _MapFrontState extends State<MapFront> {
                         ],
                       ), // Space between arrow and duration
                       Text(
-                        Duration,
+                        dduration,
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ],

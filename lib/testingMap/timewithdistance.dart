@@ -21,11 +21,13 @@ class MyLiveRoute extends StatefulWidget {
 }
 
 class RouteDetails {
+  final LatLng driver_location;
   final LatLng startLocation;
   final LatLng endLocation;
   final List<LatLng> waypoints;
 
   RouteDetails({
+    required this.driver_location,
     required this.startLocation,
     required this.endLocation,
     required this.waypoints,
@@ -47,6 +49,10 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
   bool _isMapInitialized = false;
   bool _locationPermissionGranted = false;
 
+  LatLng? driverLocation; // Class-level variable for driver's location
+  double? _distanceToDriver; // Class-level variable for distance to the driver
+  Position? userPosition;
+
 
   // Location stream subscription
   StreamSubscription<Position>? _positionStreamSubscription;
@@ -64,6 +70,7 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
     _markers.addAll(_createMarkers());
     _getRouteDataFromDB();
     _requestLocationPermission();
+    _getCurrentLocation();
   }
 
   Future<UserProfile> _fetchUserProfile() async {
@@ -204,32 +211,83 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
         if (data != null) {
           print("Route ID: ${routeDoc.id}");
 
-          _getMarkerDataFromRoute(routeDoc.id);
+          await _getMarkerDataFromRoute(routeDoc.id);
 
+          print("Driver Location: ${data['driver_location']}");
           print("Start Location: ${data['startLocation']}");
           print("End Location: ${data['endLocation']}");
           print("Waypoints: ${data['waypoints']}");
 
           // Use null-aware operators to safely access GeoPoint values
+          GeoPoint? driverGeo = data['driver_location'] as GeoPoint?;
           GeoPoint? startGeo = data['startLocation'] as GeoPoint?;
           GeoPoint? endGeo = data['endLocation'] as GeoPoint?;
 
-          if (startGeo != null && endGeo != null) {
-            LatLng start = LatLng(startGeo.latitude, startGeo.longitude);
-            LatLng end = LatLng(endGeo.latitude, endGeo.longitude);
+          // Determine time of day and set end location dynamically
+          final now = DateTime.now();
+          final morningEndTime = TimeOfDay(hour: 12, minute: 0);
+          final eveningStartTime = TimeOfDay(hour: 12, minute: 1);
 
+          // Define dynamic end location based on time
+          GeoPoint? dynamicStartGeo;
+          GeoPoint? dynamicEndGeo;
+
+          if (now.hour < morningEndTime.hour ||
+              (now.hour == morningEndTime.hour && now.minute <= morningEndTime.minute)) {
+            // Morning: Set KDU as the end location
+            dynamicEndGeo = startGeo; // Replace with actual KDU coordinates
+            dynamicStartGeo = endGeo;
+            print("It's morning. End location set to KDU.");
+          } else if (now.hour > eveningStartTime.hour ||
+              (now.hour == eveningStartTime.hour && now.minute >= eveningStartTime.minute)) {
+            // Evening: Set route's end location
+            dynamicStartGeo = startGeo;
+            dynamicEndGeo = endGeo;
+            print("It's evening. End location set to route's original end.");
+          }
+
+          if (dynamicStartGeo != null && dynamicEndGeo != null && driverGeo != null) {
+            LatLng start;
+            LatLng end;
+            LatLng driverLocation = LatLng(
+                  driverGeo.latitude, driverGeo.longitude);
             List<LatLng> waypoints = (data['waypoints'] as List?)
-                ?.map((wp) => LatLng(wp.latitude, wp.longitude))
-                .toList() ?? [];
-
+                  ?.map((wp) => LatLng(wp.latitude, wp.longitude))
+                  .toList() ?? [];
+            if (dynamicEndGeo == endGeo) {
+                start = LatLng(
+                  dynamicStartGeo.latitude, dynamicStartGeo.longitude);
+                end = LatLng(
+                  dynamicEndGeo.latitude, dynamicEndGeo.longitude);
+            }else{
+                start = LatLng(
+                    dynamicEndGeo.latitude, dynamicEndGeo.longitude);
+                end = LatLng(
+                    dynamicStartGeo.latitude, dynamicStartGeo.longitude);
+            }
             print("Start: $start, End: $end, Waypoints: $waypoints");
 
             // Create a RouteDetails object
             RouteDetails routeDetails = RouteDetails(
+              driver_location: driverLocation,
               startLocation: start,
               endLocation: end,
               waypoints: waypoints,
             );
+
+            // Show driver's location on map with a different colored marker
+            setState(() {
+              //LatLng diverlocation = LatLng(driverGeo.latitude, driverGeo.longitude);
+              _markers.add(
+                Marker(
+                  markerId: MarkerId("driver_location"),
+                  position: driverLocation,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen), // Different color for driver
+                  infoWindow: InfoWindow(title: "Driver Location"),
+                ),
+              );
+            });
+
 
             // Call Google Directions API
             final directions = GoogleMapsDirections(apiKey: "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs");
@@ -382,8 +440,8 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
   Future<void> _getDistanceMatrix(RouteDetails route) async {
     String googleAPIKey = "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs";
     // Construct origins and destinations
-    String origins = '${route.startLocation.latitude},${route.startLocation.longitude}';
-    String destinations = '${route.endLocation.latitude},${route.endLocation.longitude}';
+    String origins = '${route.endLocation.latitude},${route.endLocation.longitude}';
+    String destinations = '${route.driver_location.latitude},${route.driver_location.longitude}';
 
     // If there are waypoints, concatenate them
     if (route.waypoints.isNotEmpty) {
@@ -404,6 +462,8 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
         final elements = data['rows'][0]['elements'][0];
         final distance = elements['distance']['text'];
         final duration = elements['duration']['text'];
+
+        print("Locations fetched: $origins , $destinations");
 
         // Parse the duration (in minutes or hours) and add it to the current time
         final durationParts = duration.split(' ');
@@ -433,8 +493,10 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
             'distance': distance,
             'duration': duration, // Add duration
             'arrival_time': formattedArrivalTime,
+
           });
         });
+        print("Locations fetched: $origins , $destinations");
 
         print('Distance: $distance, Duration: $duration');
       } else {
@@ -469,13 +531,41 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    userPosition = position;
     _updatePosition(position);
 
     _positionStreamSubscription = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position newPosition) {
-      _updatePosition(newPosition);
+      _updatePosition(newPosition); // Update UI with new position
+      userPosition = newPosition; // Store the user's position
+      // Only calculate distance if driverLocation is not null
+      if (driverLocation != null) {
+        _calculateDistanceToDriver(userPosition!); // Calculate distance to driver
+      } else {
+        print("Driver location is not available still");
+
+      }
     });
+  }
+
+  Future<void> _calculateDistanceToDriver(Position userPosition) async {
+    if (driverLocation != null) {
+      double distanceInMeters = Geolocator.distanceBetween(
+        userPosition.latitude,
+        userPosition.longitude,
+        driverLocation!.latitude,
+        driverLocation!.longitude,
+      );
+
+      setState(() {
+        _distanceToDriver = distanceInMeters;
+      });
+
+      print("Distance to driver: $_distanceToDriver meters");
+    } else {
+      print("Driver location is null. Cannot calculate distance.");
+    }
   }
 
   void _updatePosition(Position position) {
@@ -556,7 +646,9 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
                 left: 10,
                 right: 10,
                 child: RouteSummaryWidget(
+                  //distance: _distanceToDriver != null ? '${_distanceToDriver!.toStringAsFixed(2)} meters' : 'Distance not available',
                   distance: _routeSummaries[0]['distance'] ?? '',
+                  //distance: _distanceToDriver.toString(),
                   duration: _routeSummaries[0]['duration'] ?? '',
                   arrivalTime: _routeSummaries[0]['arrival_time'] ?? '',  // Ensure this is arrival_time
                 ),

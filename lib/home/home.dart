@@ -369,7 +369,7 @@ class _HomePageState extends State<HomePage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = LiveLocation();
+                        currentScreen = MapFront();
                         //currentScreen = HomeContent(); // Placeholder for home content
                         currentTab = 0;
                       });

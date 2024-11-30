@@ -6,6 +6,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:google_maps_webservice/directions.dart' hide Polyline;
+import 'package:geolocator/geolocator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:e_shuttle/home/myProfile/myProfile.dart';
 
 void main() => runApp(const LiveLocations());
 
@@ -17,11 +28,13 @@ class LiveLocations extends StatefulWidget {
 }
 
 class RouteDetails {
-  final String startLocation;
-  final String endLocation;
-  final List<String> waypoints;
+  final LatLng driver_location;
+  final LatLng startLocation;
+  final LatLng endLocation;
+  final List<LatLng> waypoints;
 
   RouteDetails({
+    required this.driver_location,
     required this.startLocation,
     required this.endLocation,
     required this.waypoints,
@@ -113,17 +126,30 @@ class _LiveLocationsState extends State<LiveLocations> {
 
           _getMarkerDataFromRoute(routeDoc.id);
 
-          String startLocation = data['startLocation'] ?? "Unknown Start Location";
-          String endLocation = data['endLocation'] ?? "Unknown End Location";
-          List<String> waypoints = List<String>.from(data['waypoints'] ?? []);
+          // Use null-aware operators to safely access GeoPoint values
+          GeoPoint? driverGeo = data['driver_location'] as GeoPoint?;
+          GeoPoint? startGeo = data['startLocation'] as GeoPoint?;
+          GeoPoint? endGeo = data['endLocation'] as GeoPoint?;
 
-          setState(() {
+          if (startGeo != null && endGeo != null && driverGeo != null) {
+            LatLng driverLocation = LatLng(driverGeo.latitude, driverGeo.longitude);
+            LatLng start = LatLng(startGeo.latitude, startGeo.longitude);
+            LatLng end = LatLng(endGeo.latitude, endGeo.longitude);
+
+            List<LatLng> waypoints = (data['waypoints'] as List?)
+                ?.map((wp) => LatLng(wp.latitude, wp.longitude))
+                .toList() ?? [];
+
+            print("Start: $start, End: $end, Waypoints: $waypoints");
+
+            setState(() {
             _routeDetails = RouteDetails(
-              startLocation: startLocation,
-              endLocation: endLocation,
+              driver_location: driverLocation,
+              startLocation: start,
+              endLocation: end,
               waypoints: waypoints,
             );
-          });
+          });}
         }
       }
     }
@@ -172,8 +198,11 @@ class _LiveLocationsState extends State<LiveLocations> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Live Location: $_liveLocation'),
-        ),
+        title: Text(
+        _routeDetails != null
+        ? 'Live Location: ${_routeDetails!.driver_location.latitude}, ${_routeDetails!.driver_location.longitude}'
+            : 'Loading driver location...',
+    ),),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
