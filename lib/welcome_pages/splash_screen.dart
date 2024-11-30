@@ -1,6 +1,5 @@
 import 'package:e_shuttle/welcome_pages/welcomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 void main() => runApp(

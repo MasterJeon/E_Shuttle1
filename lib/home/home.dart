@@ -1,42 +1,23 @@
-import 'dart:ffi';
 import 'package:e_shuttle/home/Help.dart';
 import 'package:e_shuttle/home/find_shuttle.dart';
 import 'package:e_shuttle/home/SOS/SOS.dart';
 import 'package:e_shuttle/home/changeRoute.dart';
 import 'package:e_shuttle/home/eTickets/scanPay.dart';
 import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
-import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
-import 'package:e_shuttle/home/find_shuttle.dart';
 import 'package:e_shuttle/home/myProfile/appSettings.dart';
 import 'package:e_shuttle/home/myProfile/myProfile.dart';
 import 'package:e_shuttle/home/myProfile/notifi.dart';
 import 'package:e_shuttle/home/myWallet/eWallet.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shuttle/testingMap/mapfront.dart';
 
-import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:e_shuttle/welcome_pages/splash_screen.dart';
-import 'package:e_shuttle/welcome_pages/wScreen1.dart';
-import 'package:e_shuttle/welcome_pages/welcomeScreen.dart';
-import 'package:e_shuttle/welcome_pages/wScreen2.dart';
-import 'package:e_shuttle/welcome_pages/wScreen3.dart';
 
 import '../../../../global/common/toast.dart';
 import 'dart:io' as io;
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:io' as io;
-import 'package:e_shuttle/home/routemap.dart';
 import 'package:e_shuttle/testingMap/livelocation.dart';
-import 'package:e_shuttle/testingMap/routetest.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

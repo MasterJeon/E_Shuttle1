@@ -1,9 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:e_shuttle/features/user_auth/presentation/pages/forgotPW.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password1.dart';
-import 'package:e_shuttle/features/user_auth/presentation/pages/forgot_password2.dart';
-import 'package:e_shuttle/firebase_options.dart';
 import 'package:e_shuttle/home/Help.dart';
 import 'package:e_shuttle/home/changeRoute.dart';
 import 'package:e_shuttle/home/find_shuttle.dart';
@@ -17,12 +13,9 @@ import 'package:e_shuttle/testingMap/mapfront.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shuttle/home/SOS/SOS.dart';
-import 'package:e_shuttle/home/eTickets/tickets.dart';
 import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
 import 'package:e_shuttle/home/home.dart';
 import 'package:e_shuttle/home/myProfile/profile.dart';
-import 'package:e_shuttle/home/myWallet/wallet.dart';
-import 'package:e_shuttle/welcome_pages/onboarding.dart';
 import 'package:e_shuttle/welcome_pages/splash_screen.dart';
 import 'package:e_shuttle/home/eTickets/scanPay.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
@@ -38,6 +31,7 @@ import 'package:e_shuttle/testingMap/routetest.dart';
 import 'package:e_shuttle/startupPages/selectRoute.dart';
 import 'package:e_shuttle/features/user_auth/presentation/pages/email_verification_page.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +40,7 @@ Future main() async {
   runApp(MyApp());
   await Firebase.initializeApp();
 
-  NotificationService().initNotification(); //initialize the notification service
+  await NotificationService().initNotification(); //initialize the notification service
   runApp(MyApp());
 }
 
@@ -54,6 +48,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase',
       home: AuthWrapper(),  // Use AuthWrapper as the home widget
@@ -123,10 +118,10 @@ class AuthWrapper extends StatelessWidget {
       },
     );
   }
-  Future<void> _initializeApp() async {
+  //Future<void> _initializeApp() async {
     // Initialize Firebase and any other necessary setup
-    await Firebase.initializeApp();
-  }
+    //await Firebase.initializeApp();
+  //}
 }
 
 
