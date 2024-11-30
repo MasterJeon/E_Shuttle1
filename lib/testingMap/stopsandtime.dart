@@ -44,6 +44,8 @@ class RouteDetails {
 class _LiveLocationsState extends State<LiveLocations> {
   late Future<UserProfile> _userProfileFuture;
   bool _locationPermissionGranted = false;
+  List<Map<String, dynamic>> _busStops = [];
+  String? _selectedRouteId;
 
   // Location stream subscription
   StreamSubscription<Position>? _positionStreamSubscription;
@@ -100,12 +102,148 @@ class _LiveLocationsState extends State<LiveLocations> {
     print("Total markers fetched for route $routeId: ${markersSnapshot.docs.length}");
 
     setState(() {
-      for (var doc in markersSnapshot.docs) {
+      _busStops = markersSnapshot.docs.map((doc) {
         var data = doc.data();
         GeoPoint geoPoint = data['coordinates'];
-        // Handle geoPoint data here if needed
-      }
+        return {
+          'stopId': doc.id,
+          'cityName': data['cityName'],
+          'coordinates': LatLng(geoPoint.latitude, geoPoint.longitude),
+          'estimatedArrivalTime': data['estimatedArrivalTime'] ?? 'N/A',
+          'actualArrivalTime': data['actualArrivalTime'] ?? 'N/A',
+        };
+      }).toList();
     });
+    print("Bus stops loaded: ${_busStops.length}");
+  }
+
+  Future<void> _calculateETAsForStops() async {
+    if (_routeDetails == null) {
+      print("Route details not available yet.");
+      return;
+    }
+
+    if (_busStops.isEmpty) {
+      print("Error: No bus stops available.");
+      return;
+    }
+
+    final driverLocation = _routeDetails!.driver_location;
+
+    // Sort stops by their distance to the driver
+    _busStops.sort((a, b) {
+      final distanceA = Geolocator.distanceBetween(
+        driverLocation.latitude,
+        driverLocation.longitude,
+        a['coordinates'].latitude,
+        a['coordinates'].longitude,
+      );
+      final distanceB = Geolocator.distanceBetween(
+        driverLocation.latitude,
+        driverLocation.longitude,
+        b['coordinates'].latitude,
+        b['coordinates'].longitude,
+      );
+      return distanceA.compareTo(distanceB);
+    });
+
+    // Filter stops that need ETA calculation (not passed yet)
+    final upcomingStops = _busStops.where((stop) => stop['actualArrivalTime'] == 'N/A').toList();
+
+    if (upcomingStops.isEmpty) {
+      print("No upcoming stops to calculate ETAs.");
+      return;
+    }
+
+    // Construct destinations for Distance Matrix API
+    String destinations = upcomingStops
+        .map((stop) => '${stop['coordinates'].latitude},${stop['coordinates'].longitude}')
+        .join('|');
+
+    if (destinations.isEmpty) {
+      print("No valid destinations for ETA calculation.");
+      return;
+    }
+
+    // Build API URL
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/distancematrix/json?origins=${driverLocation.latitude},${driverLocation.longitude}&destinations=$destinations&key=AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs');
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final elements = data['rows'][0]['elements'];
+
+        if (elements == null || elements.isEmpty) {
+          print("Error: API returned no elements.");
+          return;
+        }
+
+        // Process and update ETA for each stop
+        for (int i = 0; i < elements.length; i++) {
+          final stop = upcomingStops[i];
+          final element = elements[i];
+
+          if (element['status'] != 'OK') {
+            print("Stop ${stop['cityName']} is unreachable.");
+            continue;
+          }
+
+          final duration = element['duration']['text'];
+          final stopId = stop['stopId'];
+
+          // Update Firestore and state
+          FirebaseFirestore.instance
+              .collection('routes')
+              .doc(_selectedRouteId)
+              .collection('markers')
+              .doc(stopId)
+              .update({'estimatedArrivalTime': duration});
+
+          setState(() {
+            _busStops.firstWhere((s) => s['stopId'] == stopId)['estimatedArrivalTime'] = duration;
+          });
+
+          print("ETA for ${stop['cityName']}: $duration");
+        }
+      } else {
+        print("Error fetching Distance Matrix API: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error calculating ETAs: $e");
+    }
+  }
+
+
+
+
+  void _updatePassedStops(LatLng driverLocation) {
+    for (var stop in _busStops) {
+      if (stop['actualArrivalTime'] == 'N/A') {
+        final distance = Geolocator.distanceBetween(
+          driverLocation.latitude,
+          driverLocation.longitude,
+          stop['coordinates'].latitude,
+          stop['coordinates'].longitude,
+        );
+        if (distance < 50) { // Adjust threshold as needed
+          final actualTime = DateFormat.jm().format(DateTime.now());
+
+          // Update Firestore with actual time
+          FirebaseFirestore.instance
+              .collection('routes')
+              .doc(_selectedRouteId)
+              .collection('markers')
+              .doc(stop['stopId'])
+              .update({'actualArrivalTime': actualTime});
+
+          setState(() {
+            stop['actualArrivalTime'] = actualTime;
+          });
+        }
+      }
+    }
   }
 
   Future<void> _getRouteDataFromDB() async {
@@ -119,12 +257,13 @@ class _LiveLocationsState extends State<LiveLocations> {
           .get();
 
       if (routeDoc.exists) {
+        _selectedRouteId = routeDoc.id;
         var data = routeDoc.data();
 
         if (data != null) {
           print("Route ID: ${routeDoc.id}");
 
-          _getMarkerDataFromRoute(routeDoc.id);
+          await _getMarkerDataFromRoute(routeDoc.id);
 
           // Use null-aware operators to safely access GeoPoint values
           GeoPoint? driverGeo = data['driver_location'] as GeoPoint?;
@@ -143,13 +282,13 @@ class _LiveLocationsState extends State<LiveLocations> {
             print("Start: $start, End: $end, Waypoints: $waypoints");
 
             setState(() {
-            _routeDetails = RouteDetails(
-              driver_location: driverLocation,
-              startLocation: start,
-              endLocation: end,
-              waypoints: waypoints,
-            );
-          });}
+              _routeDetails = RouteDetails(
+                driver_location: driverLocation,
+                startLocation: start,
+                endLocation: end,
+                waypoints: waypoints,
+              );
+            });}
         }
       }
     }
@@ -176,7 +315,9 @@ class _LiveLocationsState extends State<LiveLocations> {
     _positionStreamSubscription = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen((Position newPosition) {
-      _updatePosition(newPosition);
+      final driverLatLng = LatLng(newPosition.latitude, newPosition.longitude);
+      _updatePassedStops(driverLatLng);
+      _calculateETAsForStops();
     });
   }
 
@@ -198,11 +339,11 @@ class _LiveLocationsState extends State<LiveLocations> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-        title: Text(
-        _routeDetails != null
-        ? 'Live Location: ${_routeDetails!.driver_location.latitude}, ${_routeDetails!.driver_location.longitude}'
-            : 'Loading driver location...',
-    ),),
+          title: Text(
+            _routeDetails != null
+                ? 'Live Location: ${_routeDetails!.driver_location.latitude}, ${_routeDetails!.driver_location.longitude}'
+                : 'Loading driver location...',
+          ),),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -332,7 +473,20 @@ class _LiveLocationsState extends State<LiveLocations> {
         children: [
           Text("Bus Route", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           SizedBox(height: 10),
-          ...busStops.map((stop) => _buildStopTimeRow(stop["stop"]!, stop["time"]!)).toList(),
+          ..._busStops.map((stop) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(stop['cityName'], style: TextStyle(fontSize: 16)),
+                  stop['actualArrivalTime'] != 'N/A'
+                      ? Text('Passed at ${stop['actualArrivalTime']}', style: TextStyle(fontSize: 16, color: Colors.green))
+                      : Text('ETA: ${stop['estimatedArrivalTime']}', style: TextStyle(fontSize: 16, color: Colors.blue)),
+                ],
+              ),
+            );
+          }).toList(),
         ],
       ),
     );

@@ -120,79 +120,6 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
     });
   }
 
-  /*Future<void> _getRouteDataFromDB() async {
-    // Fetch the user's profile to get the selected route number
-    final userProfile = await _fetchUserProfile();
-    final selectedRouteNumber = userProfile.routeno;
-
-    // Fetch only the route document that matches the selected route number
-    if (selectedRouteNumber.isNotEmpty && selectedRouteNumber != 'N/A') {
-      final routeDoc = await FirebaseFirestore.instance
-          .collection('routes')
-          .doc(selectedRouteNumber)
-          .get();
-
-      if (routeDoc.exists) {
-        var data = routeDoc.data();
-
-        if (data != null) {
-          print("Route ID: ${routeDoc.id}");
-
-          _getMarkerDataFromRoute(routeDoc.id);
-
-          print("Start Location: ${data['startLocation']}");
-          print("End Location: ${data['endLocation']}");
-          print("Waypoints: ${data['waypoints']}");
-
-          // Use null-aware operators to safely access GeoPoint values
-          GeoPoint? startGeo = data['startLocation'] as GeoPoint?;
-          GeoPoint? endGeo = data['endLocation'] as GeoPoint?;
-
-          if (startGeo != null && endGeo != null) {
-            LatLng start = LatLng(startGeo.latitude, startGeo.longitude);
-            LatLng end = LatLng(endGeo.latitude, endGeo.longitude);
-
-            List<LatLng> waypoints = (data['waypoints'] as List?)
-                ?.map((wp) => LatLng(wp.latitude, wp.longitude))
-                .toList() ?? [];
-
-            print("Start: $start, End: $end, Waypoints: $waypoints");
-
-            // Call Google Directions API
-            final directions = GoogleMapsDirections(apiKey: "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs");
-            final result = await directions.directionsWithLocation(
-              Location(lat: start.latitude, lng: start.longitude),
-              Location(lat: end.latitude, lng: end.longitude),
-              waypoints: waypoints.map((wp) => Waypoint(value: '${wp.latitude},${wp.longitude}')).toList(),
-            );
-
-            if (result.isOkay) {
-              List<LatLng> routeCoords = _decodePolyline(result.routes[0].overviewPolyline.points);
-              setState(() {
-                _polylines.add(Polyline(
-                  polylineId: PolylineId(routeDoc.id),
-                  visible: true,
-                  points: routeCoords,
-                  color: Colors.blue,
-                  width: 4,
-                ));
-              });
-            }
-            await _getDistanceMatrix(routeDetails, i);
-          } else {
-            print("Start or End location is null.");
-          }
-        } else {
-          print("Route data is null.");
-        }
-      } else {
-        print("No route found for the selected route number: $selectedRouteNumber.");
-      }
-    } else {
-      print("No valid route number found in user profile: $selectedRouteNumber.");
-    }
-
-  }*/
   Future<void> _getRouteDataFromDB() async {
     // Fetch the user's profile to get the selected route number
     final userProfile = await _fetchUserProfile();
@@ -325,8 +252,226 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
     }
   }
 
+  Future<void> _getDistanceMatrix(RouteDetails route) async {
+    String googleAPIKey = "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs";
+    // Construct origins and destinations
+    String origins = '${route.endLocation.latitude},${route.endLocation.longitude}';
+    String destinations = '${route.driver_location.latitude},${route.driver_location.longitude}';
 
+    // If there are waypoints, concatenate them
+    if (route.waypoints.isNotEmpty) {
+      String waypointStr = route.waypoints.map((point) => '${point.latitude},${point.longitude}').join('|');
+      origins += '|$waypointStr';
+    }
 
+    // Make the Distance Matrix API request
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origins&destinations=$destinations&key=$googleAPIKey&units=metric');
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        // Extract distance and duration
+        final elements = data['rows'][0]['elements'][0];
+        final distance = elements['distance']['text'];
+        final duration = elements['duration']['text'];
+
+        print("Locations fetched: $origins , $destinations");
+
+        // Parse the duration (in minutes or hours) and add it to the current time
+        final durationParts = duration.split(' ');
+        int durationMinutes = 0;
+
+        // Check if the duration contains hours and minutes
+        if (durationParts.length == 4) {
+          durationMinutes = int.parse(durationParts[0]) * 60 + int.parse(durationParts[2]);
+        } else if (durationParts.length == 2) {
+          if (durationParts[1] == "hours" || durationParts[1] == "hour") {
+            durationMinutes = int.parse(durationParts[0]) * 60;
+          } else {
+            durationMinutes = int.parse(durationParts[0]);
+          }
+        }
+
+        // Calculate the arrival time by adding the duration to the current time
+        final currentTime = DateTime.now();
+        final arrivalTime = currentTime.add(Duration(minutes: durationMinutes));
+
+        // Format the arrival time
+        final formattedArrivalTime = DateFormat.jm().format(arrivalTime);
+
+        // Store the distance and duration
+        setState(() {
+          _routeSummaries.add({
+            'distance': distance,
+            'duration': duration, // Add duration
+            'arrival_time': formattedArrivalTime,
+
+          });
+        });
+        print("Locations fetched: $origins , $destinations");
+
+        print('Distance: $distance, Duration: $duration');
+      } else {
+        print('Error: Unable to retrieve data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> _requestLocationPermission() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (!serviceEnabled || permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+      setState(() {
+        _locationPermissionGranted = true;
+      });
+      _getCurrentLocation();
+    }
+  }
+
+  void _initializeMap(GoogleMapController controller) {
+    mapController = controller;
+    setState(() {
+      _isMapInitialized = true;
+    });
+  }
+
+  Future<void> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    userPosition = position;
+    _updatePosition(position);
+
+    _positionStreamSubscription = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
+    ).listen((Position newPosition) {
+      _updatePosition(newPosition); // Update UI with new position
+      userPosition = newPosition; // Store the user's position
+      // Only calculate distance if driverLocation is not null
+      if (driverLocation != null) {
+        _calculateDistanceToDriver(userPosition!); // Calculate distance to driver
+      } else {
+        print("Driver location is not available still");
+
+      }
+    });
+  }
+
+  Future<void> _calculateDistanceToDriver(Position userPosition) async {
+    if (driverLocation != null) {
+      double distanceInMeters = Geolocator.distanceBetween(
+        userPosition.latitude,
+        userPosition.longitude,
+        driverLocation!.latitude,
+        driverLocation!.longitude,
+      );
+
+      setState(() {
+        _distanceToDriver = distanceInMeters;
+      });
+
+      print("Distance to driver: $_distanceToDriver meters");
+    } else {
+      print("Driver location is null. Cannot calculate distance.");
+    }
+  }
+
+  void _updatePosition(Position position) {
+    setState(() {
+      _currentPosition = LatLng(position.latitude, position.longitude);
+      /*_markers.add(
+        Marker(
+          markerId: const MarkerId('userLocation'),
+          position: _currentPosition,
+          infoWindow: const InfoWindow(title: "You are here"),
+        ),
+      );*/
+
+      if (_isMapInitialized) {
+        mapController.animateCamera(CameraUpdate.newLatLng(_currentPosition));
+      }
+    });
+  }
+
+  /*Future<void> _getRouteDataFromDB() async {
+    // Fetch the user's profile to get the selected route number
+    final userProfile = await _fetchUserProfile();
+    final selectedRouteNumber = userProfile.routeno;
+
+    // Fetch only the route document that matches the selected route number
+    if (selectedRouteNumber.isNotEmpty && selectedRouteNumber != 'N/A') {
+      final routeDoc = await FirebaseFirestore.instance
+          .collection('routes')
+          .doc(selectedRouteNumber)
+          .get();
+
+      if (routeDoc.exists) {
+        var data = routeDoc.data();
+
+        if (data != null) {
+          print("Route ID: ${routeDoc.id}");
+
+          _getMarkerDataFromRoute(routeDoc.id);
+
+          print("Start Location: ${data['startLocation']}");
+          print("End Location: ${data['endLocation']}");
+          print("Waypoints: ${data['waypoints']}");
+
+          // Use null-aware operators to safely access GeoPoint values
+          GeoPoint? startGeo = data['startLocation'] as GeoPoint?;
+          GeoPoint? endGeo = data['endLocation'] as GeoPoint?;
+
+          if (startGeo != null && endGeo != null) {
+            LatLng start = LatLng(startGeo.latitude, startGeo.longitude);
+            LatLng end = LatLng(endGeo.latitude, endGeo.longitude);
+
+            List<LatLng> waypoints = (data['waypoints'] as List?)
+                ?.map((wp) => LatLng(wp.latitude, wp.longitude))
+                .toList() ?? [];
+
+            print("Start: $start, End: $end, Waypoints: $waypoints");
+
+            // Call Google Directions API
+            final directions = GoogleMapsDirections(apiKey: "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs");
+            final result = await directions.directionsWithLocation(
+              Location(lat: start.latitude, lng: start.longitude),
+              Location(lat: end.latitude, lng: end.longitude),
+              waypoints: waypoints.map((wp) => Waypoint(value: '${wp.latitude},${wp.longitude}')).toList(),
+            );
+
+            if (result.isOkay) {
+              List<LatLng> routeCoords = _decodePolyline(result.routes[0].overviewPolyline.points);
+              setState(() {
+                _polylines.add(Polyline(
+                  polylineId: PolylineId(routeDoc.id),
+                  visible: true,
+                  points: routeCoords,
+                  color: Colors.blue,
+                  width: 4,
+                ));
+              });
+            }
+            await _getDistanceMatrix(routeDetails, i);
+          } else {
+            print("Start or End location is null.");
+          }
+        } else {
+          print("Route data is null.");
+        }
+      } else {
+        print("No route found for the selected route number: $selectedRouteNumber.");
+      }
+    } else {
+      print("No valid route number found in user profile: $selectedRouteNumber.");
+    }
+
+  }*/
 
   /*void _getRoute() async {
     String googleAPIKey = "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs";
@@ -437,153 +582,6 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
       print('Error: $e');
     }
   }*/
-  Future<void> _getDistanceMatrix(RouteDetails route) async {
-    String googleAPIKey = "AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs";
-    // Construct origins and destinations
-    String origins = '${route.endLocation.latitude},${route.endLocation.longitude}';
-    String destinations = '${route.driver_location.latitude},${route.driver_location.longitude}';
-
-    // If there are waypoints, concatenate them
-    if (route.waypoints.isNotEmpty) {
-      String waypointStr = route.waypoints.map((point) => '${point.latitude},${point.longitude}').join('|');
-      origins += '|$waypointStr';
-    }
-
-    // Make the Distance Matrix API request
-    final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origins&destinations=$destinations&key=$googleAPIKey&units=metric');
-
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
-        // Extract distance and duration
-        final elements = data['rows'][0]['elements'][0];
-        final distance = elements['distance']['text'];
-        final duration = elements['duration']['text'];
-
-        print("Locations fetched: $origins , $destinations");
-
-        // Parse the duration (in minutes or hours) and add it to the current time
-        final durationParts = duration.split(' ');
-        int durationMinutes = 0;
-
-        // Check if the duration contains hours and minutes
-        if (durationParts.length == 4) {
-          durationMinutes = int.parse(durationParts[0]) * 60 + int.parse(durationParts[2]);
-        } else if (durationParts.length == 2) {
-          if (durationParts[1] == "hours" || durationParts[1] == "hour") {
-            durationMinutes = int.parse(durationParts[0]) * 60;
-          } else {
-            durationMinutes = int.parse(durationParts[0]);
-          }
-        }
-
-        // Calculate the arrival time by adding the duration to the current time
-        final currentTime = DateTime.now();
-        final arrivalTime = currentTime.add(Duration(minutes: durationMinutes));
-
-        // Format the arrival time
-        final formattedArrivalTime = DateFormat.jm().format(arrivalTime);
-
-        // Store the distance and duration
-        setState(() {
-          _routeSummaries.add({
-            'distance': distance,
-            'duration': duration, // Add duration
-            'arrival_time': formattedArrivalTime,
-
-          });
-        });
-        print("Locations fetched: $origins , $destinations");
-
-        print('Distance: $distance, Duration: $duration');
-      } else {
-        print('Error: Unable to retrieve data');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
-
-  Future<void> _requestLocationPermission() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (!serviceEnabled || permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
-      setState(() {
-        _locationPermissionGranted = true;
-      });
-      _getCurrentLocation();
-    }
-  }
-
-  void _initializeMap(GoogleMapController controller) {
-    mapController = controller;
-    setState(() {
-      _isMapInitialized = true;
-    });
-  }
-
-  Future<void> _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    userPosition = position;
-    _updatePosition(position);
-
-    _positionStreamSubscription = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
-    ).listen((Position newPosition) {
-      _updatePosition(newPosition); // Update UI with new position
-      userPosition = newPosition; // Store the user's position
-      // Only calculate distance if driverLocation is not null
-      if (driverLocation != null) {
-        _calculateDistanceToDriver(userPosition!); // Calculate distance to driver
-      } else {
-        print("Driver location is not available still");
-
-      }
-    });
-  }
-
-  Future<void> _calculateDistanceToDriver(Position userPosition) async {
-    if (driverLocation != null) {
-      double distanceInMeters = Geolocator.distanceBetween(
-        userPosition.latitude,
-        userPosition.longitude,
-        driverLocation!.latitude,
-        driverLocation!.longitude,
-      );
-
-      setState(() {
-        _distanceToDriver = distanceInMeters;
-      });
-
-      print("Distance to driver: $_distanceToDriver meters");
-    } else {
-      print("Driver location is null. Cannot calculate distance.");
-    }
-  }
-
-  void _updatePosition(Position position) {
-    setState(() {
-      _currentPosition = LatLng(position.latitude, position.longitude);
-      /*_markers.add(
-        Marker(
-          markerId: const MarkerId('userLocation'),
-          position: _currentPosition,
-          infoWindow: const InfoWindow(title: "You are here"),
-        ),
-      );*/
-
-      if (_isMapInitialized) {
-        mapController.animateCamera(CameraUpdate.newLatLng(_currentPosition));
-      }
-    });
-  }
 
   @override
   void dispose() {
