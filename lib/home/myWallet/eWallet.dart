@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 void main() => runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: EWallet(),
-    )
-);
+      const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: EWallet(),
+      ),
+    );
 
 class EWallet extends StatefulWidget {
   const EWallet({Key? key}) : super(key: key);
@@ -65,73 +64,112 @@ class EWalletState extends State<EWallet> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      body: Padding(
-        // Set padding relative to screen size
-        padding: EdgeInsets.symmetric(
-          vertical: screenSize.height * 0.05,
-          horizontal: screenSize.width * 0.08,
+      body: Container(
+        // Gradient background
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(0, 69, 230, 1),
+              Color.fromRGBO(0, 115, 239, 1),
+              Color.fromRGBO(38, 201, 255, 1),
+            ],
+            begin: Alignment.topRight,
+            end: Alignment.topLeft,
+          ),
         ),
         child: Column(
           children: [
-            SizedBox(
-              width: double.infinity,
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: screenSize.height * 0.05,
+                horizontal: screenSize.width * 0.08,
+              ),
+              child: Column(
+                children: [
+                  // Wallet Balance Container
+                  SizedBox(
+                    width: double.infinity,
+                    child: Container(
+                      padding: EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 77, 157, 255),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'E-Wallet',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 34),
+                          Text(
+                            'Total Balance',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                            ),
+                          ),
+                          SizedBox(height: 18),
+                          _isLoading
+                              ? CircularProgressIndicator()
+                              : Text(
+                                  'Rs. ${_walletBalance.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 48),
+                ],
+              ),
+            ),
+            // White Box Containing Buttons
+            Expanded(
               child: Container(
-                padding: EdgeInsets.all(28),
+                width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 77, 157, 255),
-                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
                 ),
+                padding: EdgeInsets.all(16),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      'E-Wallet',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    profileTab(
+                      "Recharge Balance",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RechargePage()),
+                        );
+                      },
                     ),
-                    SizedBox(height: 34),
-                    Text(
-                      'Total Balance',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                      ),
-                    ),
-                    SizedBox(height: 18),
-                    _isLoading
-                        ? CircularProgressIndicator() // Show a loading spinner while fetching
-                        : Text(
-                      'Rs. ${_walletBalance.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SizedBox(height: 16),
+                    profileTab(
+                      "Refund",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RefundPage()),
+                        );
+                      },
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 96),
-            profileTab(
-              "Recharge Balance",
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RechargePage()),
-                );
-              },
-            ),
-            SizedBox(height: 16),
-            profileTab("Refund", onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RefundPage()),
-              );
-            }),
-            SizedBox(height: 16),
           ],
         ),
       ),
@@ -141,12 +179,12 @@ class EWalletState extends State<EWallet> {
   Widget profileTab(String title, {Widget? trailing, required VoidCallback onTap}) {
     return Container(
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 255, 175, 77),
+        color: Color.fromARGB(255, 144, 238, 144), // Green box color
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             offset: Offset(0, 5),
-            color: const Color.fromARGB(255, 5, 9, 11).withOpacity(0.2),
+            color: Colors.black.withOpacity(0.2),
             spreadRadius: 2,
             blurRadius: 10,
           ),
@@ -155,14 +193,11 @@ class EWalletState extends State<EWallet> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+          style: TextStyle(color: Colors.black),
         ),
         trailing: Icon(Icons.arrow_forward, color: Colors.grey),
-        tileColor: const Color.fromARGB(255, 255, 255, 255),
-        onTap: onTap, // This line ensures the onTap is triggered
+        onTap: onTap,
       ),
     );
   }
 }
-
-
