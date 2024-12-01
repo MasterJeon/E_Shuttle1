@@ -23,7 +23,7 @@ class AmbulancePage extends StatelessWidget {
   final List<Map<String, String>> ambulanceServices = [
     {
       'name': 'Suwa Sariya',
-      'phone': '0352283332',
+      'phone': '0771254183',
       'icon': 'assets/suwa_sariya.png', // Replace with your ambulance icon
     },
     {

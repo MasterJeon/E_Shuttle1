@@ -155,7 +155,7 @@ Future<void> _getUserLocation() async {
 }
 
 Future<List<Hospital>> _getNearbyHospitals(Position position) async {
-  String apiKey = 'AIzaSyBRDV8VbzhAJvMyfWuqpObUKGOFBZ_kcgs';
+  String apiKey = 'AIzaSyDRjUOF4SaputIfu2RO7pyFMJ9m9SbWtyE';
   String url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
                '?location=${position.latitude},${position.longitude}&radius=10000'  //change the radius of the search area
                '&type=hospital&key=$apiKey';
