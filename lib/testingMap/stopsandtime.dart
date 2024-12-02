@@ -370,11 +370,11 @@ class _LiveLocationsState extends State<LiveLocations> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child:
-              journeyDetail(departureLocation, departureTime, distance, duration, arrivalLocation, arrivalTime),
-            ),
+            //Padding(
+              //padding: const EdgeInsets.all(10.0),
+              //child:
+              //journeyDetail(departureLocation, departureTime, distance, duration, arrivalLocation, arrivalTime),
+            //),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: stopsTime(),
@@ -384,7 +384,11 @@ class _LiveLocationsState extends State<LiveLocations> {
       ),
     );
   }
-  Widget journeyDetail(String departureLocation, String departureTime, String distance, String duration, String arrivalLocation, String arrivalTime) {
+
+
+
+
+  /*Widget journeyDetail(String departureLocation, String departureTime, String distance, String duration, String arrivalLocation, String arrivalTime) {
     return Container(
       width: 350,  // Set desired width here
       height: 120, // Set desired height here
@@ -473,7 +477,7 @@ class _LiveLocationsState extends State<LiveLocations> {
         ],
       ),
     );
-  }
+  }*/
 
 
   Widget stopsTime() {

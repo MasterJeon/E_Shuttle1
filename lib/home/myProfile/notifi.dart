@@ -134,7 +134,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
             // Check conditions
             final isWithinTime =
-                timestamp.isAfter(now.subtract(Duration(hours: 24))) &&
+                timestamp.isAfter(now.subtract(Duration(hours: 48))) &&
                     timestamp.isBefore(now);
             print('Notification ${doc.id} isWithinTime: $isWithinTime');
 
