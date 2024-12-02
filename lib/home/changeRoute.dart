@@ -116,26 +116,7 @@ class ChangeRouteState extends State<ChangeRoute> {
                   ),
                 ),
 
-                SizedBox(height: 40),
-                Text(
-                  "Didn't you receive any code?",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 25),
-                Text(
-                  "Resend New Code",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 32, 73, 155),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+
               ],
             ),
           ),

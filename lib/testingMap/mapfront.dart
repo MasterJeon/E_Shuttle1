@@ -557,92 +557,105 @@ class _MapFrontState extends State<MapFront> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(160.0), // Increased height to accommodate content
+          preferredSize: Size.fromHeight(160.0), // Adjust the height as needed
           child: AppBar(
-            backgroundColor: Colors.blue,
-            flexibleSpace: Padding(
-              padding: const EdgeInsets.only(top: 50.0, left: 16.0, right: 16.0), // Adjust padding here
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Departure Info
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Departure',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      SizedBox(height: 4.0), // Space between rows
-                      Text(
-                        departureTime, // Replace with your actual departure time
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      SizedBox(height: 4.0), // Space between rows
-                      Text(
-                        departureLocation, // Replace with your actual departure location
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  // Center Info (Distance and Duration)
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        ddistance,
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
-                      ),
-                      SizedBox(height: 8.0), // Space between rows
-                      Row(
-                        children: [
-                          Text(
-                            '-   -   -  -', // Replace with desired number of dashes
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w900, color: const Color.fromARGB(255, 255, 255, 255)),
-                          ),
-                          SizedBox(width: 8), // Space between dashes and arrow
-                          Icon(
-                            Icons.arrow_forward, // Arrow icon between Departure and Arrival
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 8),
-                        ],
-                      ),
-                      SizedBox(height: 8.0), // Space between rows
-                      Text(
-                        dduration,
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  // Arrival Info
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Arrival',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      SizedBox(height: 4.0), // Space between rows
-                      Text(
-                        arrivalTime, // Replace with your actual arrival time
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      SizedBox(height: 4.0), // Space between rows
-                      Text(
-                        arrivalLocation, // Replace with your actual arrival location
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ],
+            flexibleSpace: Container(
+              decoration:  BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.fromRGBO(38, 201, 255, 1),
+                    Color.fromRGBO(0, 115, 239, 1),
+                    Color.fromRGBO(0, 69, 230, 1),
+                  ],
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 50.0, left: 16.0, right: 16.0), // Adjust padding here
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Departure Info
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Departure',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        SizedBox(height: 4.0), // Space between rows
+                        Text(
+                          departureTime, // Replace with your actual departure time
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        SizedBox(height: 4.0), // Space between rows
+                        Text(
+                          departureLocation, // Replace with your actual departure location
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    // Center Info (Distance and Duration)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          ddistance,
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                        SizedBox(height: 8.0), // Space between rows
+                        Row(
+                          children: [
+                            Text(
+                              '-   -   -  -', // Replace with desired number of dashes
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w900, color: const Color.fromARGB(255, 255, 255, 255)),
+                            ),
+                            SizedBox(width: 8), // Space between dashes and arrow
+                            Icon(
+                              Icons.arrow_forward, // Arrow icon between Departure and Arrival
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 8),
+                          ],
+                        ),
+                        SizedBox(height: 8.0), // Space between rows
+                        Text(
+                          dduration,
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                      ],
+                    ),
+                    // Arrival Info
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Arrival',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        SizedBox(height: 4.0), // Space between rows
+                        Text(
+                          arrivalTime, // Replace with your actual arrival time
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        SizedBox(height: 4.0), // Space between rows
+                        Text(
+                          arrivalLocation, // Replace with your actual arrival location
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
+
         body: Stack( // Use Stack to overlay the button on the map
           children: [
             GoogleMap(

@@ -18,6 +18,7 @@ import '../../../../global/common/toast.dart';
 import 'dart:io' as io;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:e_shuttle/testingMap/livelocation.dart';
+import 'dart:async';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,12 +32,18 @@ class _HomePageState extends State<HomePage> {
   late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(6.81750000, 79.89027778);
-  int notificationCount = 3; // Example notification count, replace with actual data
+  int notificationCount = 0; // Example notification count, replace with actual data
 
   @override
   void initState() {
     super.initState();
     _userProfileFuture = _fetchUserProfile();
+    _fetchNotificationCount();
+
+    // Optionally refresh every 30 seconds
+    Timer.periodic(Duration(seconds: 10), (timer) {
+      _fetchNotificationCount();
+    });
   }
 
   Future<UserProfile> _fetchUserProfile() async {
@@ -101,6 +108,70 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     )) ?? false;
+  }
+
+  void _fetchNotificationCount() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      final userEmail = currentUser.email;
+
+      String role = '';
+      String userRoute = '';
+
+      // Check role and route
+      final driverDoc = await FirebaseFirestore.instance
+          .collection('driver')
+          .where('email', isEqualTo: userEmail)
+          .get();
+
+      final passengerDoc = await FirebaseFirestore.instance
+          .collection('passenger')
+          .where('email', isEqualTo: userEmail)
+          .get();
+
+      if (driverDoc.docs.isNotEmpty) {
+        role = 'driver';
+        userRoute = driverDoc.docs.first['routeno'];
+      } else if (passengerDoc.docs.isNotEmpty) {
+        role = 'passenger';
+        userRoute = passengerDoc.docs.first['routeno'];
+      }
+
+      if (role.isNotEmpty && userRoute.isNotEmpty) {
+        final now = DateTime.now();
+
+        final notificationsQuery = await FirebaseFirestore.instance
+            .collection('notifications')
+            .where('recipient', isEqualTo: role)
+            .where('routeno', isEqualTo: userRoute)
+            .get();
+
+        final unseenNotifications = notificationsQuery.docs.where((doc) {
+          final seenBy = List<String>.from(doc['seenby'] ?? []);
+          final timestampStr = doc['timestamp'];
+          DateTime? timestamp;
+
+          try {
+            timestamp = DateTime.parse(timestampStr);
+          } catch (e) {
+            return false; // Invalid timestamp
+          }
+
+          final isWithinTime =
+              timestamp.isAfter(now.subtract(Duration(hours: 24))) &&
+                  timestamp.isBefore(now);
+
+          final isUnseen = !seenBy.contains(userEmail);
+
+          return isWithinTime && isUnseen;
+        }).length;
+
+        setState(() {
+          notificationCount = unseenNotifications;
+        });
+      }
+    }
   }
 
   @override

@@ -90,7 +90,7 @@ class _scanPayState extends State<scanPay> {
         ),
         child: Column(
           children: [
-            SizedBox(height: 30),
+            SizedBox(height: 90),
             Text(
               'E-Tickets',
               style: TextStyle(

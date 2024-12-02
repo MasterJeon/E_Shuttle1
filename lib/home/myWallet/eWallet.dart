@@ -87,6 +87,7 @@ class EWalletState extends State<EWallet> {
               child: Column(
                 children: [
                   // Wallet Balance Container
+                          SizedBox(height: 50),
                           Text(
                             'E-Wallet',
                             style: TextStyle(
