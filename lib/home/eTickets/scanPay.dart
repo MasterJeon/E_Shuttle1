@@ -5,7 +5,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Firebase auth to get the current user ID
 
-
 void main() {
   runApp(MyApp());
 }
@@ -28,23 +27,18 @@ class scanPay extends StatefulWidget {
 }
 
 class _scanPayState extends State<scanPay> {
-  String? qrData; // Data fetched from Firestore (initially null)
+  String? qrData;
 
   void initState() {
     super.initState();
-    generateAndSaveQrCode(); // Call method to generate QR code
+    generateAndSaveQrCode();
   }
 
-  // Method to generate a random QR code and save it to Firestore
   void generateAndSaveQrCode() async {
-    // Get the current user ID from Firebase Authentication
     final user = FirebaseAuth.instance.currentUser;
     final userId = user?.uid ?? "unknown_user";
-
-    // Generate QR code data (you can customize this further)
     String generatedQrData = "QR_${DateTime.now().millisecondsSinceEpoch}_$userId";
 
-    // Save QR code data to Firestore (under the user's document)
     await FirebaseFirestore.instance.collection('passenger_qr_codes').doc(userId).set({
       'qr_code': generatedQrData,
       'status': 'unused',
@@ -52,30 +46,25 @@ class _scanPayState extends State<scanPay> {
       'scanned_by': 'unknown',
     });
 
-    // Update the state to display the generated QR code
     setState(() {
       qrData = generatedQrData;
     });
   }
 
-  // Method to update QR code status after it's scanned by the driver
   Future<void> updateQrCodeStatus(String scannedData) async {
     final user = FirebaseAuth.instance.currentUser;
     final userId = user?.uid ?? "unknown_user";
-    // Get the driver’s role from Firestore (for now, let's assume a role field exists in the user profile)
+
     DocumentSnapshot driverDoc = await FirebaseFirestore.instance.collection('driver').doc(userId).get();
     String driverRole = driverDoc.get('role');
 
-    // Only allow drivers to update the QR status
     if (driverRole == 'driver') {
-      // Update the QR code status in Firestore to 'scanned'
       await FirebaseFirestore.instance.collection('passenger_qr_codes').doc(userId).update({
         'status': 'scanned',
         'scanned_by': userId,
         'scanned_time': FieldValue.serverTimestamp(),
       });
 
-      // Regenerate the QR code after it's scanned
       generateAndSaveQrCode();
     } else {
       print("You do not have permission to scan this QR code.");
@@ -87,13 +76,19 @@ class _scanPayState extends State<scanPay> {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      //appBar: AppBar(
-        //title: Text("QR Code Generator"),
-      //),
-      body: SingleChildScrollView(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(0, 69, 230, 1),
+              Color.fromRGBO(0, 115, 239, 1),
+              Color.fromRGBO(38, 201, 255, 1),
+            ],
+            begin: Alignment.topRight,
+            end: Alignment.topLeft,
+          ),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 30),
             Text(
@@ -101,55 +96,66 @@ class _scanPayState extends State<scanPay> {
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-            SizedBox(height: 60),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.08),
-              child: Column(
-                children: [
-                  Text(
-                    'Scan to Pay...!',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 24),
-                  Text(
-                    "Validate your code at the bus entrance before and after your arrival to exit.",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black38,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 28),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: screenSize.height * 0.03,
-                      horizontal: screenSize.width * 0.08,
-                    ),
-                    color: Colors.white,
-                    child: Center(
-                      child: qrData != null
-                          ? QrImageView(
-                        data: qrData!,
-                        version: QrVersions.auto,
-                        size: 200.0,
-                        backgroundColor: Colors.white,
-                      )
-                          : CircularProgressIndicator(),
-                    ),
-                  ),
-                ],
+            SizedBox(height: 20),
+            Text(
+              'Scan to Pay...!',
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-            SizedBox(height: 60),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.08),
-              child: buildButtons(),
+            SizedBox(height: 20),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 30),
+                      Text(
+                        "Validate your code at the bus entrance before and after your arrival to exit.",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black38,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 40),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: qrData != null
+                            ? QrImageView(
+                                data: qrData!,
+                                version: QrVersions.auto,
+                                size: 200.0,
+                                backgroundColor: Colors.white,
+                              )
+                            : CircularProgressIndicator(),
+                      ),
+                      SizedBox(height: 40),
+                      buildButtons(),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -158,77 +164,75 @@ class _scanPayState extends State<scanPay> {
   }
 
   Widget buildButtons() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      Expanded(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-               MaterialPageRoute(builder: (context) => EWallet()),
-            );
-            // Handle QR code scanner button press
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 15),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color.fromRGBO(0, 69, 230, 1),
-                  Color.fromRGBO(0, 115, 239, 1),
-                  Color.fromRGBO(38, 201, 255, 1),
-                ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EWallet()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+              Color.fromARGB(255, 230, 81, 0),
+              const Color.fromRGBO(239, 108, 0, 1),
+              const Color.fromRGBO(255, 167, 38, 1),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(50),
               ),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            alignment: Alignment.center,
-            child: const Text(
-              'Check Balance',
-              style: TextStyle(
-                color: Colors.white, 
-                fontSize: 16, 
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ),
-      SizedBox(width: 20),
-      Expanded(
-        child: GestureDetector(
-          onTap: () {
-             Navigator.push(
-              context,
-               MaterialPageRoute(builder: (context) => RechargePage()),
-            );
-            // Handle payment button press
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 15),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color.fromRGBO(0, 69, 230, 1),
-                  Color.fromRGBO(0, 115, 239, 1),
-                  Color.fromRGBO(38, 201, 255, 1),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            alignment: Alignment.center,
-            child: const Text(
-              'Recharge',
-              style: TextStyle(
-                color: Colors.white, 
-                fontSize: 16, 
-                fontWeight: FontWeight.bold,
+              alignment: Alignment.center,
+              child: const Text(
+                'Check Balance',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
         ),
-      ),
-    ],
-  );
-}
+        SizedBox(width: 20),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RechargePage()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+              Color.fromARGB(255, 230, 81, 0),
+              const Color.fromRGBO(239, 108, 0, 1),
+              const Color.fromRGBO(255, 167, 38, 1),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              alignment: Alignment.center,
+              child: const Text(
+                'Recharge',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

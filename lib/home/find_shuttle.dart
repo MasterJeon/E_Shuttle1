@@ -108,7 +108,15 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
         Container(
           padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
           decoration: BoxDecoration(
-            color: Colors.yellow[100],
+              gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Row(
@@ -127,7 +135,15 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
         Container(
           padding: EdgeInsets.all(20.0),
           decoration: BoxDecoration(
-            color: Colors.blue[300],
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(0, 69, 230, 1),
+              Color.fromRGBO(0, 115, 239, 1),
+              Color.fromRGBO(38, 201, 255, 1),
+            ],
+            begin: Alignment.topRight,
+            end: Alignment.topLeft,
+          ),
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Column(
@@ -224,9 +240,21 @@ class _ShuttleDetailsPageState extends State<ShuttleDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue[100],
-        title: Text("FIND MY SHUTTLE", style: TextStyle(color: Colors.black)),
+        title: const Text("Find My Shuttle"),
         centerTitle: true,
+      flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

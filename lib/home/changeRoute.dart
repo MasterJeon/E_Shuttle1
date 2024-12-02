@@ -22,6 +22,21 @@ class ChangeRouteState extends State<ChangeRoute> {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+            appBar: AppBar(title: const Text("Change Your Route"),
+      flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
+          ),
+        ),
+      ),
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xfff7f6fb),
       body: SafeArea(
@@ -35,27 +50,17 @@ class ChangeRouteState extends State<ChangeRoute> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 96),
-                SizedBox(height: 24),
-                Text(
-                  'Select Your Route',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 24),
-                SizedBox(height: 10),
+                SizedBox(height: 80),
                 Text(
                   "By selecting your route, you'll receive daily updates on the bus location along your route.",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(162, 0, 0, 0),
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 14,),
+                SizedBox(height: 30),
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
@@ -78,7 +83,7 @@ class ChangeRouteState extends State<ChangeRoute> {
                   ),
                 ),
 
-                SizedBox(height: 28),
+                SizedBox(height: 35),
                 Container(
                   padding: EdgeInsets.all(28),
                   height: 150, // Adjust the height as needed
@@ -95,7 +100,7 @@ class ChangeRouteState extends State<ChangeRoute> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 16), // Add spacing between text and row
+                      SizedBox(height: 20), // Add spacing between text and row
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -111,7 +116,7 @@ class ChangeRouteState extends State<ChangeRoute> {
                   ),
                 ),
 
-                SizedBox(height: 18),
+                SizedBox(height: 40),
                 Text(
                   "Didn't you receive any code?",
                   style: TextStyle(
@@ -121,13 +126,13 @@ class ChangeRouteState extends State<ChangeRoute> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 18),
+                SizedBox(height: 25),
                 Text(
                   "Resend New Code",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.purple,
+                    color: const Color.fromARGB(255, 32, 73, 155),
                   ),
                   textAlign: TextAlign.center,
                 ),

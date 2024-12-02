@@ -323,7 +323,7 @@ class _HomePageState extends State<HomePage> {
 
       //Middle Navigation Icon
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.share_location_sharp),
+        child: Icon(Icons.directions_bus_rounded),
         onPressed: () {
          Navigator.push(
             context,
