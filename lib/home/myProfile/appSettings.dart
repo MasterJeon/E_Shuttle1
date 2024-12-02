@@ -22,6 +22,21 @@ class AppSettingsState extends State<AppSettings> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
+            appBar: AppBar(title: const Text("App Settings"),
+      flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Padding(
         // Set padding relative to screen size
         padding: EdgeInsets.symmetric(
@@ -31,13 +46,6 @@ class AppSettingsState extends State<AppSettings> {
         child: Column(
           children: [
             SizedBox(height: 96),
-            Text(
-                  'App Settings',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 SizedBox(height: 24),
             
             
