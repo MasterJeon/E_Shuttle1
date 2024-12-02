@@ -59,6 +59,7 @@ dependencies:
   firebase_messaging: ^14.7.10
   timezone: ^0.9.4
   flutter_phone_direct_caller: ^2.1.1
+  custom_rating_bar: ^3.0.0
 
 dev_dependencies:
   flutter_test:

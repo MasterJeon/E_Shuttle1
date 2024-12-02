@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/user.dart';
 import '../../models/refund_request.dart';
 import '../../models/userRegistration.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 const String COLLECTION_REF_USER = "user";
 const String COLLECTION_REF_REGISTER = "passenger";
@@ -20,6 +21,15 @@ class DatabaseService<T> {
   }
 
   FirebaseFirestore get firestore => _firestore;
+
+    //final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+ /* Stream<QuerySnapshot> getFeedbacks() {
+    return _firestore
+        .collection('feedbacks')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }*/
 
   Stream<QuerySnapshot<T>> getSnapshots() {
     return _ref.snapshots();
