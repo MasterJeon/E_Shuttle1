@@ -168,16 +168,6 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.account_balance_wallet),
-                    title: const Text('My Wallet'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EWallet()),
-                      );
-                    },
-                  ),
-                  ListTile(
                     leading: const Icon(Icons.settings_rounded),
                     title: const Text('Settings'),
                     onTap: () {
