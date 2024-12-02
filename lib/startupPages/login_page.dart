@@ -34,9 +34,7 @@ class Login extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             colors: [
-              Color.fromARGB(255, 230, 81, 0),
-              const Color.fromRGBO(239, 108, 0, 1),
-              const Color.fromRGBO(255, 167, 38, 1),
+
             ],
           ),
         ),

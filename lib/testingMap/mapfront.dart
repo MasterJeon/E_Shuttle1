@@ -674,16 +674,25 @@ class _MapFrontState extends State<MapFront> {
                 },
                 child: Container(
                   width: 120, // Button width
-                  height: 50, // Button height
-                  decoration: BoxDecoration(
-                    color: Colors.blue, // Button color
-                    borderRadius: BorderRadius.circular(10), // Rounded corners
-                  ),
+                  height: 50,
+                   decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 230, 81, 0),
+                          const Color.fromRGBO(239, 108, 0, 1),
+                          const Color.fromRGBO(255, 167, 38, 1),
+                        ],
+                        begin: Alignment.topRight,
+                        end: Alignment.topLeft,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ), // Button height
                   child: Center(
                     child: Text(
                       'Tap to Track',
                       style: TextStyle(
-                        color: Colors.white, // Text color
+                        color: Colors.white,
+                        fontSize: 16, // Text color
                         fontWeight: FontWeight.bold,
                       ),
                     ),

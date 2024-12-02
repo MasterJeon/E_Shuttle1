@@ -42,7 +42,21 @@ class MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(title: const Text('My Profile')),
+      appBar: AppBar(title: const Text('My Profile'),
+            flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
+          ),
+        ),
+        ),
       body: Padding(
         padding: EdgeInsets.symmetric(
           vertical: screenSize.height * 0.05,

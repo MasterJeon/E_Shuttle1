@@ -178,7 +178,6 @@ class SOS extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(height: 60), // Space for bottom navigation bar
                   ],
                 ),
               ),
