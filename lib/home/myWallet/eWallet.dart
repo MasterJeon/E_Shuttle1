@@ -165,8 +165,19 @@ class EWalletState extends State<EWallet> {
 
   Widget profileTab(String title, {Widget? trailing, required VoidCallback onTap}) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20), // Add internal padding
+      margin: EdgeInsets.symmetric(horizontal: 10), // Add margin for spacing
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 144, 238, 144), // Green box color
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.topLeft,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ), 
+          // Green box color
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -180,9 +191,10 @@ class EWalletState extends State<EWallet> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
+          
         ),
-        trailing: Icon(Icons.arrow_forward, color: Colors.grey),
+        trailing: Icon(Icons.arrow_forward, color: const Color.fromARGB(255, 225, 222, 222)),
         onTap: onTap,
       ),
     );

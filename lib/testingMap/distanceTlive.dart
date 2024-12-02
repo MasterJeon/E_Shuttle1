@@ -314,9 +314,21 @@ class _MyRouteState extends State<MyRoute> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Google Maps in Flutter'),
+            appBar: AppBar(title: const Text("Track Your Shuttle"),
+      flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
+          ),
         ),
+      ),
         body: Stack(
           children: [
             GoogleMap(
