@@ -329,7 +329,7 @@ class _HomePageState extends State<HomePage> {
             ),
             // Menu button positioned at the top-left
             Positioned(
-              top: 16,
+              top: 40,
               left: 16,
               child: Builder(
                 builder: (context) => IconButton(
@@ -342,7 +342,7 @@ class _HomePageState extends State<HomePage> {
             ),
             // Notifications icon (optional)
             Positioned(
-              top: 16,
+              top: 40,
               right: 16,
               child: Stack(
                 children: [
