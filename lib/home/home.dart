@@ -106,343 +106,342 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-               appBar: AppBar(
-          title: Text('H'),
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            ),
-          ),
-          actions: [
-            Stack(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.notifications),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NotificationsPage()),
-                    );
-                  },
-                ),
-                if (notificationCount > 0)
-                  Positioned(
-                    right: 11,
-                    top: 11,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        drawer: Drawer(
+          child: FutureBuilder<UserProfile>(
+            future: _userProfileFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Column(
+                  children: [
+                    UserAccountsDrawerHeader(
+                      accountName: const Text('Loading...'),
+                      accountEmail: const Text('Please wait...'),
+                      currentAccountPicture: CircleAvatar(
+                        child: CircularProgressIndicator(),
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      constraints: BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: Text(
-                        '$notificationCount',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                        ),
-                        textAlign: TextAlign.center,
+                        color: Colors.blueAccent,
                       ),
                     ),
+                  ],
+                );
+              }
+              if (snapshot.hasError) {
+                return Column(
+                  children: [
+                    UserAccountsDrawerHeader(
+                      accountName: const Text('Error'),
+                      accountEmail: const Text('Failed to load'),
+                      currentAccountPicture: CircleAvatar(
+                        child: Icon(Icons.error),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                  ],
+                );
+              }
+              final userProfile = snapshot.data!;
+              return Column(
+                children: [
+                  UserAccountsDrawerHeader(
+                    accountName: Text(userProfile.full_name),
+                    accountEmail: Text(userProfile.email),
+                    currentAccountPicture: CircleAvatar(
+                      child: ClipOval(),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                    ),
                   ),
-              ],
+                  ListTile(
+                    leading: const Icon(Icons.account_circle_sharp),
+                    title: const Text('My Profile'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyProfile()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.account_balance_wallet),
+                    title: const Text('My Wallet'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EWallet()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.settings_rounded),
+                    title: const Text('Settings'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AppSettings()),
+                      );
+                    },
+                  ),
+
+                  ListTile(
+                    leading: const Icon(Icons.edit_location_alt_rounded),
+                    title: const Text('Change my Route'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChangeRoute()),
+                      );
+                    },
+                  ),
+
+                  Divider(),
+
+                  ListTile(
+                    leading: const Icon(Icons.message),
+                    title: const Text('Reviews and Feedbacks'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Feedbacks()),
+                      );
+                    },
+                  ),
+
+                  ListTile(
+                    leading: const Icon(Icons.support_agent_sharp),
+                    //leading: const Icon(Icons.help),
+                    title: const Text('Help and Support'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Help_support()),
+                      );
+                    },
+                  ),
+
+
+                  ListTile(
+                      leading: const Icon(Icons.logout),
+                      title: const Text('Sign Out'),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Confirm'),
+                            content: Text('Are you sure you want sign out?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Exit the app
+                                  FirebaseAuth.instance.signOut();
+                                  Navigator.pushNamed(context, "/login");
+                                  showToast(message: "Successfully signed out");
+                                },
+                                child: Text('Sign out'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                  ),
+                ],
+              );
+    }
+    ),
+    ),
+                  // Additional drawer items
+        body: Stack(
+          children: [
+            // Main content
+            PageStorage(
+              child: currentScreen,
+              bucket: bucket,
+            ),
+            // Menu button positioned at the top-left
+            Positioned(
+              top: 16,
+              left: 16,
+              child: Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+              ),
+            ),
+            // Notifications icon (optional)
+            Positioned(
+              top: 16,
+              right: 16,
+              child: Stack(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.notifications),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotificationsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  if (notificationCount > 0)
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          '$notificationCount',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ],
         ),
-
-    drawer: Drawer(
-    child: FutureBuilder<UserProfile>(
-    future: _userProfileFuture,
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Column(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: const Text('Loading...'),
-              accountEmail: const Text('Please wait...'),
-              currentAccountPicture: CircleAvatar(
-                child: CircularProgressIndicator(),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blueAccent,
-              ),
-            ),
-            // Add other drawer items here if needed
-          ],
-        );
-      }
-      if (snapshot.hasError) {
-        return Column(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: const Text('Error'),
-              accountEmail: const Text('Failed to load'),
-              currentAccountPicture: CircleAvatar(
-                child: Icon(Icons.error),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.redAccent,
-              ),
-            ),
-            // Add other drawer items here if needed
-          ],
-        );
-      }
-      final userProfile = snapshot.data!;
-      return Column(
-        children: [
-          UserAccountsDrawerHeader(
-            accountName: Text(userProfile.full_name),
-            accountEmail: Text(userProfile.email),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                //child: userProfile.profilePictureUrl != null
-                   // ? Image.network(userProfile.profilePictureUrl!)
-                    //: Icon(Icons.person),
-              ),
-            ),
-            decoration: BoxDecoration(
-              color: Colors.blueAccent,
-            ),
-          ),
-
-          ListTile(
-            leading: const Icon(Icons.account_circle_sharp),
-            title: const Text('My Profile'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.account_balance_wallet),
-            title: const Text('My Wallet'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EWallet()),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings_rounded),
-            title: const Text('Settings'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AppSettings()),
-              );
-            },
-          ),
-
-          ListTile(
-            leading: const Icon(Icons.edit_location_alt_rounded),
-            title: const Text('Change my Route'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ChangeRoute()),
-              );
-            },
-          ),
-
-          Divider(),
-
-          ListTile(
-            leading: const Icon(Icons.message),
-            title: const Text('Reviews and Feedbacks'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Feedbacks()),
-              );
-            },
-          ),
-
-          ListTile(
-            leading: const Icon(Icons.support_agent_sharp),
-            //leading: const Icon(Icons.help),
-            title: const Text('Help and Support'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Help_support()),
-              );
-            },
-          ),
-
-
-          ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Sign Out'),
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('Confirm'),
-                      content: Text('Are you sure you want sign out?'),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // Exit the app
-                            FirebaseAuth.instance.signOut();
-                            Navigator.pushNamed(context, "/login");
-                            showToast(message: "Successfully signed out");
-                          },
-                          child: Text('Sign out'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              ),
-            ],
-          );
-        }
-      ),
-    ),
-
-      body: PageStorage(
-        child: currentScreen,
-        bucket: bucket,
-      ),
-
-      //Middle Navigation Icon
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.share_location_sharp),
-        onPressed: () {
-         Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ShuttleDetailsPage()),
-         );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      //Bottom Navigation Bar
-          //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 10,
-        child: Container(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = MapFront();
-                        //currentScreen = HomeContent(); // Placeholder for home content
-                        currentTab = 0;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.home_rounded,
-                          color: currentTab == 0 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'Home',
-                          style: TextStyle(
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.share_location_sharp),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ShuttleDetailsPage()),
+            );
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          notchMargin: 10,
+          child: Container(
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MaterialButton(
+                      minWidth: 40,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen = MapFront();
+                          currentTab = 0;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.home_rounded,
                             color: currentTab == 0 ? Colors.blue : Colors.grey,
                           ),
-                        ),
-                      ],
+                          Text(
+                            'Home',
+                            style: TextStyle(
+                              color: currentTab == 0 ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen =  scanPay();
-                        currentTab = 1;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.aod_sharp,
-                          color: currentTab == 1 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'E-Tickets',
-                          style: TextStyle(
+                    MaterialButton(
+                      minWidth: 40,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen = scanPay();
+                          currentTab = 1;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.aod_sharp,
                             color: currentTab == 1 ? Colors.blue : Colors.grey,
                           ),
-                        ),
-                      ],
+                          Text(
+                            'E-Tickets',
+                            style: TextStyle(
+                              color: currentTab == 1 ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = EWallet();
-                        currentTab = 2;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.account_balance_wallet,
-                          color: currentTab == 2 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'E-Wallet',
-                          style: TextStyle(
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MaterialButton(
+                      minWidth: 40,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen = EWallet();
+                          currentTab = 2;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.account_balance_wallet,
                             color: currentTab == 2 ? Colors.blue : Colors.grey,
                           ),
-                        ),
-                      ],
+                          Text(
+                            'E-Wallet',
+                            style: TextStyle(
+                              color: currentTab == 2 ? Colors.blue : Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = SOS();
-                        currentTab = 3;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.sos,
-                          color: currentTab == 3 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'SOS',
-                          style: TextStyle(
+                    MaterialButton(
+                      minWidth: 40,
+                      onPressed: () {
+                        setState(() {
+                          currentScreen = SOS();
+                          currentTab = 3;
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.sos,
                             color: currentTab == 3 ? Colors.blue : Colors.grey,
+                          ),
+                          Text(
+                            'SOS',
+                            style: TextStyle(
+                              color: currentTab == 3 ? Colors.blue : Colors.grey,
                           ),
                         ),
                       ],

@@ -557,26 +557,29 @@ class _MapFrontState extends State<MapFront> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70.0), // Set your desired height here
+          preferredSize: Size.fromHeight(160.0), // Increased height to accommodate content
           child: AppBar(
             backgroundColor: Colors.blue,
-            title: Padding(
-              padding: const EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0, bottom: 16.0), // Adjust the top padding here
+            flexibleSpace: Padding(
+              padding: const EdgeInsets.only(top: 50.0, left: 16.0, right: 16.0), // Adjust padding here
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Departure Info
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Departure',
                         style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
+                      SizedBox(height: 4.0), // Space between rows
                       Text(
                         departureTime, // Replace with your actual departure time
                         style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
+                      SizedBox(height: 4.0), // Space between rows
                       Text(
                         departureLocation, // Replace with your actual departure location
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
@@ -585,16 +588,19 @@ class _MapFrontState extends State<MapFront> {
                   ),
                   // Center Info (Distance and Duration)
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         ddistance,
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
+                      SizedBox(height: 8.0), // Space between rows
                       Row(
                         children: [
                           Text(
                             '-   -   -  -', // Replace with desired number of dashes
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: const Color.fromARGB(255, 255, 255, 255)),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w900, color: const Color.fromARGB(255, 255, 255, 255)),
                           ),
                           SizedBox(width: 8), // Space between dashes and arrow
                           Icon(
@@ -603,7 +609,8 @@ class _MapFrontState extends State<MapFront> {
                           ),
                           SizedBox(width: 8),
                         ],
-                      ), // Space between arrow and duration
+                      ),
+                      SizedBox(height: 8.0), // Space between rows
                       Text(
                         dduration,
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
@@ -613,15 +620,18 @@ class _MapFrontState extends State<MapFront> {
                   // Arrival Info
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         'Arrival',
                         style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
+                      SizedBox(height: 4.0), // Space between rows
                       Text(
                         arrivalTime, // Replace with your actual arrival time
                         style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
+                      SizedBox(height: 4.0), // Space between rows
                       Text(
                         arrivalLocation, // Replace with your actual arrival location
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
