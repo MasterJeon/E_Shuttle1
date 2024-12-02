@@ -91,7 +91,7 @@ class EWalletState extends State<EWallet> {
                             'E-Wallet',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 30,
+                              fontSize: 40,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -101,6 +101,7 @@ class EWalletState extends State<EWallet> {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
+                              //fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(height: 18),
@@ -110,14 +111,14 @@ class EWalletState extends State<EWallet> {
                                   'Rs. ${_walletBalance.toStringAsFixed(2)}',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 26,
+                                    fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                         ],
                       ),
                     ),
-                  SizedBox(height: 48),
+                  SizedBox(height: 30),
             // White Box Containing Buttons
             Expanded(
               child: Container(
@@ -191,7 +192,7 @@ class EWalletState extends State<EWallet> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
+          style: TextStyle(fontSize: 20,color: const Color.fromARGB(255, 255, 255, 255)),
           
         ),
         trailing: Icon(Icons.arrow_forward, color: const Color.fromARGB(255, 225, 222, 222)),

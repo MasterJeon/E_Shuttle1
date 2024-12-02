@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+//import 'package:e_shuttle/features/user_auth/presentation/pages/home_page.dart';
+import 'package:e_shuttle/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -622,10 +624,32 @@ class _MyLiveRouteState extends State<MyLiveRoute> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Google Maps in Flutter'),
+        appBar: AppBar(title: const Text("Track Your Shuttle"),
+      leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute (builder: (context) => HomePage()),
+                ); // Go back to the previous screen
+            },
+          ),
+      flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
+          ),
         ),
+      ),
         body: Stack(
           children: [
             GoogleMap(

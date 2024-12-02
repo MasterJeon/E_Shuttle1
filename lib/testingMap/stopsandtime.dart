@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:e_shuttle/testingMap/timewithdistance.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_webservice/directions.dart';
@@ -338,12 +339,34 @@ class _LiveLocationsState extends State<LiveLocations> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(
+        appBar: AppBar(title: Text(
             _routeDetails != null
                 ? 'Live Location: ${_routeDetails!.driver_location.latitude}, ${_routeDetails!.driver_location.longitude}'
                 : 'Loading driver location...',
-          ),),
+            ),
+            leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute (builder: (context) => MyLiveRoute()),
+                ); // Go back to the previous screen
+            },
+          ),
+      flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 230, 81, 0),
+                Color.fromRGBO(239, 108, 0, 1),
+                Color.fromRGBO(255, 167, 38, 1),
+              ],
+            ),
+          ),
+        ),
+      ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [

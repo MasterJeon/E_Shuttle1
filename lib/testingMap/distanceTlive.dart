@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:e_shuttle/features/user_auth/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +9,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-void main() => runApp(const MyRoute());
+void main() => runApp(
+  
+  const MyRoute());
 
 class MyRoute extends StatefulWidget {
   const MyRoute({super.key});
@@ -313,8 +316,18 @@ class _MyRouteState extends State<MyRoute> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-            appBar: AppBar(title: const Text("Track Your Shuttle"),
+      appBar: AppBar(title: const Text("Track Your Shuttle"),
+      leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute (builder: (context) => HomePage()),
+                ); // Go back to the previous screen
+            },
+          ),
       flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
