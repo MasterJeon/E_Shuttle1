@@ -7,6 +7,9 @@ import '../../startupPages/signup_page.dart';
 import 'package:e_shuttle/services/database_service.dart';
 import '../../models/user.dart';
 
+
+//Not using anymooooooore
+
 void main() => runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -19,7 +22,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DatabaseService _databaseService = DatabaseService();
+    //final DatabaseService _databaseService = DatabaseService();
     final textController1 = TextEditingController();
     final textController2 = TextEditingController();
 
@@ -148,35 +151,35 @@ class Login extends StatelessWidget {
                             String password = textController2.text;
 
                             // Fetch user from Firestore
-                            User? user = await _databaseService.getUserByEmailOrStudentID(email);
+                            //User? user = await _databaseService.getUserByEmailOrStudentID(email);
 
                             // Check if user exists and password matches
-                            if (user != null && user.password == password) {
+                            //if (user != null && user.password == password) {
                               // Successful login
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Login Success"),
-                                  duration: const Duration(seconds: 3),
-                                ),
-                              );
+                              //Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                             //// ScaffoldMessenger.of(context).showSnackBar(
+                              ////  SnackBar(
+                              //    content: Text("Login Success"),
+                                  //duration: const Duration(seconds: 3),
+                               // ),
+                              //);
 
                               //Navigation to home page
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context)=> HomePage()),
-                              );
-                            }
+                              ////Navigator.pushReplacement(
+                              //  context,
+                               // MaterialPageRoute(builder: (context)=> HomePage()),
+                             // );
+                            //}
 
-                            else {
+                            //else {
                               // Login failed
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Invalid email/Student ID or password"),
-                                  duration: const Duration(seconds: 3),
-                                ),
-                              );
-                            }
+                             // ScaffoldMessenger.of(context).showSnackBar(
+                             //   SnackBar(
+                             //     content: Text("Invalid email/Student ID or password"),
+                               //   duration: const Duration(seconds: 3),
+                               // ),
+                             // );
+                           // }
                           },
 
                           style: ButtonStyle(
@@ -203,7 +206,7 @@ class Login extends StatelessWidget {
                         margin: EdgeInsets.symmetric(horizontal: 50),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+                            //Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
                           },
                           
                           style: ButtonStyle(
