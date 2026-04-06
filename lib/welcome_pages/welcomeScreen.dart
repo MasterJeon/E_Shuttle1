@@ -20,59 +20,81 @@ class WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      // Removed backgroundColor property
-      body: Container(
-        // Added gradient background
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(0, 115, 239, 0.884),
-              Color.fromRGBO(22, 5, 107, 0.94),
-              Color.fromRGBO(8, 1, 41, 0.94),
-            ],
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: screenSize.height * 0.05,
-            horizontal: screenSize.width * 0.08,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 30),
-              SizedBox(
-                width:700,
-                height: 300,
-                child: Image.asset('assets/welcome.png'), // Replace with your image asset path
+      body: Stack(
+        children: [
+          // Background and content
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(0, 115, 239, 0.884),
+                  Color.fromRGBO(22, 5, 107, 0.94),
+                  Color.fromRGBO(8, 1, 41, 0.94),
+                ],
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
               ),
-              SizedBox(height: 40),
-              Text(
-                'Welcome to E-Shuttle !',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white, // Text color adjusted for better contrast
-                ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: screenSize.height * 0.05,
+                horizontal: screenSize.width * 0.08,
               ),
-              SizedBox(height: 24),
-              Text(
-                "Commute to KDU effortlessly! Track buses, buy digital tickets and travel safe — all in one app. Your smarter, faster way to travel. Let's get started!",
-                //"Getting your day to day shuttle update is now just a matter of some clicks.",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white70, // Text color adjusted for better contrast
-                ),
-                textAlign: TextAlign.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 30),
+                  SizedBox(
+                    width: 700,
+                    height: 300,
+                    child: Image.asset('assets/welcome.png'), // Replace with your image asset path
+                  ),
+                  SizedBox(height: 40),
+                  Text(
+                    'Welcome to E-Shuttle!',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  Text(
+                    "Commute to KDU effortlessly! Track buses, buy digital tickets, and travel safe — all in one app. Your smarter, faster way to travel. Let's get started!",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white70,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 100),
+                  buildButtons(),
+                ],
               ),
-              SizedBox(height: 100),
-              buildButtons(),
-            ],
+            ),
           ),
-        ),
+          // KDU logo in the top-left corner
+          Positioned(
+            top: 35,
+            left: 20,
+            child: Image.asset(
+              'assets/kdu_logo.png', // Replace with the actual path of your KDU logo
+              height: 50,
+              width: 50,
+            ),
+          ),
+          // E-Shuttle logo in the top-right corner
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Image.asset(
+              'assets/logo.png', // Replace with the actual path of your E-Shuttle logo
+              height: 110,
+              width: 100,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -82,7 +104,9 @@ class WelcomeScreenState extends State<WelcomeScreen> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const OnBoardingScreen(title: 'E-Shuttle Onboarding')),
+          MaterialPageRoute(
+            builder: (context) => const OnBoardingScreen(title: 'E-Shuttle Onboarding'),
+          ),
         );
       },
       child: Container(
@@ -109,3 +133,6 @@ class WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 }
+
+
+
