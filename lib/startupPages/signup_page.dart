@@ -12,7 +12,7 @@ void main() => runApp(
 );
 
 class SignUp extends StatelessWidget {
-  final DatabaseService _databaseService = DatabaseService();
+  //final DatabaseService _databaseService = DatabaseService();
 
   @override
   Widget build(BuildContext context) {

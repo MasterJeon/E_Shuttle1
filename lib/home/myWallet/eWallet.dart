@@ -1,3 +1,5 @@
+import 'package:e_shuttle/home/myWallet/recharge.dart';
+import 'package:e_shuttle/home/myWallet/refund.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,9 +74,22 @@ class EWalletState extends State<EWallet> {
             ),
             SizedBox(height: 96),
             
-            profileTab("Recharge Balance"),
+            profileTab(
+              "Recharge Balance",
+                onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RechargePage()),
+              );
+            }),
+
             SizedBox(height: 16),
-            profileTab("Refund"),
+            profileTab("Refund", onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RefundPage()),
+              );
+            }),
             SizedBox(height: 16),
             
           ],
@@ -82,7 +97,7 @@ class EWalletState extends State<EWallet> {
       ),
     );
   }
-  Widget profileTab(String title, {Widget? trailing}){
+  Widget profileTab(String title, {Widget? trailing, required VoidCallback onTap}){
     return Container(
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 255, 175, 77),
@@ -106,6 +121,7 @@ class EWalletState extends State<EWallet> {
                 //leading: Icon(iconData),
                 trailing: Icon(Icons.arrow_forward, color: Colors.grey),
                 tileColor: const Color.fromARGB(255, 255, 255, 255),
+                onTap: onTap, // This line ensures the onTap is triggered
               ),
     );
   }
