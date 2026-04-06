@@ -1,3 +1,5 @@
+import 'package:e_shuttle/home/myWallet/eWallet.dart';
+import 'package:e_shuttle/home/myWallet/recharge.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -30,9 +32,9 @@ class _scanPayState extends State<scanPay> {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("QR Code Generator"),
-      ),
+      //appBar: AppBar(
+        //title: Text("QR Code Generator"),
+      //),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -99,27 +101,77 @@ class _scanPayState extends State<scanPay> {
   }
 
   Widget buildButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              // Handle QR code scanner button press
-            },
-            child: Text('Check Balance'),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      Expanded(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+               MaterialPageRoute(builder: (context) => EWallet()),
+            );
+            // Handle QR code scanner button press
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color.fromRGBO(0, 69, 230, 1),
+                  Color.fromRGBO(0, 115, 239, 1),
+                  Color.fromRGBO(38, 201, 255, 1),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              'Check Balance',
+              style: TextStyle(
+                color: Colors.white, 
+                fontSize: 16, 
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
-        SizedBox(width: 20),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              // Handle payment button press
-            },
-            child: Text('Recharge'),
+      ),
+      SizedBox(width: 20),
+      Expanded(
+        child: GestureDetector(
+          onTap: () {
+             Navigator.push(
+              context,
+               MaterialPageRoute(builder: (context) => RechargePage()),
+            );
+            // Handle payment button press
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [
+                  Color.fromRGBO(0, 69, 230, 1),
+                  Color.fromRGBO(0, 115, 239, 1),
+                  Color.fromRGBO(38, 201, 255, 1),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              'Recharge',
+              style: TextStyle(
+                color: Colors.white, 
+                fontSize: 16, 
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 }
