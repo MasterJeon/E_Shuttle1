@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 
 void main() => runApp(
@@ -123,7 +123,7 @@ class MainApp extends StatelessWidget {
                           ),
                           ),
                           child: Center(
-                            child: Text("Login", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                            child: Text  ("Login", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
                           ),
                         ),
 
@@ -159,4 +159,4 @@ class MainApp extends StatelessWidget {
       ),
     );
   }
-}
+}*/

@@ -4,24 +4,25 @@ import 'package:flutter/services.dart';
 void main() => runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AccountVerification(),
+      home: ScanPay(),
     )
 );
 
-class AccountVerification extends StatefulWidget {
-  const AccountVerification({Key? key}) : super(key: key);
+class ScanPay extends StatefulWidget {
+  const ScanPay({Key? key}) : super(key: key);
 
   @override
-  AccountVerificationState createState() => AccountVerificationState();
+  State<ScanPay> createState() => ScanPayState();
 }
 
-class AccountVerificationState extends State<AccountVerification> {
+class ScanPayState extends State<ScanPay> {
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get the size of the screen
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(title: Text('E-Tickets')),
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xfff7f6fb),
       body: SafeArea(
