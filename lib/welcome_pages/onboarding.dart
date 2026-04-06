@@ -6,6 +6,9 @@ import 'package:e_shuttle/welcome_pages/wScreen3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/home_page.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/login_page.dart';
+import 'package:e_shuttle/features/user_auth/presentation/pages/sign_up_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -72,7 +75,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>{
                       // Navigate to the Login screen on "Finish"
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const Login()),
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
                       );
                     } else {
                       // Skip to the last screen
