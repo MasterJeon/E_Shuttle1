@@ -1,13 +1,13 @@
 import 'dart:ffi';
-import 'package:e_shuttle/home/Help.dart';
-import 'package:e_shuttle/home/SOS/SOS.dart';
-import 'package:e_shuttle/home/changeRoute.dart';
-import 'package:e_shuttle/home/eTickets/scanPay.dart';
-import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
-import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
-import 'package:e_shuttle/home/myProfile/appSettings.dart';
-import 'package:e_shuttle/home/myProfile/myProfile.dart';
-import 'package:e_shuttle/home/myWallet/eWallet.dart';
+import 'package:e_shuttle/features/home/Help.dart';
+import 'package:e_shuttle/features/home/SOS/SOS.dart';
+import 'package:e_shuttle/features/home/changeRoute.dart';
+import 'package:e_shuttle/features/home/e_tickets/scanPay.dart';
+import 'package:e_shuttle/features/home/feedbacks/feedbacks.dart';
+import 'package:e_shuttle/features/home/feedbacks/feedbacks.dart';
+import 'package:e_shuttle/features/home/myProfile/appSettings.dart';
+import 'package:e_shuttle/features/home/myProfile/myProfile.dart';
+import 'package:e_shuttle/features/home/myWallet/eWallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

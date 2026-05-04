@@ -1,4 +1,4 @@
-import 'package:e_shuttle/welcome_pages/welcomeScreen.dart';
+import 'package:e_shuttle/features/onboarding/welcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';

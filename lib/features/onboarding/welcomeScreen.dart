@@ -1,4 +1,4 @@
-import 'package:e_shuttle/welcome_pages/onboarding.dart';
+import 'package:e_shuttle/features/onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(

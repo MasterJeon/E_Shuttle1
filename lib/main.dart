@@ -1,28 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shuttle/firebase_options.dart';
-import 'package:e_shuttle/home/Help.dart';
-import 'package:e_shuttle/home/changeRoute.dart';
-import 'package:e_shuttle/home/myProfile/appSettings.dart';
-import 'package:e_shuttle/home/myWallet/eWallet.dart';
+import 'package:e_shuttle/config/firebase_options.dart';
+import 'package:e_shuttle/features/home/Help.dart';
+import 'package:e_shuttle/features/home/changeRoute.dart';
+import 'package:e_shuttle/features/home/myProfile/appSettings.dart';
+import 'package:e_shuttle/features/home/myWallet/eWallet.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:e_shuttle/home/SOS/SOS.dart';
-import 'package:e_shuttle/home/eTickets/tickets.dart';
-import 'package:e_shuttle/home/feedbacks/feedbacks.dart';
-import 'package:e_shuttle/home/home.dart';
-import 'package:e_shuttle/home/myProfile/profile.dart';
-import 'package:e_shuttle/home/myWallet/wallet.dart';
-import 'package:e_shuttle/startupPages/login_page.dart';
-import 'package:e_shuttle/startupPages/signup_page.dart';
+import 'package:e_shuttle/features/home/SOS/SOS.dart';
+import 'package:e_shuttle/features/home/e_tickets/tickets.dart';
+import 'package:e_shuttle/features/home/feedbacks/feedbacks.dart';
+import 'package:e_shuttle/features/home/home.dart';
+import 'package:e_shuttle/features/home/myProfile/profile.dart';
+import 'package:e_shuttle/features/home/myWallet/wallet.dart';
+import 'package:e_shuttle/features/auth/login_page.dart';
+import 'package:e_shuttle/features/auth/signup_page.dart';
 
-import 'package:e_shuttle/welcome_pages/onboarding.dart';
-import 'package:e_shuttle/welcome_pages/splash_screen.dart';
-import 'package:e_shuttle/welcome_pages/wScreen1.dart';
-import 'package:e_shuttle/welcome_pages/welcomeScreen.dart';
-import 'package:e_shuttle/welcome_pages/wScreen2.dart';
-import 'package:e_shuttle/welcome_pages/wScreen3.dart';
+import 'package:e_shuttle/features/onboarding/onboarding.dart';
+import 'package:e_shuttle/features/onboarding/splash_screen.dart';
+import 'package:e_shuttle/features/onboarding/wScreen1.dart';
+import 'package:e_shuttle/features/onboarding/welcomeScreen.dart';
+import 'package:e_shuttle/features/onboarding/wScreen2.dart';
+import 'package:e_shuttle/features/onboarding/wScreen3.dart';
 
-import 'package:e_shuttle/home/eTickets/scanPay.dart';
+import 'package:e_shuttle/features/home/e_tickets/scanPay.dart';
 
 
 
