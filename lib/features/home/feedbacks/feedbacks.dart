@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 
-class Feedbacks extends StatelessWidget{
-  const Feedbacks ({super.key});
+class Feedbacks extends StatelessWidget {
+  const Feedbacks({
+    super.key,
+    this.showAppBar = true,
+  });
 
-  Widget build(BuildContext context){
+  final bool showAppBar;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Reviews and Feedbacks")
+      appBar: showAppBar
+          ? AppBar(
+              title: const Text('Reviews and Feedbacks'),
+              centerTitle: true,
+            )
+          : null,
+      body: const Center(
+        child: Text('Reviews and Feedbacks'),
       ),
     );
-  }    
+  }
 }

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 
-class Tickets extends StatelessWidget{
-  const Tickets ({super.key});
+class Tickets extends StatelessWidget {
+  const Tickets({
+    super.key,
+    this.showAppBar = true,
+  });
 
-  Widget build(BuildContext context){
+  final bool showAppBar;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("E - Tickets")
+      appBar: showAppBar ? AppBar(title: const Text('E-Tickets')) : null,
+      body: const Center(
+        child: Text('E-Tickets'),
       ),
     );
-  }    
+  }
 }
