@@ -1,14 +1,11 @@
-import 'dart:ffi';
 import 'package:e_shuttle/features/home/Help.dart';
 import 'package:e_shuttle/features/home/SOS/SOS.dart';
 import 'package:e_shuttle/features/home/changeRoute.dart';
 import 'package:e_shuttle/features/home/e_tickets/scanPay.dart';
 import 'package:e_shuttle/features/home/feedbacks/feedbacks.dart';
-import 'package:e_shuttle/features/home/feedbacks/feedbacks.dart';
 import 'package:e_shuttle/features/home/myProfile/appSettings.dart';
 import 'package:e_shuttle/features/home/myProfile/myProfile.dart';
 import 'package:e_shuttle/features/home/myWallet/eWallet.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,28 +16,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentTab = 0;
-  final List<Widget> screens = [
-    HomeContent(), // Placeholder for home content
-    EWallet(),
-    AppSettings(),
-    MyProfile(),
-    Feedbacks(),
-    Help_support(),
-    changeRoute()
-  ];
-
-  final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = HomeContent(); // Placeholder for home content
+  int _currentTab = 0;
+  Widget _currentScreen = const HomeContent();
+  final PageStorageBucket _bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(''),
-      ),
-
-     drawer: Drawer(
+      appBar: AppBar(title: const Text('')),
+      drawer: Drawer(
         child: Column(
           children: [
             UserAccountsDrawerHeader(
@@ -49,297 +33,74 @@ class _HomePageState extends State<HomePage> {
               currentAccountPicture: CircleAvatar(
                 child: ClipOval(child: Image.asset('images/profile.jpg')),
               ),
-              decoration: BoxDecoration(
-                color: Colors.blueAccent,
-              ),
+              decoration: const BoxDecoration(color: Colors.blueAccent),
             ),
-            
-            ListTile(
-              leading: const Icon(Icons.account_circle_sharp),
-              title: const Text('My Profile'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyProfile()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('My Wallet'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>  EWallet()),
-                );
-              },
-            ),
-             ListTile(
-              leading: const Icon(Icons.settings_rounded),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AppSettings()),
-                );
-              },
-            ),
-
-            ListTile(
-              leading: const Icon(Icons.edit_location_alt_rounded),
-              title: const Text('Change my Route'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => changeRoute()),
-                );
-              },
-            ),
-
-            Divider(),
-
-            ListTile(
-              leading: const Icon(Icons.message),
-              title: const Text('Reviews and Feedbacks'),
-              onTap: () {
-                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Feedbacks()),
-                );
-              },
-            ),
-
-            ListTile(
-              leading: const Icon(Icons.support_agent_sharp),
-              //leading: const Icon(Icons.help),
-              title: const Text('Help and Support'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Help_support()),
-                );
-              },
-            ),
-           
-
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Sign Out'),
-              onTap: () => print('Logout tapped'),
-            ),
+            _drawerTile(Icons.account_circle_sharp, 'My Profile', () => _navigate(MyProfile())),
+            _drawerTile(Icons.account_balance_wallet, 'My Wallet', () => _navigate(EWallet())),
+            _drawerTile(Icons.settings_rounded, 'Settings', () => _navigate(AppSettings())),
+            _drawerTile(Icons.edit_location_alt_rounded, 'Change my Route', () => _navigate(changeRoute())),
+            const Divider(),
+            _drawerTile(Icons.message, 'Reviews and Feedbacks', () => _navigate(Feedbacks())),
+            _drawerTile(Icons.support_agent_sharp, 'Help and Support', () => _navigate(Help_support())),
+            _drawerTile(Icons.logout, 'Sign Out', () {}),
           ],
         ),
       ),
-
-      body: PageStorage(
-        child: currentScreen,
-        bucket: bucket,
-      ),
-
-      //Middle Navigation Icon
+      body: PageStorage(bucket: _bucket, child: _currentScreen),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.share_location_sharp),
         onPressed: () {},
+        child: const Icon(Icons.share_location_sharp),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      //Bottom Navigation Bar
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10,
-        child: Container(
+        child: SizedBox(
           height: 60,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = HomeContent(); // Placeholder for home content
-                        currentTab = 0;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.home_rounded,
-                          color: currentTab == 0 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'Home',
-                          style: TextStyle(
-                            color: currentTab == 0 ? Colors.blue : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen =  scanPay();
-                        currentTab = 1;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.aod_sharp,
-                          color: currentTab == 1 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'E-Tickets',
-                          style: TextStyle(
-                            color: currentTab == 1 ? Colors.blue : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = SOS();
-                        currentTab = 2;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.sos,
-                          color: currentTab == 2 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'SOS',
-                          style: TextStyle(
-                            color: currentTab == 2 ? Colors.blue : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = MyProfile();
-                        currentTab = 3;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.account_circle_sharp,
-                          color: currentTab == 3 ? Colors.blue : Colors.grey,
-                        ),
-                        Text(
-                          'My Profile',
-                          style: TextStyle(
-                            color: currentTab == 3 ? Colors.blue : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            children: [
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                _navButton(Icons.home_rounded, 'Home', 0, const HomeContent()),
+                _navButton(Icons.aod_sharp, 'E-Tickets', 1, scanPay()),
+              ]),
+              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                _navButton(Icons.sos, 'SOS', 2, SOS()),
+                _navButton(Icons.account_circle_sharp, 'My Profile', 3, MyProfile()),
+              ]),
             ],
           ),
         ),
       ),
-      /*drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: const Text('Sasini Lekamge'),
-              accountEmail: const Text('sasini@gmail.com'),
-              currentAccountPicture: CircleAvatar(
-                child: ClipOval(child: Image.asset('images/profile.jpg')),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blueAccent,
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.sos),
-              title: const Text('SOS-Emergency'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SOS()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.aod_sharp),
-              title: const Text('E-Tickets'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ScanPay()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_balance_wallet),
-              title: const Text('My Wallet'),
-              onTap: () {
-                // Implement My Wallet navigation
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.account_circle_sharp),
-              title: const Text('My Profile'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyProfile()),
-                );
-              },
-            ),
-            Divider(),
+    );
+  }
 
-            ListTile(
-              leading: const Icon(Icons.message),
-              title: const Text('Reviews and Feedbacks'),
-              onTap: () {
-                // Implement Reviews and Feedbacks navigation
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Sign Out'),
-              onTap: () => print('Logout tapped'),
-            ),
+  void _navigate(Widget page) =>
+      Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+
+  ListTile _drawerTile(IconData icon, String title, VoidCallback onTap) =>
+      ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
+
+  Widget _navButton(IconData icon, String label, int index, Widget screen) =>
+      MaterialButton(
+        minWidth: 40,
+        onPressed: () => setState(() {
+          _currentScreen = screen;
+          _currentTab = index;
+        }),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: _currentTab == index ? Colors.blue : Colors.grey),
+            Text(label, style: TextStyle(color: _currentTab == index ? Colors.blue : Colors.grey)),
           ],
         ),
-      ),*/
-    );
-  }
+      );
 }
 
-// Placeholder widget for home content
 class HomeContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Home Content'),
-    );
-  }
-}
+  const HomeContent({super.key});
 
+  @override
+  Widget build(BuildContext context) => const Center(child: Text('Home Content'));
+}
